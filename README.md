@@ -4,7 +4,7 @@
 
 | 日期 | 作者 | 版本 | 变更描述 | 下载
 | --- | --- | --- | --- | --- |
-| 2016-08-26 | JasperXgwang | 1.0.0-RC01 | 撰写文档 | [download](https://github.com/MEIZUPUSH/JavaSdk/blob/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC01.zip/)
+| 2016-08-26 | JasperXgwang | 1.0.0-RC01 | 撰写文档 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC01.zip)
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)
