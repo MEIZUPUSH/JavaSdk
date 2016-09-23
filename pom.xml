@@ -6,7 +6,7 @@
 
     <groupId>com.meizu.push</groupId>
     <artifactId>JavaPushSdk</artifactId>
-    <version>1.0</version>
+    <version>1.0.0-RC01</version>
 
 
     <dependencies>
