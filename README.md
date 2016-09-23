@@ -50,7 +50,7 @@ UnVarnishedMessage|透传消息体
 参数名称|类型|必填|默认|描述
 ---|---|---|---|---
 appId|Long|是|null|注册应用appId
-Title|String|是|null|推送标题, 【字数限制1~32】
+title|String|是|null|推送标题, 【字数限制1~32】
 content|String|是|null|推送内容, 【字数限制1~100】
 noticeBarType|int|否|0|通知栏样式(0, "标准")【非必填，默认值为0】
 noticeExpandType|int|否|0|展开方式 (0, "标准"),(1, "文本")【非必填，默认值为0】
@@ -60,7 +60,7 @@ url|String|否|null|URI页面地址, 【clickType为打开URI页面时，必填,
 parameters|JSONObject|否|null|透传参数 【JSON格式，非必填】
 activity|String|否|null|应用页面地址, 【clickType为打开应用页面时，必填, 长度限制1000byte】
 isOffLine|Boolean|否|true|是否进离线消息, (false 否 true 是) 【非必填，默认值为true】
-validTime|int|否|24|有效时长 (1~72小时内的正整数), 【offLine值为true时，必填，值的范围1~72】
+validTime|int|否|24|有效时长 (1~72小时内的正整数), 【isOffLine值为true时，必填，值的范围1~72】
 pushTimeType|int|否|0|定时推送 (0, "即时"),(1, "定时"), 【只对全部用户推送生效】
 startTime|Date|否|null|任务定时开始时间,【非必填，pushTimeType为True必填】只对全部用户推送生效
 isFixSpeed|Boolean|否|false|是否定速推送, 【非必填，默认值为False】
@@ -68,17 +68,17 @@ fixSpeedRate|Long|否|0|定速速率,【isFixSpeed为true时，必填】
 isSuspend|Boolean|否|true|是否通知栏悬浮窗显示 (true显示，false不显示) 【非必填，默认True】
 isClearNoticeBar|Boolean|否|true|是否可清除通知栏 (true可以，false不可以) ，【非必填，默认true】
 vibrate|Boolean|否|true|震动 (false关闭  true 开启) , 【非必填，默认true】
-Lights|Boolean|否|true|闪光 (false关闭  true 开启) , 【非必填，默认true】
-Sound|Boolean|否|true|声音 (false关闭  true 开启) , 【非必填，默认true】
+lights|Boolean|否|true|闪光 (false关闭  true 开启) , 【非必填，默认true】
+sound|Boolean|否|true|声音 (false关闭  true 开启) , 【非必填，默认true】
 
 ### 透传消息(UnVarnishedMessage) <a name="UnVarnishedMessage_index"/>
 参数名称|类型|必填|默认|描述
 ---|---|---|---|---
 appId|Long|是|null|注册应用appId
-title|String|否|null|推送标题,任务推送建议填写，方便数据查询,【字数限制1~100】
+title|String|否|null|推送标题,任务推送建议填写，方便数据查询,【字数限制1~32】
 content|String|是|null|推送内容,【必填，字数限制2000byte以内】
 isOffLine|Boolean|否|true|是否进离线消息,【非必填，默认为true】
-validTime|int|否|24|有效时长 (1~72小时内的正整数),【offLine值为true时，必填，值的范围1--72】
+validTime|int|否|24|有效时长 (1~72小时内的正整数),【isOffLine值为true时，必填，值的范围1--72】
 pushTimeType|int|否|0|定时推送 (0, "即时"),(1, "定时"), 【只对全部用户推送生效】
 startTime|Date|否|null|任务定时开始时间, 【pushTimeType为1必填】只对全部用户推送生效
 isFixSpeed|Boolean|否|false|是否定速推送,【非必填，默认值为false】
@@ -479,7 +479,7 @@ Long  任务ID
 
 接口|说明
 ---|---
-`ResultPack<Boolean> cancelTaskPush(PushType pushType, long appId, long taskId)`|只针对全部用户推送待推送和推送中的任务取消
+`ResultPack<Boolean> cancelTaskPush(PushType pushType, long appId, long taskId)`|只针对全部用户推送且推送状态为待推送或者推送中的任务取消
 
 - 参数说明
 
