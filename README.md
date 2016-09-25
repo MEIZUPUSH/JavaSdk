@@ -34,7 +34,7 @@
 
 参数名称|类型|必填|默认|描述
 ---|---|---|---|---
-rowappSecret|String|是|null|注册应用appSecret
+appSecret|String|是|null|注册应用appSecret
 useSSL|Boolean|否|false| 是否使用https接口调用：true 使用https连接，false使用http连接
 
 ## 通知栏消息体(Message) <a name="Message_index"/>
