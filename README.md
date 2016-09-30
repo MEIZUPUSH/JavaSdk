@@ -76,7 +76,7 @@ sound|Boolean|否|true|声音 (false关闭  true 开启) , 【非必填，默认
 ---|---|---|---|---
 appId|Long|是|null|注册应用appId
 title|String|否|null|推送标题,任务推送建议填写，方便数据查询,【字数限制1~32】
-content|String|是|null|推送内容,【必填，字数限制2000byte以内】
+content|String|是|null|推送内容,【必填，字数限制3800byte以内】
 isOffLine|Boolean|否|true|是否进离线消息,【非必填，默认为true】
 validTime|int|否|24|有效时长 (1~72小时内的正整数),【isOffLine值为true时，必填，值的范围1--72】
 pushTimeType|int|否|0|定时推送 (0, "即时"),(1, "定时"), 【只对全部用户推送生效】
