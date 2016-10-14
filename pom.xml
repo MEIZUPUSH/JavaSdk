@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.meizu.push</groupId>
-    <artifactId>JavaPushSdk</artifactId>
-    <version>1.0.0-RC01</version>
+    <artifactId>push-server-sdk</artifactId>
+    <version>1.0.0-RC02</version>
 
 
     <dependencies>

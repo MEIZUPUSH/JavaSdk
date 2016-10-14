@@ -40,6 +40,11 @@ public class SystemConstants {
     public static final String PUSH_APPID_PUSH_TO_APP = "http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToApp";
 
     /**
+     * 标签推送
+     */
+    public static final String PUSH_APPID_PUSH_TO_TAG = "http://api-push.meizu.com/garcia/api/server/push/pushTask/pushToTag";
+
+    /**
      * 取消推送任务
      */
     public static final String PUSH_CANCEL_PUSH_TO_APP = "http://api-push.meizu.com/garcia/api/server/push/pushTask/cancel";

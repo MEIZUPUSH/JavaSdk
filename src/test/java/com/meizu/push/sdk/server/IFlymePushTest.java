@@ -3,6 +3,7 @@ package com.meizu.push.sdk.server;
 
 import com.alibaba.fastjson.JSON;
 import com.meizu.push.sdk.constant.PushType;
+import com.meizu.push.sdk.constant.ScopeType;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -27,9 +28,9 @@ public class IFlymePushTest {
     public static final Long appId = 100999l;
 
 
-
     /**
      * 通知栏消息推送（pushMessage）
+     *
      * @throws Exception
      */
     @Test
@@ -61,6 +62,7 @@ public class IFlymePushTest {
 
     /**
      * 透传消息推送（pushMessage）
+     *
      * @throws Exception
      */
     @Test
@@ -91,6 +93,7 @@ public class IFlymePushTest {
 
     /**
      * 获取通知栏推送taskId(getTaskId)
+     *
      * @throws Exception
      */
     @Test
@@ -103,7 +106,7 @@ public class IFlymePushTest {
                 .title("java Sdk推送标题").content("java Sdk 推送内容")
                 .noticeExpandType(1)
                 .noticeExpandContent("展开文本内容")
-                .clickType(2).url("http://www.baidu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
+                .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
                 .offLine(true).validTime(12)
                 .suspend(true).clearNoticeBar(true).vibrate(false).lights(false).sound(false)
                 .fixSpeed(true).fixSpeedRate(20)
@@ -115,6 +118,7 @@ public class IFlymePushTest {
 
     /**
      * 获取透传推送taskId(getTaskId)
+     *
      * @throws Exception
      */
     @Test
@@ -135,6 +139,7 @@ public class IFlymePushTest {
 
     /**
      * 任务消息推送（pushMessageByTaskId）
+     *
      * @throws IOException
      */
     @Test
@@ -160,6 +165,7 @@ public class IFlymePushTest {
 
     /**
      * 应用全部推送(pushToApp)
+     *
      * @throws IOException
      */
     @Test
@@ -172,7 +178,7 @@ public class IFlymePushTest {
                 .title("java Sdk 全部推送标题").content("java Sdk 全部推送内容")
                 .noticeExpandType(1)
                 .noticeExpandContent("展开文本内容")
-                .clickType(2).url("http://www.baidu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
+                .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
                 .offLine(true).validTime(12)
                 .suspend(true).clearNoticeBar(true).vibrate(false).lights(false).sound(false)
                 .fixSpeed(true).fixSpeedRate(30)
@@ -197,7 +203,51 @@ public class IFlymePushTest {
     }
 
     /**
+     * 标签推送(pushToTag)
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testPushToTag() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //推送标签
+        List<String> tagName = new ArrayList<String>();
+        tagName.add("news");
+        tagName.add("tech");
+
+        //通知栏标签推送
+        VarnishedMessage varnishedMessage = new VarnishedMessage.Builder().appId(appId)
+                .title("java Sdk 标签推送标题").content("java Sdk 标签推送内容")
+                .noticeExpandType(1)
+                .noticeExpandContent("展开文本内容")
+                .offLine(true).validTime(12)
+                .suspend(true).clearNoticeBar(true).vibrate(false).lights(false).sound(false)
+                .fixSpeed(true).fixSpeedRate(30)
+                .pushTimeType(1)
+                .startTime(new Date())
+                .build();
+        ResultPack<Long> result = push.pushToTag(PushType.STATUSBAR, varnishedMessage, tagName, ScopeType.INTERSECTION);
+        System.out.println(result);
+
+        //透传标签推送
+        UnVarnishedMessage unVarnishedMessage = new UnVarnishedMessage.Builder()
+                .appId(appId)
+                .title("Java SDK 标签推送标题")
+                .content("Java Sdk标签推送内容")
+                .isOffLine(true)
+                .validTime(10)
+                .pushTimeType(1)
+                .startTime(new Date())
+                .build();
+        result = push.pushToTag(PushType.DIRECT, unVarnishedMessage, tagName, ScopeType.UNION);
+        System.out.println(result);
+    }
+
+    /**
      * 取消推送任务(cancelTaskPush) 只针对全网推送生效
+     *
      * @throws IOException
      */
     @Test

@@ -5,6 +5,7 @@
 | 日期 | 作者 | 版本 | 变更描述 | 下载
 | --- | --- | --- | --- | --- |
 | 2016-08-26 | JasperXgwang | 1.0.0-RC01 | 撰写文档 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC01.zip)
+| 2016-10-14 | JasperXgwang | 1.0.0-RC02 | 增加标签推送接口、通知栏增加客户端自定义参数 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC02.zip)
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)
@@ -16,6 +17,7 @@
     * [接口响应码定义(ErrorCode)](#ErrorCode_index)
     * [推送响应码定义(PushResponseCode)](#PushResponseCode_index)    
     * [推送类型(PushType)](#PushType_index) 
+    * [标签推送集合类型（ScopeType）](#ScopeType_index) 
 * [二.接口说明](#api_def_index) 
     * [非任务推送](#UnTaskPush_index)      
          * [通知栏消息推送(pushMessage)](#VarnishedMessage_push_index)    
@@ -24,6 +26,7 @@
          * [获取推送taskId(getTaskId)](#getTaskId_index)    
          * [任务消息推送(pushMessageByTaskId）](#pushMessageByTaskId_index)    
          * [应用全部推送(pushToApp)](#pushToApp_index) 
+         * [应用标签推送(pushToTag)](#pushToTag_index)
          * [取消推送任务(cancelTaskPush)](#cancelTaskPush_index) 
 
     
@@ -131,6 +134,12 @@ RSP_INVALID_PUSHID|110003|pushId非法
 ---|---|--- 
 STATUSBAR|Enum|通知栏消息类型
 DIRECT|Enum|透传消息类型
+
+## 推送类型（ScopeType）<a name="ScopeType_index"/>
+枚举|类型|描述
+---|---|--- 
+UNION|Enum|并集
+INTERSECTION|Enum|交集
 
 # 接口说明 <a name="api_def_index"/>
 ## 非任务推送 <a name="UnTaskPush_index"/>
@@ -473,13 +482,83 @@ Long  任务ID
     }
 ```
 
+#### 应用标签推送(pushToTag) <a name="pushToTag_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<Long> pushToTag(PushType pushType, Message message, List<String> tagName, ScopeType scopeType)`|应用标签推送
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushType|PushType|是|null|消息类型
+message|Message|是|null|消息体
+tagName|List|是|null|推送标签
+scopeType|ScopeType|是|null|标签集合类型
+
+- 返回值
+
+```
+Long  任务ID
+```
+
+- 示例
+
+```java
+/**
+ * 标签推送(pushToTag)
+ *
+ * @throws IOException
+ */
+@Test
+public void testPushToTag() throws IOException {
+    //推送对象
+    IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+    //推送标签
+    List<String> tagName = new ArrayList<String>();
+    tagName.add("news");
+    tagName.add("tech");
+
+    //通知栏标签推送
+    VarnishedMessage varnishedMessage = new VarnishedMessage.Builder().appId(appId)
+            .title("java Sdk 标签推送标题").content("java Sdk 标签推送内容")
+            .noticeExpandType(1)
+            .noticeExpandContent("展开文本内容")
+            .offLine(true).validTime(12)
+            .suspend(true).clearNoticeBar(true).vibrate(false).lights(false).sound(false)
+            .fixSpeed(true).fixSpeedRate(30)
+            .pushTimeType(1)
+            .startTime(new Date())
+            .build();
+    ResultPack<Long> result = push.pushToTag(PushType.STATUSBAR, varnishedMessage, tagName, ScopeType.INTERSECTION);
+    System.out.println(result);
+
+    //透传标签推送
+    UnVarnishedMessage unVarnishedMessage = new UnVarnishedMessage.Builder()
+            .appId(appId)
+            .title("Java SDK 标签推送标题")
+            .content("Java Sdk标签推送内容")
+            .isOffLine(true)
+            .validTime(10)
+            .pushTimeType(1)
+            .startTime(new Date())
+            .build();
+    result = push.pushToTag(PushType.DIRECT, unVarnishedMessage, tagName, ScopeType.UNION);
+    System.out.println(result);
+}
+
+```
+
 
 #### 取消推送任务(cancelTaskPush) <a name="cancelTaskPush_index"/>
 - 接口说明
 
 接口|说明
 ---|---
-`ResultPack<Boolean> cancelTaskPush(PushType pushType, long appId, long taskId)`|只针对全部用户推送且推送状态为待推送或者推送中的任务取消
+`ResultPack<Boolean> cancelTaskPush(PushType pushType, long appId, long taskId)`|只针对全部用户推送以及标签推送且推送状态为待推送或者推送中的任务取消
 
 - 参数说明
 

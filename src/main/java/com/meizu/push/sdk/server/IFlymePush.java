@@ -4,6 +4,7 @@ package com.meizu.push.sdk.server;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.meizu.push.sdk.constant.PushType;
+import com.meizu.push.sdk.constant.ScopeType;
 import com.meizu.push.sdk.constant.SystemConstants;
 import com.meizu.push.sdk.exception.InvalidRequestException;
 import com.meizu.push.sdk.utils.CollectionUtils;
@@ -156,7 +157,7 @@ public class IFlymePush extends HttpClient {
 
             NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent());
             NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent());
-            ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity());
+            ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime());
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
             AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(), msgInfo.isClearNoticeBar(), notificationType);
@@ -269,7 +270,98 @@ public class IFlymePush extends HttpClient {
 
             NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent());
             NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent());
-            ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity());
+            ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
+            String startTime = "";
+            if (msgInfo.getStartTime() != null) {
+                startTime = DateUtils.date2String(msgInfo.getStartTime());
+            }
+            PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime(), msgInfo.getPushTimeType(), startTime);
+            NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
+            AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(), msgInfo.isClearNoticeBar(), notificationType);
+
+            VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo, noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo);
+            addParameter(body, "messageJson", JSON.toJSONString(messageJson));
+
+        }
+
+        HttpResult httpResult = this.post(_url, body.toString());
+        String code = httpResult.getCode();
+        String msg = httpResult.getMessage();
+        String value = httpResult.getValue();
+        if (SUCCESS_CODE.equals(code)) {
+            JSONObject objValue = JSON.parseObject(value);
+            if (objValue.containsKey("taskId")) {
+                Long taskId = objValue.getLong("taskId");
+                return ResultPack.succeed(code, msg, taskId);
+            } else {
+                return ResultPack.failed("error return value");
+            }
+        } else {
+            return ResultPack.failed(code, msg);
+        }
+    }
+
+    /**
+     * 标签推送
+     *
+     * @param pushType  推送类型
+     * @param message   推送消息
+     * @param tagName   推送标签
+     * @param scopeType 推送标签集合类型
+     * @return
+     * @throws IOException
+     */
+    public ResultPack<Long> pushToTag(PushType pushType, Message message, List<String> tagName, ScopeType scopeType) throws IOException {
+        String _url = SystemConstants.PUSH_APPID_PUSH_TO_TAG;
+        if (pushType == null) {
+            return ResultPack.failed("pushType is null");
+        }
+        if (scopeType == null) {
+            return ResultPack.failed("scopeType is null");
+        }
+        if (message == null) {
+            return ResultPack.failed("message is null");
+        }
+        if (CollectionUtils.isEmpty(tagName)) {
+            return ResultPack.failed("tagName is null");
+        }
+        Long appId = message.getAppId();
+        if (appId == null) {
+            return ResultPack.failed("appId is null");
+        }
+
+        StringBuilder body = newBody("pushType", String.valueOf(pushType.getDesc()));
+        addParameter(body, "appId", String.valueOf(appId));
+        addParameter(body, "tagNames", CollectionUtils.list2Str(tagName));
+        addParameter(body, "scope", String.valueOf(scopeType.getDesc()));
+
+
+        if (PushType.DIRECT == pushType) {
+            if (!(message instanceof UnVarnishedMessage)) {
+                return ResultPack.failed("message must be instanceof UnVarnishedMessage");
+            }
+
+            UnVarnishedMessage msgInfo = (UnVarnishedMessage) message;
+
+            String startTime = "";
+            if (msgInfo.getStartTime() != null) {
+                startTime = DateUtils.date2String(msgInfo.getStartTime());
+            }
+            PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime(), msgInfo.getPushTimeType(), startTime);
+            AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate());
+
+            UnVarnishedMessageJson messageJson = new UnVarnishedMessageJson(msgInfo.getTitle(), msgInfo.getContent(), pushTimeInfo, advanceInfo);
+
+            addParameter(body, "messageJson", JSON.toJSONString(messageJson));
+        } else if (PushType.STATUSBAR == pushType) {
+            if (!(message instanceof VarnishedMessage)) {
+                return ResultPack.failed("message must be instanceof VarnishedMessage");
+            }
+            VarnishedMessage msgInfo = (VarnishedMessage) message;
+
+            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent());
+            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent());
+            ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             String startTime = "";
             if (msgInfo.getStartTime() != null) {
                 startTime = DateUtils.date2String(msgInfo.getStartTime());
@@ -383,7 +475,7 @@ public class IFlymePush extends HttpClient {
 
             NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent());
             NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent());
-            ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity());
+            ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime());
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
             AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(), msgInfo.isClearNoticeBar(), notificationType);

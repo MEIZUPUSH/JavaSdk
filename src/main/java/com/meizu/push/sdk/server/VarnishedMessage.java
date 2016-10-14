@@ -49,11 +49,11 @@ public class VarnishedMessage extends Message {
 
     /* =============点击动作 begin=============  */
     /**
-     * 点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开H5地址")
+     * 点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开H5地址"),(3, "应用客户端自定义")
      */
     private int clickType;
     /**
-     * H5页面地址, 【clickType为打开H5地址时，必填 长度限制1000】
+     * H5页面地址, 【clickType为打开H5地址时，必填 长度限制1000字节】
      */
     private String url = "";
     /**
@@ -61,9 +61,14 @@ public class VarnishedMessage extends Message {
      */
     private JSONObject parameters;
     /**
-     * 应用页面地址 【clickType为打开应用页面时，必填 长度限制1000】
+     * 应用页面地址 【clickType为打开应用页面时，必填 长度限制1000字节】
      */
     private String activity = "";
+
+    /**
+     * 应用客户端自定义内容 【clickType为应用客户端自定义时，必填 长度限制1000字节】
+     */
+    private String customAttribute = "";
 
     /* =============点击动作 end=============  */
 
@@ -133,6 +138,7 @@ public class VarnishedMessage extends Message {
         this.url = builder.url;
         this.parameters = builder.parameters;
         this.activity = builder.activity;
+        this.customAttribute = builder.customAttribute;
         this.isOffLine = builder.isOffLine;
         this.validTime = builder.validTime;
         this.pushTimeType = builder.pushTimeType;
@@ -230,6 +236,9 @@ public class VarnishedMessage extends Message {
         return sound;
     }
 
+    public String getCustomAttribute() {
+        return customAttribute;
+    }
 
     @Override
     public String toString() {
@@ -243,6 +252,7 @@ public class VarnishedMessage extends Message {
                 ", url='" + url + '\'' +
                 ", parameters=" + parameters +
                 ", activity='" + activity + '\'' +
+                ", customAttribute='" + customAttribute + '\'' +
                 ", isOffLine=" + isOffLine +
                 ", validTime=" + validTime +
                 ", pushTimeType=" + pushTimeType +
@@ -293,7 +303,7 @@ public class VarnishedMessage extends Message {
 
     /* =============点击动作 begin=============  */
         /**
-         * 点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开H5地址")
+         * 点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开H5地址"),(3, "应用客户端自定义")
          */
         private int clickType;
         /**
@@ -308,6 +318,11 @@ public class VarnishedMessage extends Message {
          * 应用页面地址 【clickType为打开应用页面时，必填 长度限制1000】
          */
         private String activity = "";
+        /**
+         * 应用客户端自定义内容 【clickType为应用客户端自定义时，必填 长度限制1000字节】
+         */
+        private String customAttribute = "";
+
     /* =============点击动作 end=============  */
 
 
@@ -415,6 +430,11 @@ public class VarnishedMessage extends Message {
 
         public VarnishedMessage.Builder activity(String activity) {
             this.activity = activity;
+            return this;
+        }
+
+        public VarnishedMessage.Builder customAttribute(String customAttribute) {
+            this.customAttribute = customAttribute;
             return this;
         }
 
