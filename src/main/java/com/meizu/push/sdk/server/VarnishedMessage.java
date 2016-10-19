@@ -110,6 +110,20 @@ public class VarnishedMessage extends Message {
      * 是否可清除通知栏 true 可以 false 不可以 【非必填，默认true】
      */
     private boolean isClearNoticeBar = Boolean.TRUE;
+
+    /**
+     * 是否定时展示 (fixDisplayTime 定时展示时间) 【非必填,默认false】
+     */
+    private boolean isFixDisplay = Boolean.FALSE;
+    /**
+     * 定时展示开始时间 【fixDisplay为true时，必填】
+     */
+    private Date fixStartDisplayDate;
+    /**
+     * 定时展示结束时间 【fixDisplay为true时，必填，并且开始时间要晚于结束时间】
+     */
+    private Date fixEndDisplayDate;
+
     /**
      * 通知方式 震动 false关闭 true 开启 , 【非必填，默认true】
      */
@@ -150,6 +164,9 @@ public class VarnishedMessage extends Message {
         this.vibrate = builder.vibrate;
         this.lights = builder.lights;
         this.sound = builder.sound;
+        this.isFixDisplay = builder.isFixDisplay;
+        this.fixStartDisplayDate = builder.fixStartDisplayDate;
+        this.fixEndDisplayDate = builder.fixEndDisplayDate;
     }
 
     public static long getSerialVersionUID() {
@@ -240,6 +257,18 @@ public class VarnishedMessage extends Message {
         return customAttribute;
     }
 
+    public boolean isFixDisplay() {
+        return isFixDisplay;
+    }
+
+    public Date getFixStartDisplayDate() {
+        return fixStartDisplayDate;
+    }
+
+    public Date getFixEndDisplayDate() {
+        return fixEndDisplayDate;
+    }
+
     @Override
     public String toString() {
         return "VarnishedMessage{" +
@@ -261,6 +290,9 @@ public class VarnishedMessage extends Message {
                 ", fixSpeedRate=" + fixSpeedRate +
                 ", isSuspend=" + isSuspend +
                 ", isClearNoticeBar=" + isClearNoticeBar +
+                ", isFixDisplay=" + isFixDisplay +
+                ", fixStartDisplayDate=" + fixStartDisplayDate +
+                ", fixEndDisplayDate=" + fixEndDisplayDate +
                 ", vibrate=" + vibrate +
                 ", lights=" + lights +
                 ", sound=" + sound +
@@ -363,6 +395,18 @@ public class VarnishedMessage extends Message {
          * 是否可清除通知栏 true 可以 false 不可以 【非必填，默认true】
          */
         private boolean isClearNoticeBar = Boolean.TRUE;
+        /**
+         * 是否定时展示 (fixDisplayTime 定时展示时间) 【非必填,默认false】
+         */
+        private boolean isFixDisplay = Boolean.FALSE;
+        /**
+         * 定时展示开始时间 【fixDisplay为true时，必填】
+         */
+        private Date fixStartDisplayDate;
+        /**
+         * 定时展示结束时间 【fixDisplay为true时，必填，并且开始时间要晚于结束时间】
+         */
+        private Date fixEndDisplayDate;
         /**
          * 通知方式 震动 false关闭 true 开启 , 【非必填，默认true】
          */
@@ -491,6 +535,17 @@ public class VarnishedMessage extends Message {
 
         public VarnishedMessage.Builder startTime(Date startTime) {
             this.startTime = startTime;
+            return this;
+        }
+
+        public VarnishedMessage.Builder isFixDisplay(boolean isFixDisplay) {
+            this.isFixDisplay = isFixDisplay;
+            return this;
+        }
+
+        public VarnishedMessage.Builder fixDisplayTime(Date fixStartDisplayDate, Date fixEndDisplayDate) {
+            this.fixStartDisplayDate = fixStartDisplayDate;
+            this.fixEndDisplayDate = fixEndDisplayDate;
             return this;
         }
 

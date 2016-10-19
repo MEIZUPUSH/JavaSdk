@@ -7,10 +7,14 @@ import com.meizu.push.sdk.constant.ScopeType;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static com.meizu.push.sdk.utils.DateUtils.FORMAT_STRING;
 
 /**
  * Created by wangxinguo on 2016-8-21.
@@ -21,7 +25,7 @@ public class IFlymePushTest {
     /**
      * 平台注册应用secretKey
      */
-    public static final String APP_SECRET_KEY = "secretKey";
+    public static final String APP_SECRET_KEY = "appSecret";
     /**
      * 平台注册应用ID
      */
@@ -43,8 +47,9 @@ public class IFlymePushTest {
                 .title("Java SDK 推送标题").content("Java SDK 推送内容")
                 .noticeExpandType(1)
                 .noticeExpandContent("展开文本内容")
-                .clickType(2).url("http://www.baidu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
+                .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
                 .offLine(true).validTime(12)
+                .isFixDisplay(true).fixDisplayTime(str2Date("2017-10-01 12:00:00"), str2Date("2017-10-01 12:30:00"))
                 .suspend(true).clearNoticeBar(true).vibrate(true).lights(true).sound(true)
                 .build();
 
@@ -108,6 +113,7 @@ public class IFlymePushTest {
                 .noticeExpandContent("展开文本内容")
                 .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
                 .offLine(true).validTime(12)
+                .isFixDisplay(true).fixDisplayTime(str2Date("2017-10-01 12:00:00"), str2Date("2017-10-01 12:30:00"))
                 .suspend(true).clearNoticeBar(true).vibrate(false).lights(false).sound(false)
                 .fixSpeed(true).fixSpeedRate(20)
                 .build();
@@ -257,6 +263,15 @@ public class IFlymePushTest {
         long taskId = 123l;
         ResultPack resultPack = push.cancelTaskPush(PushType.STATUSBAR, appId, taskId);
         System.out.println(resultPack);
+    }
+
+    private static Date str2Date(String dateString) {
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(FORMAT_STRING);
+            return simpleDateFormat.parse(dateString);
+        } catch (ParseException e) {
+            throw new RuntimeException("时间转化格式错误" + "[dateString=" + dateString + "]" + "[FORMAT_STRING=" + FORMAT_STRING + "]");
+        }
     }
 
 }

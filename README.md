@@ -6,6 +6,7 @@
 | --- | --- | --- | --- | --- |
 | 2016-08-26 | JasperXgwang | 1.0.0-RC01 | 撰写文档 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC01.zip)
 | 2016-10-14 | JasperXgwang | 1.0.0-RC02 | 增加标签推送接口、通知栏增加客户端自定义参数 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC02.zip)
+| 2016-10-15 | JasperXgwang | 1.0.0-RC03 | 通知栏推送增加定时展示功能 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC03.zip)
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)
@@ -70,6 +71,8 @@ isFixSpeed|Boolean|否|false|是否定速推送, 【非必填，默认值为Fals
 fixSpeedRate|Long|否|0|定速速率,【isFixSpeed为true时，必填】
 isSuspend|Boolean|否|true|是否通知栏悬浮窗显示 (true显示，false不显示) 【非必填，默认True】
 isClearNoticeBar|Boolean|否|true|是否可清除通知栏 (true可以，false不可以) ，【非必填，默认true】
+isFixDisplay|Boolean|否|false|是否定时展示 【非必填,默认false】
+fixDisplayTime|(Date,Date)|否|(null,null)|定时展示开始,结束时间 【fixDisplay为true时，必填，并且开始时间要晚于结束时间】
 vibrate|Boolean|否|true|震动 (false关闭  true 开启) , 【非必填，默认true】
 lights|Boolean|否|true|闪光 (false关闭  true 开启) , 【非必填，默认true】
 sound|Boolean|否|true|声音 (false关闭  true 开启) , 【非必填，默认true】

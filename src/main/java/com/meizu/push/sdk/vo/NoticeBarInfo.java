@@ -27,10 +27,6 @@ public class NoticeBarInfo implements Serializable{
 	 * 推送内容, 【必填，字数限制1~100】
 	 */
 	private String content = "";
-//	/**
-//	 * 通知栏图片URL 【通知栏类型为0时，非必填；通知栏类型为1时，必填，图片格式为1008*192,200KB以内】
-//	 */
-//	private String noticeBarImgUrl = "";
 
     public NoticeBarInfo() {
     }

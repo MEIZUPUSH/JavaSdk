@@ -25,10 +25,6 @@ public class NoticeExpandInfo implements Serializable{
 	 * 展开内容, 【noticeExpandType为文本时，必填】
 	 */
 	private String noticeExpandContent = "";
-//	/**
-//	 * 展开大图URL 【noticeExpandType为大图时，必填】
-//	 */
-//	private String noticeExpandImgUrl = "";
 
     public NoticeExpandInfo() {
     }

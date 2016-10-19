@@ -6,7 +6,7 @@
 
     <groupId>com.meizu.push</groupId>
     <artifactId>push-server-sdk</artifactId>
-    <version>1.0.0-RC02</version>
+    <version>1.0.0-RC03</version>
 
 
     <dependencies>

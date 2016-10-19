@@ -160,7 +160,8 @@ public class IFlymePush extends HttpClient {
             ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime());
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
-            AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(), msgInfo.isClearNoticeBar(), notificationType);
+            AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(),
+                    msgInfo.isClearNoticeBar(), notificationType, msgInfo.isFixDisplay(), msgInfo.getFixStartDisplayDate(), msgInfo.getFixEndDisplayDate());
 
             VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo, noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo);
             addParameter(body, "messageJson", JSON.toJSONString(messageJson));
@@ -277,7 +278,8 @@ public class IFlymePush extends HttpClient {
             }
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime(), msgInfo.getPushTimeType(), startTime);
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
-            AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(), msgInfo.isClearNoticeBar(), notificationType);
+            AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(),
+                    msgInfo.isClearNoticeBar(), notificationType, msgInfo.isFixDisplay(), msgInfo.getFixStartDisplayDate(), msgInfo.getFixEndDisplayDate());
 
             VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo, noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo);
             addParameter(body, "messageJson", JSON.toJSONString(messageJson));
@@ -368,7 +370,8 @@ public class IFlymePush extends HttpClient {
             }
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime(), msgInfo.getPushTimeType(), startTime);
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
-            AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(), msgInfo.isClearNoticeBar(), notificationType);
+            AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(),
+                    msgInfo.isClearNoticeBar(), notificationType, msgInfo.isFixDisplay(), msgInfo.getFixStartDisplayDate(), msgInfo.getFixEndDisplayDate());
 
             VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo, noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo);
             addParameter(body, "messageJson", JSON.toJSONString(messageJson));
@@ -478,7 +481,8 @@ public class IFlymePush extends HttpClient {
             ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime());
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
-            AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(), msgInfo.isClearNoticeBar(), notificationType);
+            AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(),
+                    msgInfo.isClearNoticeBar(), notificationType, msgInfo.isFixDisplay(), msgInfo.getFixStartDisplayDate(), msgInfo.getFixEndDisplayDate());
 
             VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo, noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo);
             addParameter(body, "messageJson", JSON.toJSONString(messageJson));
