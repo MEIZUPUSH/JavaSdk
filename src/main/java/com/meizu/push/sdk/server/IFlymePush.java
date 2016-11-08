@@ -77,7 +77,40 @@ public class IFlymePush extends HttpClient {
             return ResultPack.failed("message is null");
         }
         String pushIdStr = list2Str(pushIds);
-        return this.pushMessage(PushType.STATUSBAR, message, pushIdStr, retries);
+        return this.pushMessage(UserType.PUSHID, PushType.STATUSBAR, message, pushIdStr, retries);
+    }
+
+    /**
+     * 别名通知栏推送 不重试
+     *
+     * @param message
+     * @param alias
+     * @return
+     * @throws IOException
+     */
+    public ResultPack<Map<Integer, List<String>>> pushMessageByAlias(VarnishedMessage message, List<String> alias) throws IOException {
+        return this.pushMessageByAlias(message, alias, 0);
+    }
+
+
+    /**
+     * 别名通知栏推送 可重试
+     *
+     * @param message 推送通知栏消息
+     * @param alias
+     * @param retries 重试次数
+     * @return 推送结果
+     * @throws IOException
+     */
+    public ResultPack<Map<Integer, List<String>>> pushMessageByAlias(VarnishedMessage message, List<String> alias, int retries) throws IOException {
+        if (CollectionUtils.isEmpty(alias)) {
+            return ResultPack.failed("alias is empty");
+        }
+        if (message == null) {
+            return ResultPack.failed("message is null");
+        }
+        String aliasStr = list2Str(alias);
+        return this.pushMessage(UserType.ALIAS, PushType.STATUSBAR, message, aliasStr, retries);
     }
 
     /**
@@ -109,7 +142,39 @@ public class IFlymePush extends HttpClient {
             return ResultPack.failed("message is null");
         }
         String pushIdStr = list2Str(pushIds);
-        return this.pushMessage(PushType.DIRECT, message, pushIdStr, retries);
+        return this.pushMessage(UserType.PUSHID, PushType.DIRECT, message, pushIdStr, retries);
+    }
+
+    /**
+     * 别名透传消息推送
+     *
+     * @param message 推送消息
+     * @param alias   别名集合
+     * @return
+     * @throws IOException
+     */
+    public ResultPack<Map<Integer, List<String>>> pushMessageByAlias(UnVarnishedMessage message, List<String> alias) throws IOException {
+        return this.pushMessageByALias(message, alias, 0);
+    }
+
+    /**
+     * 别名透传消息推送
+     *
+     * @param message 推送消息
+     * @param alias   别名集合
+     * @param retries 失败重试次数
+     * @return
+     * @throws IOException
+     */
+    public ResultPack<Map<Integer, List<String>>> pushMessageByALias(UnVarnishedMessage message, List<String> alias, int retries) throws IOException {
+        if (CollectionUtils.isEmpty(alias)) {
+            return ResultPack.failed("alias is empty");
+        }
+        if (message == null) {
+            return ResultPack.failed("message is null");
+        }
+        String aliasStr = list2Str(alias);
+        return this.pushMessage(UserType.ALIAS, PushType.DIRECT, message, aliasStr, retries);
     }
 
 
@@ -217,7 +282,44 @@ public class IFlymePush extends HttpClient {
             return ResultPack.failed("pushIds is empty");
         }
         String pushIdStr = list2Str(pushIds);
-        return this.pushMessageByTaskId(pushType, appId, taskId, pushIdStr, retries);
+        return this.pushMessageByTaskId(UserType.PUSHID, pushType, appId, taskId, pushIdStr, retries);
+    }
+
+
+    /**
+     * 通过任务ID推送别名消息 不重试
+     *
+     * @param pushType 消息类型
+     * @param appId    应用Id
+     * @param taskId   任务Id
+     * @param alias    别名集合
+     * @return
+     * @throws IOException
+     */
+    public ResultPack<Map<Integer, List<String>>> pushAliasMessageByTaskId(PushType pushType, long appId, long taskId, List<String> alias) throws IOException {
+        return this.pushAliasMessageByTaskId(pushType, appId, taskId, alias, 0);
+    }
+
+    /**
+     * 通过任务ID推送别名消息 可重试
+     *
+     * @param pushType 消息类型
+     * @param appId    应用Id
+     * @param taskId   任务Id
+     * @param alias    别名集合
+     * @param retries  失败重试次数
+     * @return
+     * @throws IOException
+     */
+    public ResultPack<Map<Integer, List<String>>> pushAliasMessageByTaskId(PushType pushType, long appId, long taskId, List<String> alias, int retries) throws IOException {
+        if (pushType == null) {
+            return ResultPack.failed("pushType is null");
+        }
+        if (CollectionUtils.isEmpty(alias)) {
+            return ResultPack.failed("alias is empty");
+        }
+        String aliasStr = list2Str(alias);
+        return this.pushMessageByTaskId(UserType.ALIAS, pushType, appId, taskId, aliasStr, retries);
     }
 
 
@@ -423,17 +525,58 @@ public class IFlymePush extends HttpClient {
         }
     }
 
-    private ResultPack<Map<Integer, List<String>>> pushMessage(PushType pushType, Message message, String pushIds, int retries) throws IOException {
+    /**
+     * 获取任务Id推送统计结果
+     *
+     * @param appId
+     * @param taskId
+     * @return
+     * @throws IOException
+     */
+    public ResultPack<TaskStatistics> getTaskStatistics(long appId, long taskId) throws IOException {
+
+        String _url = SystemConstants.GET_PUSH_STATISTICS_BY_TASKID;
+
+        StringBuilder body = newBody("appId", String.valueOf(appId));
+        addParameter(body, "taskId", String.valueOf(String.valueOf(taskId)));
+
+        HttpResult httpResult = this.post(_url, body.toString());
+        String code = httpResult.getCode();
+        String msg = httpResult.getMessage();
+        String value = httpResult.getValue();
+        TaskStatistics taskStatistics = new TaskStatistics();
+        if (SUCCESS_CODE.equals(code)) {
+            if (StringUtils.isNotBlank(value)) {
+                try {
+                    JSONObject jsonObject = JSONObject.parseObject(value);
+                    taskStatistics.setTargetNo(jsonObject.getLong("targetNo"));
+                    taskStatistics.setValidNo(jsonObject.getLong("validNo"));
+                    taskStatistics.setPushedNo(jsonObject.getLong("pushedNo"));
+                    taskStatistics.setAcceptNo(jsonObject.getLong("acceptNo"));
+                    taskStatistics.setDisplayNo(jsonObject.getLong("displayNo"));
+                    taskStatistics.setClickNo(jsonObject.getLong("clickNo"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return ResultPack.succeed(taskStatistics);
+        } else {
+            return ResultPack.failed(code, msg);
+        }
+    }
+
+
+    private ResultPack<Map<Integer, List<String>>> pushMessage(UserType userType, PushType pushType, Message message, String targets, int retries) throws IOException {
         int attempt = 0;
-        ResultPack<Map<Integer, List<String>>> result = null;
+        ResultPack<Map<Integer, List<String>>> result;
         int backoff = 1000;
         boolean tryAgain;
         do {
             ++attempt;
             if (logger.isLoggable(Level.FINE)) {
-                logger.fine(String.format("attempt [%s] to pushMessage [%s] to pushIds [%s]", attempt, message, pushIds));
+                logger.fine(String.format("attempt [%s] to pushMessage [%s] to %s [%s]", attempt, message, userType.getValue(), targets));
             }
-            result = this.pushMessageNoRetry(pushType, message, pushIds);
+            result = this.pushMessageNoRetry(userType, pushType, message, targets);
             tryAgain = result == null && attempt <= retries;
             backoff = getBackoffTime(backoff, tryAgain);
         } while (tryAgain);
@@ -455,9 +598,15 @@ public class IFlymePush extends HttpClient {
         return backoff;
     }
 
-    private ResultPack<Map<Integer, List<String>>> pushMessageNoRetry(PushType pushType, Message message, String pushIds) throws IOException {
+    private ResultPack<Map<Integer, List<String>>> pushMessageNoRetry(UserType userType, PushType pushType, Message message, String targets) throws IOException {
         String _url = null;
-        StringBuilder body = newBody("pushIds", pushIds);
+        StringBuilder body = null;
+        if (UserType.PUSHID == userType) {
+            body = newBody("pushIds", targets);
+        } else if (UserType.ALIAS == userType) {
+            body = newBody("alias", targets);
+        }
+
         Long appId = message.getAppId();
         if (appId != null && appId > 0) {
             addParameter(body, "appId", String.valueOf(appId));
@@ -472,7 +621,11 @@ public class IFlymePush extends HttpClient {
             UnVarnishedMessageJson messageJson = new UnVarnishedMessageJson(msgInfo.getTitle(), msgInfo.getContent(), pushTimeInfo);
             addParameter(body, "messageJson", JSON.toJSONString(messageJson));
 
-            _url = SystemConstants.PUSH_APPID_UNVARNISHED_PUSHIDS;
+            if (UserType.PUSHID == userType) {
+                _url = SystemConstants.PUSH_APPID_UNVARNISHED_PUSHIDS;
+            } else if (UserType.ALIAS == userType) {
+                _url = SystemConstants.PUSH_APPID_UNVARNISHED_ALIAS;
+            }
         } else if (PushType.STATUSBAR == pushType) {
             VarnishedMessage msgInfo = (VarnishedMessage) message;
 
@@ -487,7 +640,11 @@ public class IFlymePush extends HttpClient {
             VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo, noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo);
             addParameter(body, "messageJson", JSON.toJSONString(messageJson));
 
-            _url = SystemConstants.PUSH_APPID_VARNISHED_PUSHIDS;
+            if (UserType.PUSHID == userType) {
+                _url = SystemConstants.PUSH_APPID_VARNISHED_PUSHIDS;
+            } else if (UserType.ALIAS == userType) {
+                _url = SystemConstants.PUSH_APPID_VARNISHED_ALIAS;
+            }
         }
 
         HttpResult httpResult = this.post(_url, body.toString());
@@ -583,17 +740,17 @@ public class IFlymePush extends HttpClient {
         }
     }
 
-    private ResultPack<Map<Integer, List<String>>> pushMessageByTaskId(PushType pushType, long appId, long taskId, String pushIds, int retries) throws IOException {
+    private ResultPack<Map<Integer, List<String>>> pushMessageByTaskId(UserType userType, PushType pushType, long appId, long taskId, String targets, int retries) throws IOException {
         int attempt = 0;
-        ResultPack<Map<Integer, List<String>>> result = null;
+        ResultPack<Map<Integer, List<String>>> result;
         int backoff = 1000;
         boolean tryAgain;
         do {
             ++attempt;
             if (logger.isLoggable(Level.FINE)) {
-                logger.fine(String.format("attempt [%s] to taskId [%s] to pushIds [%s]", attempt, taskId, pushIds));
+                logger.fine(String.format("attempt [%s] to taskId [%s] to %s [%s]", attempt, taskId, userType, targets));
             }
-            result = this.pushMessageByTaskIdNoRetry(pushType, appId, taskId, pushIds);
+            result = this.pushMessageByTaskIdNoRetry(userType, pushType, appId, taskId, targets);
             tryAgain = result == null && attempt <= retries;
             backoff = getBackoffTime(backoff, tryAgain);
         } while (tryAgain);
@@ -604,16 +761,30 @@ public class IFlymePush extends HttpClient {
         }
     }
 
-    private ResultPack<Map<Integer, List<String>>> pushMessageByTaskIdNoRetry(PushType pushType, long appId, long taskId, String pushIds) throws IOException {
+    private ResultPack<Map<Integer, List<String>>> pushMessageByTaskIdNoRetry(UserType userType, PushType pushType, long appId, long taskId, String targets) throws IOException {
         String _url = null;
         StringBuilder body = newBody("appId", String.valueOf(appId));
         addParameter(body, "taskId", String.valueOf(taskId));
-        addParameter(body, "pushIds", pushIds);
+
+        if (UserType.PUSHID == userType) {
+            addParameter(body, "pushIds", targets);
+        } else if (UserType.ALIAS == userType) {
+            addParameter(body, "alias", targets);
+        }
+
 
         if (PushType.DIRECT == pushType) {
-            _url = SystemConstants.PUSH_APPID_UNVARNISHED_TASKID_PUSHIDS;
+            if (UserType.PUSHID == userType) {
+                _url = SystemConstants.PUSH_APPID_UNVARNISHED_TASKID_PUSHIDS;
+            } else if (UserType.ALIAS == userType) {
+                _url = SystemConstants.PUSH_APPID_UNVARNISHED_TASKID_ALIAS;
+            }
         } else if (PushType.STATUSBAR == pushType) {
-            _url = SystemConstants.PUSH_APPID_VARNISHED_TASKID_PUSHIDS;
+            if (UserType.PUSHID == userType) {
+                _url = SystemConstants.PUSH_APPID_VARNISHED_TASKID_PUSHIDS;
+            } else if (UserType.ALIAS == userType) {
+                _url = SystemConstants.PUSH_APPID_VARNISHED_TASKID_ALIAS;
+            }
         }
         HttpResult httpResult = this.post(_url, body.toString());
         if (httpResult == null) {
@@ -646,5 +817,33 @@ public class IFlymePush extends HttpClient {
             sb.append(",").append(pushIds.get(i));
         }
         return sb.toString();
+    }
+
+    enum UserType {
+
+        PUSHID(0, "pushId"), ALIAS(1, "alias");
+        private Integer key;
+        private String value;
+
+        UserType(Integer key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
     }
 }

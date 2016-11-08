@@ -19,6 +19,7 @@ public class PushResponseCode {
     public static PushResponseCode RSP_REPEATED = valueOf(520, "消息折叠,短时间内同一设备同一消息收到多次(rsp_repeated)");
     public static PushResponseCode RSP_UNSUBSCRIBE_PUSHID = valueOf(110002, "pushId未订阅(un subscribe pushId)");
     public static PushResponseCode RSP_INVALID_PUSHID = valueOf(110003, "pushId非法(invalid pushId)");
+    public static PushResponseCode RSP_UNSUBSCRIBE_ALIAS = valueOf(110005, "pushId未订阅(un subscribe alias)");
 
     private static HashMap<Integer, PushResponseCode> createIntegerPushResponseCodeMapping() {
         HashMap result = new HashMap();

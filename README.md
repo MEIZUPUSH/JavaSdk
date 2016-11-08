@@ -7,6 +7,7 @@
 | 2016-08-26 | JasperXgwang | 1.0.0-RC01 | 撰写文档 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC01.zip)
 | 2016-10-14 | JasperXgwang | 1.0.0-RC02 | 增加标签推送接口、通知栏增加客户端自定义参数 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC02.zip)
 | 2016-10-15 | JasperXgwang | 1.0.0-RC03 | 通知栏推送增加定时展示功能 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC03.zip)
+| 2016-11-08 | JasperXgwang | 1.0.0-RC04 | 增加别名推送&推送统计接口 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC04.zip)
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)
@@ -19,17 +20,22 @@
     * [推送响应码定义(PushResponseCode)](#PushResponseCode_index)    
     * [推送类型(PushType)](#PushType_index) 
     * [标签推送集合类型（ScopeType）](#ScopeType_index) 
+    * [任务推送统计（TaskStatistics）](#TaskStatistics_index) 
 * [二.接口说明](#api_def_index) 
     * [非任务推送](#UnTaskPush_index)      
-         * [通知栏消息推送(pushMessage)](#VarnishedMessage_push_index)    
-         * [透传消息推送(pushMessage)](#UnVarnishedMessage_push_index)
+         * [pushId通知栏消息推送(pushMessage)](#VarnishedMessage_push_index)    
+         * [pushId透传消息推送(pushMessage)](#UnVarnishedMessage_push_index)
+         * [别名通知栏消息推送(pushMessageByAlias)](#VarnishedMessage_alias_push_index)    
+         * [别名透传消息推送(pushMessageByAlias)](#UnVarnishedMessage_alias_push_index)
     * [任务推送](#taskPush_index)      
          * [获取推送taskId(getTaskId)](#getTaskId_index)    
-         * [任务消息推送(pushMessageByTaskId）](#pushMessageByTaskId_index)    
+         * [pushId消息推送(pushMessageByTaskId）](#pushMessageByTaskId_index)  
+         * [别名消息推送(pushAliasMessageByTaskId）](#pushAliasMessageByTaskId_index)  
          * [应用全部推送(pushToApp)](#pushToApp_index) 
          * [应用标签推送(pushToTag)](#pushToTag_index)
          * [取消推送任务(cancelTaskPush)](#cancelTaskPush_index) 
-
+    * [推送统计](#statistics_index) 
+        * [获取任务推送统计(getTaskStatistics)](#getTaskStatistics_index)    
     
 
 # 类型定义 <a name="type_def_index"/>
@@ -144,6 +150,17 @@ DIRECT|Enum|透传消息类型
 UNION|Enum|并集
 INTERSECTION|Enum|交集
 
+## 任务推送统计（TaskStatistics）<a name="TaskStatistics_index"/>
+名称|类型|描述
+---|---|--- 
+targetNo|Long|目标数
+validNo|Long|有效数
+pushedNo|Long|推送数
+acceptNo|Long|接受数
+displayNo|Long|展示数
+clickNo|Long|点击数
+
+
 # 接口说明 <a name="api_def_index"/>
 ## 非任务推送 <a name="UnTaskPush_index"/>
 ### 描述
@@ -156,7 +173,7 @@ INTERSECTION|Enum|交集
 > - 场景1：查找手机业务需要远程定位位置，可发送消息指令到对应的设备
 > - 场景2：社区用户回帖消息提醒，用户对发表的帖子有最新回复时，消息提醒发帖者
 
-#### 通知栏消息推送（pushMessage） <a name="VarnishedMessage_push_index"/>
+#### pushId通知栏消息推送（pushMessage） <a name="VarnishedMessage_push_index"/>
 - 接口说明
 
 接口|说明
@@ -220,7 +237,7 @@ value：响应码对应的目标用户
 ```
 
 
-#### 透传消息推送（pushMessage） <a name="UnVarnishedMessage_push_index"/>
+#### pushId透传消息推送（pushMessage） <a name="UnVarnishedMessage_push_index"/>
 - 接口说明
 
 接口|说明
@@ -281,6 +298,134 @@ value：响应码对应的目标用户
     }
 ```
 
+
+#### 别名通知栏消息推送（pushMessageByAlias） <a name="VarnishedMessage_alias_push_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<Map<Integer, List<String>>> pushMessageByAlias(VarnishedMessage message, List<String> alias)`|推送通知栏消息
+`ResultPack<Map<Integer, List<String>>> pushMessageByAlias(VarnishedMessage message, List<String> alias, int retries)`|推送通知栏消息
+
+- 参数说明
+
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+message|VarnishedMessage|是|null|推送消息
+alias|List<String>|是|null|推送目标
+retries|int|否|0|超时or异常重试次数
+
+- 返回值
+
+```
+Map<Integer, List<String>>
+
+key：推送响应码
+value：响应码对应的目标用户 
+注：只返回不合法、超速以及推送失败的目标用户
+```
+
+- 示例
+
+
+```java
+/**
+ * 别名通知栏消息推送（pushMessage）
+ *
+ * @throws Exception
+ */
+@Test
+public void testVarnishedMessagePushByAlias() throws Exception {
+    //推送对象
+    IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+    //组装消息
+    VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+            .title("Java SDK 推送标题").content("Java SDK 推送内容")
+            .noticeExpandType(1)
+            .noticeExpandContent("展开文本内容")
+            .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
+            .offLine(true).validTime(12)
+            .isFixDisplay(true).fixDisplayTime(str2Date("2017-10-01 12:00:00"), str2Date("2017-10-01 12:30:00"))
+            .suspend(true).clearNoticeBar(true).vibrate(true).lights(true).sound(true)
+            .build();
+
+    //目标用户
+    List<String> alias = new ArrayList<String>();
+    alias.add("Android");
+    alias.add("alias2");
+    try {
+        ResultPack<Map<Integer, List<String>>> result = push.pushMessageByAlias(message, alias);
+        System.out.println(result);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+```
+
+
+#### 别名透传消息推送（pushMessageByAlias） <a name="UnVarnishedMessage_alias_push_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<Map<Integer, List<String>>> pushMessageByAlias(UnVarnishedMessage message, List<String> alias)`|推送透传消息
+`ResultPack<Map<Integer, List<String>>> pushMessageByAlias(UnVarnishedMessage message, List<String> alias, int retries)`|推送透传消息
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+message|UnVarnishedMessage|是|null|推送消息
+alias|List<String>|是|null|推送目标
+retries|int|否|0|超时or异常重试次数
+
+- 返回值
+
+```
+Map<Integer, List<String>>
+
+key：推送响应码
+value：响应码对应的目标用户 
+注：只返回不合法、超速以及推送失败的目标用户
+```
+
+- 示例
+
+
+```java
+/**
+ * 别名透传推送
+ *
+ * @throws Exception
+ */
+@Test
+public void testUnVarnishedMessagePushByALias() throws Exception {
+    //推送对象
+    IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+    //组装透传消息
+    UnVarnishedMessage message = new UnVarnishedMessage.Builder()
+            .appId(appId)
+            .title("Java SDK 透传推送标题")
+            .content("Java Sdk透传推送内容")
+            .build();
+
+    //目标用户
+    List<String> alias = new ArrayList<String>();
+    alias.add("alias");
+    alias.add("alias2");
+
+    try {
+        ResultPack<Map<Integer, List<String>>> result = push.pushMessageByAlias(message, alias);
+        System.out.println(result);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+```
 
 ## 任务推送 <a name="taskPush_index"/>
 ### 描述
@@ -364,7 +509,7 @@ Long  任务ID
 ```
 
 
-#### 任务消息推送（pushMessageByTaskId）<a name="pushMessageByTaskId_index"/>
+#### pushId消息推送（pushMessageByTaskId）<a name="pushMessageByTaskId_index"/>
 - 接口说明
 
 接口|说明
@@ -420,6 +565,65 @@ Value：响应码对应的目标用户
         result = push.pushMessageByTaskId(PushType.DIRECT, appId, taskId, pushIds, 0);
         System.out.println(result);
     }
+```
+
+#### 别名消息推送（pushAliasMessageByTaskId）<a name="pushAliasMessageByTaskId_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`public ResultPack<Map<Integer, List<String>>> pushAliasMessageByTaskId(PushType pushType, long appId, long taskId, List<String> alias)`|任务消息推送
+`public ResultPack<Map<Integer, List<String>>> pushAliasMessageByTaskId(PushType pushType, long appId, long taskId, List<String> alias, int retries)`|任务消息推送
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushType|PushType|是|null|消息类型
+appId|Long|是|null|推送应用ID
+taskId|Long|是|null|推送任务ID
+alias|List<String>|是|null|推送目标别名
+retries|int|否|0|超时or异常重试次数
+
+- 返回值
+
+
+```
+Map<Integer, List<String>> 
+
+key：推送响应码
+Value：响应码对应的目标用户 
+注：只返回不合法、超速以及推送失败的目标用户，业务一般对超速的pushId对处理
+```
+
+- 示例
+
+
+```java
+  **
+ * 别名任务消息推送
+ *
+ * @throws IOException
+ */
+@Test
+public void testPushAliasPyTaskId() throws IOException {
+    //推送对象
+    IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+    //目标用户
+    List<String> alias = new ArrayList<String>();
+    alias.add("alias123");
+    alias.add("Android654");
+
+    //通知栏任务消息推送
+    Long taskId = 45361L;
+    ResultPack<Map<Integer, List<String>>> result = push.pushAliasMessageByTaskId(PushType.STATUSBAR, appId, taskId, alias);
+    System.out.println(result);
+
+    //透传消息任务推送
+    taskId = 45407L;
+    result = push.pushAliasMessageByTaskId(PushType.DIRECT, appId, taskId, alias);
+    System.out.println(result);
+}
 ```
 
 
@@ -594,4 +798,41 @@ Boolean  true:成功  false：失败
     }
 ```
 
+## 推送统计 <a name="statistics_index"/>
+### 获取任务推送统计(getTaskStatistics) <a name="getTaskStatistics_index"/>
+- 接口说明
 
+接口|说明
+---|---
+`public ResultPack<TaskStatistics> getTaskStatistics(long appId, long taskId)`|获取推送统计
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+appId|Long|是|null|应用ID
+taskId|Long|是|null|任务ID
+
+- 返回值
+
+```
+TaskStatistics
+```
+
+- 示例
+
+```java
+@Test
+public void getTaskStatistics() throws Exception {
+    AppInfo appInfo = AppInfo.build(appId, packageName, appSecret);
+
+    ResultPack<TaskStatistics> result = pushService.getTaskStatistics(appInfo, 45415L);
+
+    if (result.isSucceed()) {
+        logger.info("getTaskStatistics result:{}", result.value());
+    } else {
+        logger.error("getTaskStatistics error result:{}", result);
+    }
+}
+
+```

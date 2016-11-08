@@ -25,7 +25,7 @@ public class IFlymePushTest {
     /**
      * 平台注册应用secretKey
      */
-    public static final String APP_SECRET_KEY = "appSecret";
+    public static final String APP_SECRET_KEY = "secret";
     /**
      * 平台注册应用ID
      */
@@ -55,10 +55,43 @@ public class IFlymePushTest {
 
         //目标用户
         List<String> pushIds = new ArrayList<String>();
-        pushIds.add("pushId_1");
-        pushIds.add("pushId_2");
+        pushIds.add("868746022990120100999");
+        pushIds.add("869011020131345100999");
         try {
             ResultPack<Map<Integer, List<String>>> result = push.pushMessage(message, pushIds);
+            System.out.println(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 别名通知栏消息推送（pushMessage）
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testVarnishedMessagePushByAlias() throws Exception {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //组装消息
+        VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+                .title("Java SDK 推送标题").content("Java SDK 推送内容")
+                .noticeExpandType(1)
+                .noticeExpandContent("展开文本内容")
+                .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
+                .offLine(true).validTime(12)
+                .isFixDisplay(true).fixDisplayTime(str2Date("2017-10-01 12:00:00"), str2Date("2017-10-01 12:30:00"))
+                .suspend(true).clearNoticeBar(true).vibrate(true).lights(true).sound(true)
+                .build();
+
+        //目标用户
+        List<String> alias = new ArrayList<String>();
+        alias.add("Android");
+        alias.add("alias2");
+        try {
+            ResultPack<Map<Integer, List<String>>> result = push.pushMessageByAlias(message, alias);
             System.out.println(result);
         } catch (IOException e) {
             e.printStackTrace();
@@ -90,6 +123,35 @@ public class IFlymePushTest {
 
         try {
             ResultPack<Map<Integer, List<String>>> result = push.pushMessage(message, pushIds);
+            System.out.println(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 别名透传推送
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testUnVarnishedMessagePushByALias() throws Exception {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+        //组装透传消息
+        UnVarnishedMessage message = new UnVarnishedMessage.Builder()
+                .appId(appId)
+                .title("Java SDK 透传推送标题")
+                .content("Java Sdk透传推送内容")
+                .build();
+
+        //目标用户
+        List<String> alias = new ArrayList<String>();
+        alias.add("alias");
+        alias.add("alias2");
+
+        try {
+            ResultPack<Map<Integer, List<String>>> result = push.pushMessageByAlias(message, alias);
             System.out.println(result);
         } catch (IOException e) {
             e.printStackTrace();
@@ -166,6 +228,32 @@ public class IFlymePushTest {
         //透传消息任务推送
         taskId = 123l;
         result = push.pushMessageByTaskId(PushType.DIRECT, appId, taskId, pushIds, 0);
+        System.out.println(result);
+    }
+
+    /**
+     * 别名任务消息推送
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testPushAliasPyTaskId() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //目标用户
+        List<String> alias = new ArrayList<String>();
+        alias.add("alias123");
+        alias.add("Android654");
+
+        //通知栏任务消息推送
+        Long taskId = 45361L;
+        ResultPack<Map<Integer, List<String>>> result = push.pushAliasMessageByTaskId(PushType.STATUSBAR, appId, taskId, alias);
+        System.out.println(result);
+
+        //透传消息任务推送
+        taskId = 45407L;
+        result = push.pushAliasMessageByTaskId(PushType.DIRECT, appId, taskId, alias);
         System.out.println(result);
     }
 
@@ -262,6 +350,20 @@ public class IFlymePushTest {
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
         long taskId = 123l;
         ResultPack resultPack = push.cancelTaskPush(PushType.STATUSBAR, appId, taskId);
+        System.out.println(resultPack);
+    }
+
+    /**
+     * 获取任务统计结果
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testGetTaskStatistics() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+        long taskId = 44760L;
+        ResultPack<TaskStatistics> resultPack = push.getTaskStatistics(appId, taskId);
         System.out.println(resultPack);
     }
 
