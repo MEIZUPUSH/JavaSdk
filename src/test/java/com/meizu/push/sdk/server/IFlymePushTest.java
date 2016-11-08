@@ -49,7 +49,6 @@ public class IFlymePushTest {
                 .noticeExpandContent("展开文本内容")
                 .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
                 .offLine(true).validTime(12)
-                .isFixDisplay(true).fixDisplayTime(str2Date("2017-10-01 12:00:00"), str2Date("2017-10-01 12:30:00"))
                 .suspend(true).clearNoticeBar(true).vibrate(true).lights(true).sound(true)
                 .build();
 
@@ -82,7 +81,6 @@ public class IFlymePushTest {
                 .noticeExpandContent("展开文本内容")
                 .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
                 .offLine(true).validTime(12)
-                .isFixDisplay(true).fixDisplayTime(str2Date("2017-10-01 12:00:00"), str2Date("2017-10-01 12:30:00"))
                 .suspend(true).clearNoticeBar(true).vibrate(true).lights(true).sound(true)
                 .build();
 
@@ -175,7 +173,6 @@ public class IFlymePushTest {
                 .noticeExpandContent("展开文本内容")
                 .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
                 .offLine(true).validTime(12)
-                .isFixDisplay(true).fixDisplayTime(str2Date("2017-10-01 12:00:00"), str2Date("2017-10-01 12:30:00"))
                 .suspend(true).clearNoticeBar(true).vibrate(false).lights(false).sound(false)
                 .fixSpeed(true).fixSpeedRate(20)
                 .build();
