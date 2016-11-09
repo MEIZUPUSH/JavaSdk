@@ -823,17 +823,18 @@ TaskStatistics
 - 示例
 
 ```java
-@Test
-public void getTaskStatistics() throws Exception {
-    AppInfo appInfo = AppInfo.build(appId, packageName, appSecret);
-
-    ResultPack<TaskStatistics> result = pushService.getTaskStatistics(appInfo, 45415L);
-
-    if (result.isSucceed()) {
-        logger.info("getTaskStatistics result:{}", result.value());
-    } else {
-        logger.error("getTaskStatistics error result:{}", result);
+    /**
+     * 获取任务统计结果
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testGetTaskStatistics() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+        long taskId = 44760L;
+        ResultPack<TaskStatistics> resultPack = push.getTaskStatistics(appId, taskId);
+        System.out.println(resultPack);
     }
-}
 
 ```
