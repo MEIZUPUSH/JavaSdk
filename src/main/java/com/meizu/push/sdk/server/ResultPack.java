@@ -41,6 +41,10 @@ public final class ResultPack<T> implements Serializable, Cloneable {
         _errorCode = errorCode;
     }
 
+    public ErrorCode getErrorCode() {
+        return _errorCode;
+    }
+
     /**
      * Get pack _state _value
      *
@@ -111,7 +115,7 @@ public final class ResultPack<T> implements Serializable, Cloneable {
         return this;
     }
 
-    public ResultPack<T> errorCode() {
+    private ResultPack<T> _errorCode() {
         try {
             int code = Integer.parseInt(this._code);
             String comment = this.comment();
@@ -249,7 +253,7 @@ public final class ResultPack<T> implements Serializable, Cloneable {
      */
     public static <R> ResultPack<R> failed() {
         ResultPack<R> result = new ResultPack<R>();
-        return result.status(ResultPack.FAILED).code(ERROR_CODE).error(new Throwable()).errorCode();
+        return result.status(ResultPack.FAILED).code(ERROR_CODE).error(new Throwable())._errorCode();
     }
 
     /**
@@ -260,7 +264,7 @@ public final class ResultPack<T> implements Serializable, Cloneable {
      */
     public static <R> ResultPack<R> failed(String comment) {
         ResultPack<R> result = new ResultPack<R>();
-        return result.status(ResultPack.FAILED).code(ERROR_CODE).error(new Throwable(comment)).errorCode();
+        return result.status(ResultPack.FAILED).code(ERROR_CODE).error(new Throwable(comment))._errorCode();
     }
 
     /**
@@ -273,7 +277,7 @@ public final class ResultPack<T> implements Serializable, Cloneable {
      */
     public static <R> ResultPack<R> failed(String code, String comment) {
         ResultPack<R> result = new ResultPack<R>();
-        return result.status(ResultPack.FAILED).code(code).error(new Throwable(comment)).errorCode();
+        return result.status(ResultPack.FAILED).code(code).error(new Throwable(comment))._errorCode();
     }
 
     /**
@@ -285,7 +289,7 @@ public final class ResultPack<T> implements Serializable, Cloneable {
      */
     public static <R> ResultPack<R> failed(String comment, Throwable e) {
         ResultPack<R> result = new ResultPack<R>();
-        return result.status(ResultPack.FAILED).code(ERROR_CODE).comment(comment).error(e).errorCode();
+        return result.status(ResultPack.FAILED).code(ERROR_CODE).comment(comment).error(e)._errorCode();
     }
 
     /**
@@ -298,7 +302,7 @@ public final class ResultPack<T> implements Serializable, Cloneable {
      */
     public static <R> ResultPack<R> failed(String comment, R value) {
         ResultPack<R> result = new ResultPack<R>();
-        return result.status(ResultPack.FAILED).code(ERROR_CODE).comment(comment).value(value).errorCode();
+        return result.status(ResultPack.FAILED).code(ERROR_CODE).comment(comment).value(value)._errorCode();
     }
 
     /**
@@ -309,7 +313,7 @@ public final class ResultPack<T> implements Serializable, Cloneable {
      */
     public static <R> ResultPack<R> failed(Throwable e) {
         ResultPack<R> result = new ResultPack<R>();
-        return result.status(ResultPack.FAILED).code(ERROR_CODE).error(e).errorCode();
+        return result.status(ResultPack.FAILED).code(ERROR_CODE).error(e)._errorCode();
     }
 
     /**
