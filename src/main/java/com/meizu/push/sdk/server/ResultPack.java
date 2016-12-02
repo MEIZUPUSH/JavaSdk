@@ -20,27 +20,25 @@ public final class ResultPack<T> implements Serializable, Cloneable {
     public static final int SUCCESS = 1;
     private static final String ERROR_CODE = "500";
     private static final String SUCCESS_CODE = "200";
-    private static ErrorCode _errorCode;
 
     private int _status = 0; // enum _value in -1 0 1
     private String _code;
     private String _comment = null;
     private T _value = null;
     private Throwable _error = null;
+    private ErrorCode _errorCode = null;
+
 
     public ResultPack() {
     }
 
-    private ResultPack(int status, T value, String code, String comment, Throwable error) {
+    private ResultPack(int status, T value, String code, String comment, Throwable error, ErrorCode errorCode) {
         _status = status;
         _value = value;
         _comment = comment;
         _code = code;
         _error = error;
-    }
-
-    public static ErrorCode getErrorCode() {
-        return _errorCode;
+        _errorCode = errorCode;
     }
 
     /**
@@ -117,7 +115,7 @@ public final class ResultPack<T> implements Serializable, Cloneable {
         try {
             int code = Integer.parseInt(this._code);
             String comment = this.comment();
-            this._errorCode = ErrorCode.valueOf(code,comment);
+            this._errorCode = ErrorCode.valueOf(code, comment);
         } catch (NumberFormatException e) {
         }
         return this;
@@ -203,7 +201,7 @@ public final class ResultPack<T> implements Serializable, Cloneable {
 
     @Override
     public ResultPack<T> clone() {
-        return new ResultPack<T>(_status, _value, _code, _comment, _error);
+        return new ResultPack<T>(_status, _value, _code, _comment, _error, _errorCode);
     }
 
     /**

@@ -1,6 +1,6 @@
 # 魅族开放平台PUSH系统JAVA版本SDK
 
-**文档变更记录**
+**文档变更记录(请使用最新版本)**
 
 | 日期 | 作者 | 版本 | 变更描述 | 下载
 | --- | --- | --- | --- | --- |
@@ -8,6 +8,7 @@
 | 2016-10-14 | JasperXgwang | 1.0.0-RC02 | 增加标签推送接口、通知栏增加客户端自定义参数 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC02.zip)
 | 2016-10-15 | JasperXgwang | 1.0.0-RC03 | 通知栏推送增加定时展示功能 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC03.zip)
 | 2016-11-08 | JasperXgwang | 1.0.0-RC04 | 增加别名推送&推送统计接口 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC04.zip)
+| 2016-12-02 | JasperXgwang | 1.0.0-RC05 | 修改ResultPack对象组装bug | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC05.zip)
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)
