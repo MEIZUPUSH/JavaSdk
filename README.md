@@ -9,6 +9,8 @@
 | 2016-10-15 | JasperXgwang | 1.0.0-RC03 | 通知栏推送增加定时展示功能 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC03.zip)
 | 2016-11-08 | JasperXgwang | 1.0.0-RC04 | 增加别名推送&推送统计接口 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC04.zip)
 | 2016-12-02 | JasperXgwang | 1.0.0-RC05 | 修改ResultPack对象组装bug | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC05.zip)
+| 2016-12-13 | JasperXgwang | 1.0.0-RC06 | 修改编译版本为UTF-8环境 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC06.zip)
+
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)
@@ -189,7 +191,7 @@ clickNo|Long|点击数
 参数名称|类型|必需|默认|描述
 ---|---|---|---|---
 message|VarnishedMessage|是|null|推送消息
-pushIds|List<String>|是|null|推送目标
+pushIds|List<String>|是|null|推送目标，一批最多不能超过1000个
 retries|int|否|0|超时or异常重试次数
 
 - 返回值
@@ -252,7 +254,7 @@ value：响应码对应的目标用户
 参数名称|类型|必需|默认|描述
 ---|---|---|---|---
 message|UnVarnishedMessage|是|null|推送消息
-pushIds|List<String>|是|null|推送目标
+pushIds|List<String>|是|null|推送目标，一批最多不能超过1000个
 retries|int|否|0|超时or异常重试次数
 
 - 返回值
@@ -315,7 +317,7 @@ value：响应码对应的目标用户
 参数名称|类型|必需|默认|描述
 ---|---|---|---|---
 message|VarnishedMessage|是|null|推送消息
-alias|List<String>|是|null|推送目标
+alias|List<String>|是|null|推送目标，一批最多不能超过1000个
 retries|int|否|0|超时or异常重试次数
 
 - 返回值
@@ -381,7 +383,7 @@ public void testVarnishedMessagePushByAlias() throws Exception {
 参数名称|类型|必需|默认|描述
 ---|---|---|---|---
 message|UnVarnishedMessage|是|null|推送消息
-alias|List<String>|是|null|推送目标
+alias|List<String>|是|null|推送目标，一批最多不能超过1000个
 retries|int|否|0|超时or异常重试次数
 
 - 返回值
@@ -525,7 +527,7 @@ Long  任务ID
 pushType|PushType|是|null|消息类型
 appId|Long|是|null|推送应用ID
 taskId|Long|是|null|推送任务ID
-pushIds|List<String>|是|null|推送目标
+pushIds|List<String>|是|null|推送目标，一批最多不能超过1000个
 retries|int|否|0|超时or异常重试次数
 
 - 返回值
@@ -583,7 +585,7 @@ Value：响应码对应的目标用户
 pushType|PushType|是|null|消息类型
 appId|Long|是|null|推送应用ID
 taskId|Long|是|null|推送任务ID
-alias|List<String>|是|null|推送目标别名
+alias|List<String>|是|null|推送目标别名，一批最多不能超过1000个
 retries|int|否|0|超时or异常重试次数
 
 - 返回值
