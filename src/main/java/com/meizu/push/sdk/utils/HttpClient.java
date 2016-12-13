@@ -244,7 +244,7 @@ public class HttpClient {
             basestring.append(param.getKey()).append("=").append(param.getValue());
         }
         basestring.append(secret);
-        return MD5Util.MD5Encode(basestring.toString());
+        return MD5Util.MD5Encode(basestring.toString(), SystemConstants.CHAR_SET);
     }
 
     private static void ignoreSsl() throws KeyManagementException, NoSuchAlgorithmException {
