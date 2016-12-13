@@ -6,7 +6,12 @@
 
     <groupId>com.meizu.push</groupId>
     <artifactId>push-server-sdk</artifactId>
-    <version>1.0.0-RC05</version>
+    <version>1.0.0-RC06</version>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
 
     <dependencies>
@@ -36,4 +41,28 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>env.develop</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>env.production</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
