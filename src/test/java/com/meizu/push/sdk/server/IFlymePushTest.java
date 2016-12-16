@@ -56,13 +56,12 @@ public class IFlymePushTest {
         List<String> pushIds = new ArrayList<String>();
         pushIds.add("868746022990120100999");
         pushIds.add("869011020131345100999");
-        try {
-            ResultPack<Map<Integer, List<String>>> result = push.pushMessage(message, pushIds);
-            System.out.println(result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        // 1 调用推送服务
+        ResultPack<Map<Integer, List<String>>> result = push.pushMessage(message, pushIds);
+        handleResult(result);
     }
+
 
     /**
      * 别名通知栏消息推送（pushMessage）
@@ -86,14 +85,13 @@ public class IFlymePushTest {
 
         //目标用户
         List<String> alias = new ArrayList<String>();
-        alias.add("Android");
+        alias.add("alias1");
         alias.add("alias2");
-        try {
-            ResultPack<Map<Integer, List<String>>> result = push.pushMessageByAlias(message, alias);
-            System.out.println(result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        // 1 调用推送服务
+        ResultPack<Map<Integer, List<String>>> result = push.pushMessageByAlias(message, alias);
+        // 2 处理推送结果
+        handleResult(result);
     }
 
     /**
@@ -119,12 +117,9 @@ public class IFlymePushTest {
         pushIds.add("pushId_1");
         pushIds.add("pushId_2");
 
-        try {
-            ResultPack<Map<Integer, List<String>>> result = push.pushMessage(message, pushIds);
-            System.out.println(result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ResultPack<Map<Integer, List<String>>> result = push.pushMessage(message, pushIds);
+        // 2 处理推送结果
+        handleResult(result);
     }
 
     /**
@@ -148,12 +143,9 @@ public class IFlymePushTest {
         alias.add("alias");
         alias.add("alias2");
 
-        try {
-            ResultPack<Map<Integer, List<String>>> result = push.pushMessageByAlias(message, alias);
-            System.out.println(result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ResultPack<Map<Integer, List<String>>> result = push.pushMessageByAlias(message, alias);
+        // 2 处理推送结果
+        handleResult(result);
     }
 
     /**
@@ -220,12 +212,14 @@ public class IFlymePushTest {
         //通知栏任务消息推送
         Long taskId = 123l;
         ResultPack<Map<Integer, List<String>>> result = push.pushMessageByTaskId(PushType.STATUSBAR, appId, taskId, pushIds, 0);
-        System.out.println(result);
+        // 2 处理推送结果
+        handleResult(result);
 
         //透传消息任务推送
         taskId = 123l;
         result = push.pushMessageByTaskId(PushType.DIRECT, appId, taskId, pushIds, 0);
-        System.out.println(result);
+        // 2 处理推送结果
+        handleResult(result);
     }
 
     /**
@@ -246,12 +240,14 @@ public class IFlymePushTest {
         //通知栏任务消息推送
         Long taskId = 45361L;
         ResultPack<Map<Integer, List<String>>> result = push.pushAliasMessageByTaskId(PushType.STATUSBAR, appId, taskId, alias);
-        System.out.println(result);
+        // 2 处理推送结果
+        handleResult(result);
 
         //透传消息任务推送
         taskId = 45407L;
         result = push.pushAliasMessageByTaskId(PushType.DIRECT, appId, taskId, alias);
-        System.out.println(result);
+        // 2 处理推送结果
+        handleResult(result);
     }
 
     /**
@@ -370,6 +366,32 @@ public class IFlymePushTest {
             return simpleDateFormat.parse(dateString);
         } catch (ParseException e) {
             throw new RuntimeException("时间转化格式错误" + "[dateString=" + dateString + "]" + "[FORMAT_STRING=" + FORMAT_STRING + "]");
+        }
+    }
+
+    /**
+     * 处理推送结果
+     *
+     * @param result
+     */
+    private void handleResult(ResultPack<Map<Integer, List<String>>> result) {
+        if (result.isSucceed()) {
+            // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
+            Map<Integer, List<String>> targetResultMap = result.value();//推送结果，全部推送成功，则map为empty
+            if (targetResultMap != null && !targetResultMap.isEmpty()) {
+                // 3 判断是否有获取超速的target
+                if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
+                    // 4 获取超速的target
+                    List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
+                    System.out.println("rateLimitTarget is :" + rateLimitTarget);
+                    //TODO 5 业务处理，重推......
+                }
+            }
+        } else {
+            // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
+            // result.code(); //服务异常码
+            // result.comment();//服务异常描述
+            System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }
     }
 
