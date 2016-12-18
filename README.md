@@ -10,6 +10,7 @@
 | 2016-11-08 | JasperXgwang | 1.0.0-RC04 | 增加别名推送&推送统计接口 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC04.zip)
 | 2016-12-02 | JasperXgwang | 1.0.0-RC05 | 修改ResultPack对象组装bug | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC05.zip)
 | 2016-12-13 | JasperXgwang | 1.0.0-RC06 | 修改编译版本为UTF-8环境 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC06.zip)
+| 2016-12-18 | JasperXgwang | 1.0.0.20171218_release | 1.0.0标准版 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_1.0.0.20171218_release.zip)
 
 
 # 目录 <a name="index"/>
