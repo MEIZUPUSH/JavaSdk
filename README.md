@@ -2,15 +2,15 @@
 
 **文档变更记录(请使用最新版本)**
 
-| 日期 | 作者 | 版本 | 变更描述 | 下载
-| --- | --- | --- | --- | --- |
-| 2016-08-26 | JasperXgwang | 1.0.0-RC01 | 撰写文档 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC01.zip)
-| 2016-10-14 | JasperXgwang | 1.0.0-RC02 | 增加标签推送接口、通知栏增加客户端自定义参数 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC02.zip)
-| 2016-10-15 | JasperXgwang | 1.0.0-RC03 | 通知栏推送增加定时展示功能 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC03.zip)
-| 2016-11-08 | JasperXgwang | 1.0.0-RC04 | 增加别名推送&推送统计接口 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC04.zip)
-| 2016-12-02 | JasperXgwang | 1.0.0-RC05 | 修改ResultPack对象组装bug | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC05.zip)
-| 2016-12-13 | JasperXgwang | 1.0.0-RC06 | 修改编译版本为UTF-8环境 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC06.zip)
-| 2016-12-18 | JasperXgwang | 1.0.0.20171218_release | 1.0.0标准版 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_1.0.0.20171218_release.zip)
+| 日期 | 版本 | 变更描述 | 下载
+| --- | --- | --- | --- |
+| 2016-08-26 | 1.0.0-RC01 | 撰写文档 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC01.zip)
+| 2016-10-14 | 1.0.0-RC02 | 增加标签推送接口、通知栏增加客户端自定义参数 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC02.zip)
+| 2016-10-15 | 1.0.0-RC03 | 通知栏推送增加定时展示功能 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC03.zip)
+| 2016-11-08 | 1.0.0-RC04 | 增加别名推送&推送统计接口 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC04.zip)
+| 2016-12-02 | 1.0.0-RC05 | 修改ResultPack对象组装bug | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC05.zip)
+| 2016-12-13 | 1.0.0-RC06 | 修改编译版本为UTF-8环境 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC06.zip)
+| 2016-12-18 | 1.0.0.20171218_release | 1.0.0标准版 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_1.0.0.20171218_release.zip)
 
 
 # 目录 <a name="index"/>
