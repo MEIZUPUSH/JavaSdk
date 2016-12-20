@@ -4,14 +4,17 @@
 
 | 日期 | 版本 | 变更描述 | 下载
 | --- | --- | --- | --- |
-| 2016-08-26 | 1.0.0-RC01 | 撰写文档 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC01.zip)
-| 2016-10-14 | 1.0.0-RC02 | 增加标签推送接口、通知栏增加客户端自定义参数 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC02.zip)
-| 2016-10-15 | 1.0.0-RC03 | 通知栏推送增加定时展示功能 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC03.zip)
-| 2016-11-08 | 1.0.0-RC04 | 增加别名推送&推送统计接口 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC04.zip)
-| 2016-12-02 | 1.0.0-RC05 | 修改ResultPack对象组装bug | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC05.zip)
-| 2016-12-13 | 1.0.0-RC06 | 修改编译版本为UTF-8环境 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_V1.0.0-RC06.zip)
 | 2016-12-18 | 1.0.0.20161218_release | 1.0.0标准版 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_1.0.0.20161218_release.zip)
 
+**Maven Pom**
+
+```xml
+<dependency>
+  <groupId>com.meizu.flyme</groupId>
+  <artifactId>push-server-sdk</artifactId>
+  <version>1.0.0.20161218_release</version><!--请使用最新版本 http://search.maven.org/-->
+</dependency>
+```
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)
@@ -66,13 +69,14 @@ UnVarnishedMessage|透传消息体
 appId|Long|是|null|注册应用appId
 title|String|是|null|推送标题, 【字数限制1~32】
 content|String|是|null|推送内容, 【字数限制1~100】
-noticeBarType|int|否|0|通知栏样式(0, "标准")【非必填，默认值为0】
+noticeBarType|int|否|0|通知栏样式(0, "标准"),(2, "安卓原生")【非必填，默认值为0】
 noticeExpandType|int|否|0|展开方式 (0, "标准"),(1, "文本")【非必填，默认值为0】
 noticeExpandContent|String|否|null|展开内容, 【noticeExpandType为文本时，必填】
-clickType|int|否|0|点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开URI页面"),【非必填，默认值为0】
+clickType|int|否|0|点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开URI页面"),(3, "应用客户端自定义")【非必填，默认值为0】
 url|String|否|null|URI页面地址, 【clickType为打开URI页面时，必填, 长度限制1000byte】
 parameters|JSONObject|否|null|透传参数 【JSON格式，非必填】
 activity|String|否|null|应用页面地址, 【clickType为打开应用页面时，必填, 长度限制1000byte】
+customAttribute|String|否|null|应用客户端自定义内容, 【clickType为应用客户端自定义时，必填, 长度限制1000byte】
 isOffLine|Boolean|否|true|是否进离线消息, (false 否 true 是) 【非必填，默认值为true】
 validTime|int|否|24|有效时长 (1~72小时内的正整数), 【isOffLine值为true时，必填，值的范围1~72】
 pushTimeType|int|否|0|定时推送 (0, "即时"),(1, "定时"), 【只对全部用户推送生效】
@@ -149,7 +153,7 @@ RSP_UNSUBSCRIBE_ALIAS|110005|别名未订阅(包括推送开关关闭的设备)
 STATUSBAR|Enum|通知栏消息类型
 DIRECT|Enum|透传消息类型
 
-## 推送类型（ScopeType）<a name="ScopeType_index"/>
+## 推送标签集合类型（ScopeType）<a name="ScopeType_index"/>
 枚举|类型|描述
 ---|---|--- 
 UNION|Enum|并集
