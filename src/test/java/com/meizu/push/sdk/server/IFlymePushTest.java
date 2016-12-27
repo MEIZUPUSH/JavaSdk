@@ -54,8 +54,8 @@ public class IFlymePushTest {
 
         //目标用户
         List<String> pushIds = new ArrayList<String>();
-        pushIds.add("868746022990120100999");
-        pushIds.add("869011020131345100999");
+        pushIds.add("pushId_1");
+        pushIds.add("pushId_2");
 
         // 1 调用推送服务
         ResultPack<Map<Integer, List<String>>> result = push.pushMessage(message, pushIds);
@@ -195,12 +195,34 @@ public class IFlymePushTest {
     }
 
     /**
-     * 任务消息推送（pushMessageByTaskId）
+     * 任务透传消息推送（pushMessageByTaskId）
      *
      * @throws IOException
      */
     @Test
-    public void testPushPyTaskId() throws IOException {
+    public void testUnVarnishedMessagePushByTaskId() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //目标用户
+        List<String> pushIds = new ArrayList<String>();
+        pushIds.add("pushId_1");
+        pushIds.add("pushId_2");
+
+        //透传消息任务推送
+        Long taskId = 123l;
+        ResultPack<Map<Integer, List<String>>> result = push.pushMessageByTaskId(PushType.DIRECT, appId, taskId, pushIds);
+        // 2 处理推送结果
+        handleResult(result);
+    }
+
+    /**
+     * 任务通知栏消息推送（pushMessageByTaskId）
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testVarnishedMessagePushByTaskId() throws IOException {
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
 
@@ -211,44 +233,55 @@ public class IFlymePushTest {
 
         //通知栏任务消息推送
         Long taskId = 123l;
-        ResultPack<Map<Integer, List<String>>> result = push.pushMessageByTaskId(PushType.STATUSBAR, appId, taskId, pushIds, 0);
-        // 2 处理推送结果
-        handleResult(result);
-
-        //透传消息任务推送
-        taskId = 123l;
-        result = push.pushMessageByTaskId(PushType.DIRECT, appId, taskId, pushIds, 0);
+        ResultPack<Map<Integer, List<String>>> result = push.pushMessageByTaskId(PushType.STATUSBAR, appId, taskId, pushIds);
         // 2 处理推送结果
         handleResult(result);
     }
 
     /**
-     * 别名任务消息推送
+     * 别名任务通知栏消息推送
      *
      * @throws IOException
      */
     @Test
-    public void testPushAliasPyTaskId() throws IOException {
+    public void testVarnishedMessagePushAliasPyTaskId() throws IOException {
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
 
         //目标用户
         List<String> alias = new ArrayList<String>();
-        alias.add("alias123");
-        alias.add("Android654");
+        alias.add("alias1");
+        alias.add("alias2");
 
         //通知栏任务消息推送
         Long taskId = 45361L;
         ResultPack<Map<Integer, List<String>>> result = push.pushAliasMessageByTaskId(PushType.STATUSBAR, appId, taskId, alias);
         // 2 处理推送结果
         handleResult(result);
+    }
+
+    /**
+     * 别名任务透传消息推送
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testUnVarnishedMessagePushAliasPyTaskId() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //目标用户
+        List<String> alias = new ArrayList<String>();
+        alias.add("alias1");
+        alias.add("alias2");
 
         //透传消息任务推送
-        taskId = 45407L;
-        result = push.pushAliasMessageByTaskId(PushType.DIRECT, appId, taskId, alias);
+        long taskId = 45407L;
+        ResultPack<Map<Integer, List<String>>> result = push.pushAliasMessageByTaskId(PushType.DIRECT, appId, taskId, alias);
         // 2 处理推送结果
         handleResult(result);
     }
+
 
     /**
      * 应用全部推送(pushToApp)
@@ -256,7 +289,7 @@ public class IFlymePushTest {
      * @throws IOException
      */
     @Test
-    public void testPushToApp() throws IOException {
+    public void testVarnishedMessagePushToApp() throws IOException {
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
 
@@ -274,6 +307,18 @@ public class IFlymePushTest {
                 .build();
         ResultPack<Long> result = push.pushToApp(PushType.STATUSBAR, message);
         System.out.println(result);
+    }
+
+
+    /**
+     * 应用全部推送(pushToApp)
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testUnVarnishedMessagePushToApp() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
 
         //透传全部推送
         UnVarnishedMessage message2 = new UnVarnishedMessage.Builder()
@@ -285,7 +330,7 @@ public class IFlymePushTest {
                 .pushTimeType(1)
                 .startTime(new Date())
                 .build();
-        result = push.pushToApp(PushType.DIRECT, message2);
+        ResultPack<Long> result = push.pushToApp(PushType.DIRECT, message2);
         System.out.println(result);
     }
 
@@ -295,7 +340,7 @@ public class IFlymePushTest {
      * @throws IOException
      */
     @Test
-    public void testPushToTag() throws IOException {
+    public void testVarnishedMessagePushToTag() throws IOException {
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
 
@@ -317,6 +362,22 @@ public class IFlymePushTest {
                 .build();
         ResultPack<Long> result = push.pushToTag(PushType.STATUSBAR, varnishedMessage, tagName, ScopeType.INTERSECTION);
         System.out.println(result);
+    }
+
+    /**
+     * 标签推送(pushToTag)
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testUnVarnishedMessagePushToTag() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //推送标签
+        List<String> tagName = new ArrayList<String>();
+        tagName.add("news");
+        tagName.add("tech");
 
         //透传标签推送
         UnVarnishedMessage unVarnishedMessage = new UnVarnishedMessage.Builder()
@@ -328,9 +389,10 @@ public class IFlymePushTest {
                 .pushTimeType(1)
                 .startTime(new Date())
                 .build();
-        result = push.pushToTag(PushType.DIRECT, unVarnishedMessage, tagName, ScopeType.UNION);
+        ResultPack<Long> result = push.pushToTag(PushType.DIRECT, unVarnishedMessage, tagName, ScopeType.UNION);
         System.out.println(result);
     }
+
 
     /**
      * 取消推送任务(cancelTaskPush) 只针对全网推送生效
