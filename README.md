@@ -8,11 +8,13 @@
 
 **Maven Pom**
 
+[Central Repository](http://search.maven.org/#search|ga|1|com.meizu.flyme)
+
 ```xml
 <dependency>
   <groupId>com.meizu.flyme</groupId>
   <artifactId>push-server-sdk</artifactId>
-  <version>1.0.0.20161218_release</version><!--请使用最新版本 http://search.maven.org/-->
+  <version>1.0.0.20161218_release</version>
 </dependency>
 ```
 
