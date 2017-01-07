@@ -6,16 +6,48 @@
 | --- | --- | --- | --- |
 | 2016-12-18 | 1.0.0.20161218_release | 1.0.0标准版 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_1.0.0.20161218_release.zip)
 
-**Maven Pom**
+**Dependency Information**
 
 [Central Repository](http://search.maven.org/#search|ga|1|com.meizu.flyme)
 
+- Apache Maven
 ```xml
 <dependency>
   <groupId>com.meizu.flyme</groupId>
   <artifactId>push-server-sdk</artifactId>
   <version>1.0.0.20161218_release</version>
 </dependency>
+```
+- Apache Buildr
+```xml
+'com.meizu.flyme:push-server-sdk:jar:1.0.0.20161218_release'
+```
+- Apache Buildr
+```xml
+'com.meizu.flyme:push-server-sdk:jar:1.0.0.20161218_release'
+```
+- Apache Ivy
+```xml
+<dependency org="com.meizu.flyme" name="push-server-sdk" rev="1.0.0.20161218_release" />
+```
+- Groovy Grape
+```xml
+@Grapes( 
+@Grab(group='com.meizu.flyme', module='push-server-sdk', version='1.0.0.20161218_release') 
+)
+```
+- Gradle/Grails
+```xml
+compile 'com.meizu.flyme:push-server-sdk:1.0.0.20161218_release'
+```
+- Scala SBT
+```xml
+libraryDependencies += "com.meizu.flyme" % "push-server-sdk" % "1.0.0.20161218_release"
+
+```
+- Leiningen
+```xml
+[com.meizu.flyme/push-server-sdk "1.0.0.20161218_release"]
 ```
 
 # 目录 <a name="index"/>
