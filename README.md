@@ -1,54 +1,13 @@
 # 魅族开放平台PUSH系统JAVA版本SDK
 
-**文档变更记录(请使用最新版本)**
+## JavaPushSdk发布说明(请使用最新版本)
+* 中央仓库获取 [Central Repository](http://search.maven.org/#search|ga|1|com.meizu.flyme)
+* 直接下载获取 [Java Server SDK](https://github.com/MEIZUPUSH/JavaSdk/releases)
 
-| 日期 | 版本 | 变更描述 | 下载
-| --- | --- | --- | --- |
-| 2016-12-18 | 1.0.0.20161218_release | 1.0.0标准版 | [download](https://github.com/MEIZUPUSH/JavaSdk/raw/master/version/Flyme_Push_JAVA_SDK_1.0.0.20161218_release.zip)
+## 更新日志
 
-**Dependency Information**
-
-[Central Repository](http://search.maven.org/#search|ga|1|com.meizu.flyme)
-
-- Apache Maven
-```xml
-<dependency>
-  <groupId>com.meizu.flyme</groupId>
-  <artifactId>push-server-sdk</artifactId>
-  <version>1.0.0.20161218_release</version>
-</dependency>
-```
-- Apache Buildr
-```xml
-'com.meizu.flyme:push-server-sdk:jar:1.0.0.20161218_release'
-```
-- Apache Buildr
-```xml
-'com.meizu.flyme:push-server-sdk:jar:1.0.0.20161218_release'
-```
-- Apache Ivy
-```xml
-<dependency org="com.meizu.flyme" name="push-server-sdk" rev="1.0.0.20161218_release" />
-```
-- Groovy Grape
-```xml
-@Grapes( 
-@Grab(group='com.meizu.flyme', module='push-server-sdk', version='1.0.0.20161218_release') 
-)
-```
-- Gradle/Grails
-```xml
-compile 'com.meizu.flyme:push-server-sdk:1.0.0.20161218_release'
-```
-- Scala SBT
-```xml
-libraryDependencies += "com.meizu.flyme" % "push-server-sdk" % "1.0.0.20161218_release"
-
-```
-- Leiningen
-```xml
-[com.meizu.flyme/push-server-sdk "1.0.0.20161218_release"]
-```
+### [2016-12-18]V1.0.0.20161218_release
+*  1.0.0标准版
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)
