@@ -114,7 +114,7 @@ errorCode()|Enum|接口响应异常枚举 详见ErrorCode
 方法名称|类型|描述
 ---|---|--- 
 getMsgId()|String|推送消息ID，用于推送流程明细排查
-getRespTarget()|Map<Integer, List<String>> respTarget|推送目标结果状态(KEY：推送响应码<PushResponseCode> VALUE：响应码对应的目标用户 )
+getRespTarget()|Map|推送目标结果状态(KEY：推送响应码<PushResponseCode> VALUE：响应码对应的目标用户 )
 
 ## 接口响应码定义(ErrorCode) <a name="ErrorCode_index"/>
 名称|Code|Commen
