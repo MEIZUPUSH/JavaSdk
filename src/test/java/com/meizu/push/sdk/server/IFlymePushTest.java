@@ -58,7 +58,7 @@ public class IFlymePushTest {
         pushIds.add("pushId_2");
 
         // 1 调用推送服务
-        ResultPack<Map<Integer, List<String>>> result = push.pushMessage(message, pushIds);
+        ResultPack<PushResult> result = push.pushMessage(message, pushIds);
         handleResult(result);
     }
 
@@ -89,7 +89,7 @@ public class IFlymePushTest {
         alias.add("alias2");
 
         // 1 调用推送服务
-        ResultPack<Map<Integer, List<String>>> result = push.pushMessageByAlias(message, alias);
+        ResultPack<PushResult> result = push.pushMessageByAlias(message, alias);
         // 2 处理推送结果
         handleResult(result);
     }
@@ -117,7 +117,7 @@ public class IFlymePushTest {
         pushIds.add("pushId_1");
         pushIds.add("pushId_2");
 
-        ResultPack<Map<Integer, List<String>>> result = push.pushMessage(message, pushIds);
+        ResultPack<PushResult> result = push.pushMessage(message, pushIds);
         // 2 处理推送结果
         handleResult(result);
     }
@@ -143,7 +143,7 @@ public class IFlymePushTest {
         alias.add("alias");
         alias.add("alias2");
 
-        ResultPack<Map<Integer, List<String>>> result = push.pushMessageByAlias(message, alias);
+        ResultPack<PushResult> result = push.pushMessageByAlias(message, alias);
         // 2 处理推送结果
         handleResult(result);
     }
@@ -211,7 +211,7 @@ public class IFlymePushTest {
 
         //透传消息任务推送
         Long taskId = 123l;
-        ResultPack<Map<Integer, List<String>>> result = push.pushMessageByTaskId(PushType.DIRECT, appId, taskId, pushIds);
+        ResultPack<PushResult> result = push.pushMessageByTaskId(PushType.DIRECT, appId, taskId, pushIds);
         // 2 处理推送结果
         handleResult(result);
     }
@@ -233,7 +233,7 @@ public class IFlymePushTest {
 
         //通知栏任务消息推送
         Long taskId = 123l;
-        ResultPack<Map<Integer, List<String>>> result = push.pushMessageByTaskId(PushType.STATUSBAR, appId, taskId, pushIds);
+        ResultPack<PushResult> result = push.pushMessageByTaskId(PushType.STATUSBAR, appId, taskId, pushIds);
         // 2 处理推送结果
         handleResult(result);
     }
@@ -255,7 +255,7 @@ public class IFlymePushTest {
 
         //通知栏任务消息推送
         Long taskId = 45361L;
-        ResultPack<Map<Integer, List<String>>> result = push.pushAliasMessageByTaskId(PushType.STATUSBAR, appId, taskId, alias);
+        ResultPack<PushResult> result = push.pushAliasMessageByTaskId(PushType.STATUSBAR, appId, taskId, alias);
         // 2 处理推送结果
         handleResult(result);
     }
@@ -277,7 +277,7 @@ public class IFlymePushTest {
 
         //透传消息任务推送
         long taskId = 45407L;
-        ResultPack<Map<Integer, List<String>>> result = push.pushAliasMessageByTaskId(PushType.DIRECT, appId, taskId, alias);
+        ResultPack<PushResult> result = push.pushAliasMessageByTaskId(PushType.DIRECT, appId, taskId, alias);
         // 2 处理推送结果
         handleResult(result);
     }
@@ -436,10 +436,14 @@ public class IFlymePushTest {
      *
      * @param result
      */
-    private void handleResult(ResultPack<Map<Integer, List<String>>> result) {
+    private void handleResult(ResultPack<PushResult> result) {
         if (result.isSucceed()) {
             // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
-            Map<Integer, List<String>> targetResultMap = result.value();//推送结果，全部推送成功，则map为empty
+            PushResult pushResult = result.value();
+            String msgId = pushResult.getMsgId();//推送消息ID，用于推送流程明细排查
+            Map<Integer, List<String>> targetResultMap = pushResult.getRespTarget();//推送结果，全部推送成功，则map为empty
+            System.out.println("push msgId:" + msgId);
+            System.out.println("push targetResultMap:" + targetResultMap);
             if (targetResultMap != null && !targetResultMap.isEmpty()) {
                 // 3 判断是否有获取超速的target
                 if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {

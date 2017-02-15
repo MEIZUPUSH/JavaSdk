@@ -11,7 +11,14 @@ import com.meizu.push.sdk.utils.CollectionUtils;
 import com.meizu.push.sdk.utils.DateUtils;
 import com.meizu.push.sdk.utils.HttpClient;
 import com.meizu.push.sdk.utils.StringUtils;
-import com.meizu.push.sdk.vo.*;
+import com.meizu.push.sdk.vo.AdvanceInfo;
+import com.meizu.push.sdk.vo.ClickTypeInfo;
+import com.meizu.push.sdk.vo.NoticeBarInfo;
+import com.meizu.push.sdk.vo.NoticeExpandInfo;
+import com.meizu.push.sdk.vo.NotificationType;
+import com.meizu.push.sdk.vo.PushTimeInfo;
+import com.meizu.push.sdk.vo.UnVarnishedMessageJson;
+import com.meizu.push.sdk.vo.VarnishedMessageJson;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -55,7 +62,7 @@ public class IFlymePush extends HttpClient {
      * @return
      * @throws IOException
      */
-    public ResultPack<Map<Integer, List<String>>> pushMessage(VarnishedMessage message, List<String> pushIds) throws IOException {
+    public ResultPack<PushResult> pushMessage(VarnishedMessage message, List<String> pushIds) throws IOException {
         return this.pushMessage(message, pushIds, 0);
     }
 
@@ -69,7 +76,7 @@ public class IFlymePush extends HttpClient {
      * @return 推送结果
      * @throws IOException
      */
-    public ResultPack<Map<Integer, List<String>>> pushMessage(VarnishedMessage message, List<String> pushIds, int retries) throws IOException {
+    public ResultPack<PushResult> pushMessage(VarnishedMessage message, List<String> pushIds, int retries) throws IOException {
         if (CollectionUtils.isEmpty(pushIds)) {
             return ResultPack.failed("pushIds is empty");
         }
@@ -88,7 +95,7 @@ public class IFlymePush extends HttpClient {
      * @return
      * @throws IOException
      */
-    public ResultPack<Map<Integer, List<String>>> pushMessageByAlias(VarnishedMessage message, List<String> alias) throws IOException {
+    public ResultPack<PushResult> pushMessageByAlias(VarnishedMessage message, List<String> alias) throws IOException {
         return this.pushMessageByAlias(message, alias, 0);
     }
 
@@ -102,7 +109,7 @@ public class IFlymePush extends HttpClient {
      * @return 推送结果
      * @throws IOException
      */
-    public ResultPack<Map<Integer, List<String>>> pushMessageByAlias(VarnishedMessage message, List<String> alias, int retries) throws IOException {
+    public ResultPack<PushResult> pushMessageByAlias(VarnishedMessage message, List<String> alias, int retries) throws IOException {
         if (CollectionUtils.isEmpty(alias)) {
             return ResultPack.failed("alias is empty");
         }
@@ -121,7 +128,7 @@ public class IFlymePush extends HttpClient {
      * @return
      * @throws IOException
      */
-    public ResultPack<Map<Integer, List<String>>> pushMessage(UnVarnishedMessage message, List<String> pushIds) throws IOException {
+    public ResultPack<PushResult> pushMessage(UnVarnishedMessage message, List<String> pushIds) throws IOException {
         return this.pushMessage(message, pushIds, 0);
     }
 
@@ -134,7 +141,7 @@ public class IFlymePush extends HttpClient {
      * @return
      * @throws IOException
      */
-    public ResultPack<Map<Integer, List<String>>> pushMessage(UnVarnishedMessage message, List<String> pushIds, int retries) throws IOException {
+    public ResultPack<PushResult> pushMessage(UnVarnishedMessage message, List<String> pushIds, int retries) throws IOException {
         if (CollectionUtils.isEmpty(pushIds)) {
             return ResultPack.failed("pushIds is empty");
         }
@@ -153,7 +160,7 @@ public class IFlymePush extends HttpClient {
      * @return
      * @throws IOException
      */
-    public ResultPack<Map<Integer, List<String>>> pushMessageByAlias(UnVarnishedMessage message, List<String> alias) throws IOException {
+    public ResultPack<PushResult> pushMessageByAlias(UnVarnishedMessage message, List<String> alias) throws IOException {
         return this.pushMessageByALias(message, alias, 0);
     }
 
@@ -166,7 +173,7 @@ public class IFlymePush extends HttpClient {
      * @return
      * @throws IOException
      */
-    public ResultPack<Map<Integer, List<String>>> pushMessageByALias(UnVarnishedMessage message, List<String> alias, int retries) throws IOException {
+    public ResultPack<PushResult> pushMessageByALias(UnVarnishedMessage message, List<String> alias, int retries) throws IOException {
         if (CollectionUtils.isEmpty(alias)) {
             return ResultPack.failed("alias is empty");
         }
@@ -259,7 +266,7 @@ public class IFlymePush extends HttpClient {
      * @return
      * @throws IOException
      */
-    public ResultPack<Map<Integer, List<String>>> pushMessageByTaskId(PushType pushType, long appId, long taskId, List<String> pushIds) throws IOException {
+    public ResultPack<PushResult> pushMessageByTaskId(PushType pushType, long appId, long taskId, List<String> pushIds) throws IOException {
         return this.pushMessageByTaskId(pushType, appId, taskId, pushIds, 0);
     }
 
@@ -274,7 +281,7 @@ public class IFlymePush extends HttpClient {
      * @return
      * @throws IOException
      */
-    public ResultPack<Map<Integer, List<String>>> pushMessageByTaskId(PushType pushType, long appId, long taskId, List<String> pushIds, int retries) throws IOException {
+    public ResultPack<PushResult> pushMessageByTaskId(PushType pushType, long appId, long taskId, List<String> pushIds, int retries) throws IOException {
         if (pushType == null) {
             return ResultPack.failed("pushType is null");
         }
@@ -296,7 +303,7 @@ public class IFlymePush extends HttpClient {
      * @return
      * @throws IOException
      */
-    public ResultPack<Map<Integer, List<String>>> pushAliasMessageByTaskId(PushType pushType, long appId, long taskId, List<String> alias) throws IOException {
+    public ResultPack<PushResult> pushAliasMessageByTaskId(PushType pushType, long appId, long taskId, List<String> alias) throws IOException {
         return this.pushAliasMessageByTaskId(pushType, appId, taskId, alias, 0);
     }
 
@@ -311,7 +318,7 @@ public class IFlymePush extends HttpClient {
      * @return
      * @throws IOException
      */
-    public ResultPack<Map<Integer, List<String>>> pushAliasMessageByTaskId(PushType pushType, long appId, long taskId, List<String> alias, int retries) throws IOException {
+    public ResultPack<PushResult> pushAliasMessageByTaskId(PushType pushType, long appId, long taskId, List<String> alias, int retries) throws IOException {
         if (pushType == null) {
             return ResultPack.failed("pushType is null");
         }
@@ -566,9 +573,9 @@ public class IFlymePush extends HttpClient {
     }
 
 
-    private ResultPack<Map<Integer, List<String>>> pushMessage(UserType userType, PushType pushType, Message message, String targets, int retries) throws IOException {
+    private ResultPack<PushResult> pushMessage(UserType userType, PushType pushType, Message message, String targets, int retries) throws IOException {
         int attempt = 0;
-        ResultPack<Map<Integer, List<String>>> result;
+        ResultPack<PushResult> result;
         int backoff = 1000;
         boolean tryAgain;
         do {
@@ -598,7 +605,7 @@ public class IFlymePush extends HttpClient {
         return backoff;
     }
 
-    private ResultPack<Map<Integer, List<String>>> pushMessageNoRetry(UserType userType, PushType pushType, Message message, String targets) throws IOException {
+    private ResultPack<PushResult> pushMessageNoRetry(UserType userType, PushType pushType, Message message, String targets) throws IOException {
         String _url = null;
         StringBuilder body = null;
         if (UserType.PUSHID == userType) {
@@ -655,12 +662,13 @@ public class IFlymePush extends HttpClient {
         String code = httpResult.getCode();
         String msg = httpResult.getMessage();
         String value = httpResult.getValue();
+        String msgId = httpResult.getMsgId();
         if (SUCCESS_CODE.equals(code)) {
-            Map<Integer, List<String>> pushResult = new HashMap<Integer, List<String>>();
+            Map<Integer, List<String>> respTarget = new HashMap<Integer, List<String>>();
             if (StringUtils.isNotBlank(value)) {
-                pushResult = JSONObject.parseObject(value, Map.class);
+                respTarget = JSONObject.parseObject(value, Map.class);
             }
-            return ResultPack.succeed(code, msg, pushResult);
+            return ResultPack.succeed(code, msg, PushResult.build(msgId, respTarget));
         } else {
             return ResultPack.failed(code, msg);
         }
@@ -740,9 +748,9 @@ public class IFlymePush extends HttpClient {
         }
     }
 
-    private ResultPack<Map<Integer, List<String>>> pushMessageByTaskId(UserType userType, PushType pushType, long appId, long taskId, String targets, int retries) throws IOException {
+    private ResultPack<PushResult> pushMessageByTaskId(UserType userType, PushType pushType, long appId, long taskId, String targets, int retries) throws IOException {
         int attempt = 0;
-        ResultPack<Map<Integer, List<String>>> result;
+        ResultPack<PushResult> result;
         int backoff = 1000;
         boolean tryAgain;
         do {
@@ -761,7 +769,7 @@ public class IFlymePush extends HttpClient {
         }
     }
 
-    private ResultPack<Map<Integer, List<String>>> pushMessageByTaskIdNoRetry(UserType userType, PushType pushType, long appId, long taskId, String targets) throws IOException {
+    private ResultPack<PushResult> pushMessageByTaskIdNoRetry(UserType userType, PushType pushType, long appId, long taskId, String targets) throws IOException {
         String _url = null;
         StringBuilder body = newBody("appId", String.valueOf(appId));
         addParameter(body, "taskId", String.valueOf(taskId));
@@ -793,13 +801,14 @@ public class IFlymePush extends HttpClient {
         String code = httpResult.getCode();
         String msg = httpResult.getMessage();
         String value = httpResult.getValue();
+        String msgId = String.valueOf(taskId);
 
         if (SUCCESS_CODE.equals(code)) {
-            Map<Integer, List<String>> pushResult = new HashMap<Integer, List<String>>();
+            Map<Integer, List<String>> respTarget = new HashMap<Integer, List<String>>();
             if (StringUtils.isNotBlank(value)) {
-                pushResult = JSONObject.parseObject(value, Map.class);
+                respTarget = JSONObject.parseObject(value, Map.class);
             }
-            return ResultPack.succeed(code, msg, pushResult);
+            return ResultPack.succeed(code, msg, PushResult.build(msgId, respTarget));
         } else {
             return ResultPack.failed(code, msg);
         }

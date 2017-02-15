@@ -13,12 +13,14 @@ public final class HttpResult implements Serializable {
     private final String code;
     private final String message;
     private final String value;
+    private final String msgId;
 
 
     private HttpResult(HttpResult.Builder builder) {
         this.code = builder.code;
         this.message = builder.message;
         this.value = builder.value;
+        this.msgId = builder.msgId;
     }
 
     public String getCode() {
@@ -33,10 +35,15 @@ public final class HttpResult implements Serializable {
         return value;
     }
 
+    public String getMsgId() {
+        return msgId;
+    }
+
     public static final class Builder {
         private String code;
         private String message;
         private String value;
+        private String msgId;
 
         public Builder() {
         }
@@ -45,6 +52,9 @@ public final class HttpResult implements Serializable {
             this.code = json.getString("code");
             this.message = json.getString("message");
             this.value = json.getString("value");
+            if (json.containsKey("msgId")) {
+                this.msgId = json.getString("msgId");
+            }
             return this.build();
         }
 

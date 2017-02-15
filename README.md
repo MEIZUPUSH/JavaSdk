@@ -9,6 +9,10 @@
 ### [2016-12-18]V1.0.0.20161218_release
 *  1.0.0标准版
 
+### [2017-02-16]V1.1.0.20170216_release
+*  推送结果增加msgId
+*  通过msgId以及推送目标在推送平台查询具体的推送日志明细
+
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)
     * [推送服务(IFlymePush)](#IFlymePush_index)
@@ -16,6 +20,7 @@
       * [通知栏消息(VarnishedMessage)](#VarnishedMessage_index)
       * [透传消息(UnVarnishedMessage)](#UnVarnishedMessage_index)
     * [接口返回值(ResultPack)](#ResultPack_index)
+    * [消息推送结果(PushResult)](#PushResult_index)
     * [接口响应码定义(ErrorCode)](#ErrorCode_index)
     * [推送响应码定义(PushResponseCode)](#PushResponseCode_index)    
     * [推送类型(PushType)](#PushType_index) 
@@ -105,6 +110,12 @@ Comment()|String|接口响应描述
 value()|T|接口响应内容
 errorCode()|Enum|接口响应异常枚举 详见ErrorCode
 
+## 消息推送结果(PushResult) <a name="PushResult_index"/>
+方法名称|类型|描述
+---|---|--- 
+getMsgId()|String|推送消息ID，用于推送流程明细排查
+getRespTarget()|Map<Integer, List<String>> respTarget|推送目标结果状态(KEY：推送响应码<PushResponseCode> VALUE：响应码对应的目标用户 )
+
 ## 接口响应码定义(ErrorCode) <a name="ErrorCode_index"/>
 名称|Code|Commen
 ---|---|--- 
@@ -180,8 +191,8 @@ clickNo|Long|点击数
 
 接口|说明
 ---|---
-`ResultPack<Map<Integer, List<String>>> pushMessage(VarnishedMessage message, List<String> pushIds)`|推送通知栏消息
-`ResultPack<Map<Integer, List<String>>> pushMessage(VarnishedMessage message, List<String> pushIds, int retries)`|推送通知栏消息
+`ResultPack<PushResult> pushMessage(VarnishedMessage message, List<String> pushIds)`|推送通知栏消息
+`ResultPack<PushResult> pushMessage(VarnishedMessage message, List<String> pushIds, int retries)`|推送通知栏消息
 
 - 参数说明
 
@@ -195,10 +206,11 @@ retries|int|否|0|超时or异常重试次数
 - 返回值
 
 ```
-Map<Integer, List<String>>
+PushResult
 
-key：推送响应码
-value：响应码对应的目标用户 
+msgId;  推送消息ID，用于推送流程明细排查
+respTarget;  推送目标结果状态(key：推送响应码  value：响应码对应的目标用户 )
+
 注：只返回不合法、超速以及推送失败的目标用户，业务一般对超速的pushId处理。
 ```
 
@@ -230,10 +242,14 @@ value：响应码对应的目标用户
         pushIds.add("pushId_1");
         pushIds.add("pushId_2");
         // 1 调用推送服务
-        ResultPack<Map<Integer, List<String>>> result = push.pushMessage(message, pushIds);
+        ResultPack<PushResult> result = push.pushMessage(message, pushIds);
         if (result.isSucceed()) {
             // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
-            Map<Integer, List<String>> targetResultMap = result.value();//推送结果，全部推送成功，则map为empty
+            PushResult pushResult = result.value();
+            String msgId = pushResult.getMsgId();//推送消息ID，用于推送流程明细排查
+            Map<Integer, List<String>> targetResultMap = pushResult.getRespTarget();//推送结果，全部推送成功，则map为empty
+            System.out.println("push msgId:" + msgId);
+            System.out.println("push targetResultMap:" + targetResultMap);
             if (targetResultMap != null && !targetResultMap.isEmpty()) {
                 // 3 判断是否有获取超速的target
                 if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
@@ -258,8 +274,8 @@ value：响应码对应的目标用户
 
 接口|说明
 ---|---
-`ResultPack<Map<Integer, List<String>>> pushMessage(UnVarnishedMessage message, List<String> pushIds)`|推送透传消息
-`ResultPack<Map<Integer, List<String>>> pushMessage(UnVarnishedMessage message, List<String> pushIds, int retries)`|推送透传消息
+`ResultPack<PushResult> pushMessage(UnVarnishedMessage message, List<String> pushIds)`|推送透传消息
+`ResultPack<PushResult> pushMessage(UnVarnishedMessage message, List<String> pushIds, int retries)`|推送透传消息
 
 - 参数说明
 
@@ -272,10 +288,10 @@ retries|int|否|0|超时or异常重试次数
 - 返回值
 
 ```
-Map<Integer, List<String>>
+PushResult
 
-key：推送响应码
-value：响应码对应的目标用户 
+msgId;  推送消息ID，用于推送流程明细排查
+respTarget;  推送目标结果状态(key：推送响应码  value：响应码对应的目标用户 )
 注：只返回不合法、超速以及推送失败的目标用户，业务一般对超速的pushId处理。
 ```
 
@@ -306,25 +322,29 @@ value：响应码对应的目标用户
         pushIds.add("pushId_2");
 
         // 1 调用推送服务
-         ResultPack<Map<Integer, List<String>>> result = push.pushMessage(message, pushIds);
-        if (result.isSucceed()) {
-            // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
-            Map<Integer, List<String>> targetResultMap = result.value();//推送结果，全部推送成功，则map为empty
-            if (targetResultMap != null && !targetResultMap.isEmpty()) {
-                // 3 判断是否有获取超速的target
-                if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
-                    // 4 获取超速的target
-                    List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
-                    System.out.println("rateLimitTarget is :" + rateLimitTarget);
-                    //TODO 5 业务处理，重推......
-                }
-            }
-        } else {
-            // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
-            // result.code(); //服务异常码
-            // result.comment();//服务异常描述
-            System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
-        }        
+         ResultPack<PushResult> result = push.pushMessage(message, pushIds);
+         if (result.isSucceed()) {
+             // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
+             PushResult pushResult = result.value();
+             String msgId = pushResult.getMsgId();//推送消息ID，用于推送流程明细排查
+             Map<Integer, List<String>> targetResultMap = pushResult.getRespTarget();//推送结果，全部推送成功，则map为empty
+             System.out.println("push msgId:" + msgId);
+             System.out.println("push targetResultMap:" + targetResultMap);
+             if (targetResultMap != null && !targetResultMap.isEmpty()) {
+                 // 3 判断是否有获取超速的target
+                 if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
+                     // 4 获取超速的target
+                     List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
+                     System.out.println("rateLimitTarget is :" + rateLimitTarget);
+                     //TODO 5 业务处理，重推......
+                 }
+             }
+         } else {
+             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
+             // result.code(); //服务异常码
+             // result.comment();//服务异常描述
+             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
+         }      
     }
 ```
 
@@ -334,8 +354,8 @@ value：响应码对应的目标用户
 
 接口|说明
 ---|---
-`ResultPack<Map<Integer, List<String>>> pushMessageByAlias(VarnishedMessage message, List<String> alias)`|推送通知栏消息
-`ResultPack<Map<Integer, List<String>>> pushMessageByAlias(VarnishedMessage message, List<String> alias, int retries)`|推送通知栏消息
+`ResultPack<PushResult> pushMessageByAlias(VarnishedMessage message, List<String> alias)`|推送通知栏消息
+`ResultPack<PushResult> pushMessageByAlias(VarnishedMessage message, List<String> alias, int retries)`|推送通知栏消息
 
 - 参数说明
 
@@ -349,10 +369,10 @@ retries|int|否|0|超时or异常重试次数
 - 返回值
 
 ```
-Map<Integer, List<String>>
+PushResult
 
-key：推送响应码
-value：响应码对应的目标用户 
+msgId;  推送消息ID，用于推送流程明细排查
+respTarget;  推送目标结果状态(key：推送响应码  value：响应码对应的目标用户 )
 注：只返回不合法、超速以及推送失败的目标用户
 ```
 
@@ -381,30 +401,34 @@ public void testVarnishedMessagePushByAlias() throws Exception {
             .suspend(true).clearNoticeBar(true).vibrate(true).lights(true).sound(true)
             .build();
 
-    //目标用户
-    List<String> alias = new ArrayList<String>();
-    alias.add("Android");
-    alias.add("alias2");
-    // 1 调用推送服务
-    ResultPack<Map<Integer, List<String>>> result = push.pushMessageByAlias(message, alias);
-    if (result.isSucceed()) {
-        // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
-        Map<Integer, List<String>> targetResultMap = result.value();//推送结果，全部推送成功，则map为empty
-        if (targetResultMap != null && !targetResultMap.isEmpty()) {
-            // 3 判断是否有获取超速的target
-            if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
-                // 4 获取超速的target
-                List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
-                System.out.println("rateLimitTarget is :" + rateLimitTarget);
-                //TODO 5 业务处理，重推......
+        //目标用户
+        List<String> alias = new ArrayList<String>();
+        alias.add("Android");
+        alias.add("alias2");
+        // 1 调用推送服务
+        ResultPack<PushResult> result = push.pushMessageByAlias(message, alias);
+        if (result.isSucceed()) {
+            // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
+            PushResult pushResult = result.value();
+            String msgId = pushResult.getMsgId();//推送消息ID，用于推送流程明细排查
+            Map<Integer, List<String>> targetResultMap = pushResult.getRespTarget();//推送结果，全部推送成功，则map为empty
+            System.out.println("push msgId:" + msgId);
+            System.out.println("push targetResultMap:" + targetResultMap);
+            if (targetResultMap != null && !targetResultMap.isEmpty()) {
+                // 3 判断是否有获取超速的target
+                if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
+                    // 4 获取超速的target
+                    List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
+                    System.out.println("rateLimitTarget is :" + rateLimitTarget);
+                    //TODO 5 业务处理，重推......
+                }
             }
-        }
-    } else {
-        // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
-        // result.code(); //服务异常码
-        // result.comment();//服务异常描述
-        System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
-    }    
+        } else {
+            // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
+            // result.code(); //服务异常码
+            // result.comment();//服务异常描述
+            System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
+        }    
 }
 
 ```
@@ -415,8 +439,8 @@ public void testVarnishedMessagePushByAlias() throws Exception {
 
 接口|说明
 ---|---
-`ResultPack<Map<Integer, List<String>>> pushMessageByAlias(UnVarnishedMessage message, List<String> alias)`|推送透传消息
-`ResultPack<Map<Integer, List<String>>> pushMessageByAlias(UnVarnishedMessage message, List<String> alias, int retries)`|推送透传消息
+`ResultPack<PushResult> pushMessageByAlias(UnVarnishedMessage message, List<String> alias)`|推送透传消息
+`ResultPack<PushResult> pushMessageByAlias(UnVarnishedMessage message, List<String> alias, int retries)`|推送透传消息
 
 - 参数说明
 
@@ -429,10 +453,10 @@ retries|int|否|0|超时or异常重试次数
 - 返回值
 
 ```
-Map<Integer, List<String>>
+PushResult
 
-key：推送响应码
-value：响应码对应的目标用户 
+msgId;  推送消息ID，用于推送流程明细排查
+respTarget;  推送目标结果状态(key：推送响应码  value：响应码对应的目标用户 ) 
 注：只返回不合法、超速以及推送失败的目标用户
 ```
 
@@ -461,26 +485,30 @@ public void testUnVarnishedMessagePushByALias() throws Exception {
     alias.add("alias");
     alias.add("alias2");
 
-    // 1 调用推送服务
-    ResultPack<Map<Integer, List<String>>> result = push.pushMessageByAlias(message, alias);
-    if (result.isSucceed()) {
-        // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
-        Map<Integer, List<String>> targetResultMap = result.value();//推送结果，全部推送成功，则map为empty
-        if (targetResultMap != null && !targetResultMap.isEmpty()) {
-            // 3 判断是否有获取超速的target
-            if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
-                // 4 获取超速的target
-                List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
-                System.out.println("rateLimitTarget is :" + rateLimitTarget);
-                //TODO 5 业务处理，重推......
+        // 1 调用推送服务
+        ResultPack<PushResult> result = push.pushMessageByAlias(message, alias);
+        if (result.isSucceed()) {
+            // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
+            PushResult pushResult = result.value();
+            String msgId = pushResult.getMsgId();//推送消息ID，用于推送流程明细排查
+            Map<Integer, List<String>> targetResultMap = pushResult.getRespTarget();//推送结果，全部推送成功，则map为empty
+            System.out.println("push msgId:" + msgId);
+            System.out.println("push targetResultMap:" + targetResultMap);
+            if (targetResultMap != null && !targetResultMap.isEmpty()) {
+                // 3 判断是否有获取超速的target
+                if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
+                    // 4 获取超速的target
+                    List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
+                    System.out.println("rateLimitTarget is :" + rateLimitTarget);
+                    //TODO 5 业务处理，重推......
+                }
             }
-        }
-    } else {
-        // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
-        // result.code(); //服务异常码
-        // result.comment();//服务异常描述
-        System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
-    }    
+        } else {
+            // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
+            // result.code(); //服务异常码
+            // result.comment();//服务异常描述
+            System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
+        }   
 }
 
 ```
@@ -572,8 +600,8 @@ Long  任务ID
 
 接口|说明
 ---|---
-`ResultPack<Map<Integer, List<String>>> pushMessageByTaskId(PushType pushType, long appId, long taskId, List<String> pushIds)`|任务消息推送
-`ResultPack<Map<Integer, List<String>>> pushMessageByTaskId(PushType pushType, long appId, long taskId, List<String> pushIds, int retries)`|任务消息推送
+`ResultPack<PushResult> pushMessageByTaskId(PushType pushType, long appId, long taskId, List<String> pushIds)`|任务消息推送
+`ResultPack<PushResult> pushMessageByTaskId(PushType pushType, long appId, long taskId, List<String> pushIds, int retries)`|任务消息推送
 - 参数说明
 
 参数名称|类型|必需|默认|描述
@@ -588,10 +616,10 @@ retries|int|否|0|超时or异常重试次数
 
 
 ```
-Map<Integer, List<String>> 
+PushResult
 
-key：推送响应码
-Value：响应码对应的目标用户 
+msgId;  推送消息ID，用于推送流程明细排查
+respTarget;  推送目标结果状态(key：推送响应码  value：响应码对应的目标用户 )
 注：只返回不合法、超速以及推送失败的目标用户，业务一般对超速的pushId对处理
 ```
 
@@ -616,10 +644,14 @@ Value：响应码对应的目标用户
         //通知栏任务消息推送
         Long taskId = 123l;
         // 1 调用推送服务
-        ResultPack<Map<Integer, List<String>>> result = push.pushMessageByTaskId(PushType.STATUSBAR, appId, taskId, pushIds, 0);
+        ResultPack<PushResult> result = push.pushMessageByTaskId(PushType.STATUSBAR, appId, taskId, pushIds, 0);
         if (result.isSucceed()) {
             // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
-            Map<Integer, List<String>> targetResultMap = result.value();//推送结果，全部推送成功，则map为empty
+            PushResult pushResult = result.value();
+            String msgId = pushResult.getMsgId();//推送消息ID，用于推送流程明细排查
+            Map<Integer, List<String>> targetResultMap = pushResult.getRespTarget();//推送结果，全部推送成功，则map为empty
+            System.out.println("push msgId:" + msgId);
+            System.out.println("push targetResultMap:" + targetResultMap);
             if (targetResultMap != null && !targetResultMap.isEmpty()) {
                 // 3 判断是否有获取超速的target
                 if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
@@ -642,7 +674,11 @@ Value：响应码对应的目标用户
         result = push.pushMessageByTaskId(PushType.DIRECT, appId, taskId, pushIds, 0);
         if (result.isSucceed()) {
             // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
-            Map<Integer, List<String>> targetResultMap = result.value();//推送结果，全部推送成功，则map为empty
+            PushResult pushResult = result.value();
+            String msgId = pushResult.getMsgId();//推送消息ID，用于推送流程明细排查
+            Map<Integer, List<String>> targetResultMap = pushResult.getRespTarget();//推送结果，全部推送成功，则map为empty
+            System.out.println("push msgId:" + msgId);
+            System.out.println("push targetResultMap:" + targetResultMap);
             if (targetResultMap != null && !targetResultMap.isEmpty()) {
                 // 3 判断是否有获取超速的target
                 if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
@@ -657,7 +693,7 @@ Value：响应码对应的目标用户
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
-        }        
+        }     
     }
 ```
 
@@ -666,8 +702,8 @@ Value：响应码对应的目标用户
 
 接口|说明
 ---|---
-`public ResultPack<Map<Integer, List<String>>> pushAliasMessageByTaskId(PushType pushType, long appId, long taskId, List<String> alias)`|任务消息推送
-`public ResultPack<Map<Integer, List<String>>> pushAliasMessageByTaskId(PushType pushType, long appId, long taskId, List<String> alias, int retries)`|任务消息推送
+`ResultPack<PushResult> pushAliasMessageByTaskId(PushType pushType, long appId, long taskId, List<String> alias)`|任务消息推送
+`ResultPack<PushResult> pushAliasMessageByTaskId(PushType pushType, long appId, long taskId, List<String> alias, int retries)`|任务消息推送
 - 参数说明
 
 参数名称|类型|必需|默认|描述
@@ -682,10 +718,10 @@ retries|int|否|0|超时or异常重试次数
 
 
 ```
-Map<Integer, List<String>> 
+PushResult
 
-key：推送响应码
-Value：响应码对应的目标用户 
+msgId;  推送消息ID，用于推送流程明细排查
+respTarget;  推送目标结果状态(key：推送响应码  value：响应码对应的目标用户 )
 注：只返回不合法、超速以及推送失败的目标用户，业务一般对超速的pushId对处理
 ```
 
@@ -711,48 +747,56 @@ public void testPushAliasPyTaskId() throws IOException {
     //通知栏任务消息推送
     Long taskId = 45361L;
     // 1 调用推送服务
-    ResultPack<Map<Integer, List<String>>> result = push.pushAliasMessageByTaskId(PushType.STATUSBAR, appId, taskId, alias);
-    if (result.isSucceed()) {
-        // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
-        Map<Integer, List<String>> targetResultMap = result.value();//推送结果，全部推送成功，则map为empty
-        if (targetResultMap != null && !targetResultMap.isEmpty()) {
-            // 3 判断是否有获取超速的target
-            if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
-                // 4 获取超速的target
-                List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
-                System.out.println("rateLimitTarget is :" + rateLimitTarget);
-                //TODO 5 业务处理，重推......
+    ResultPack<PushResult> result = push.pushAliasMessageByTaskId(PushType.STATUSBAR, appId, taskId, alias);
+        if (result.isSucceed()) {
+            // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
+            PushResult pushResult = result.value();
+            String msgId = pushResult.getMsgId();//推送消息ID，用于推送流程明细排查
+            Map<Integer, List<String>> targetResultMap = pushResult.getRespTarget();//推送结果，全部推送成功，则map为empty
+            System.out.println("push msgId:" + msgId);
+            System.out.println("push targetResultMap:" + targetResultMap);
+            if (targetResultMap != null && !targetResultMap.isEmpty()) {
+                // 3 判断是否有获取超速的target
+                if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
+                    // 4 获取超速的target
+                    List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
+                    System.out.println("rateLimitTarget is :" + rateLimitTarget);
+                    //TODO 5 业务处理，重推......
+                }
             }
-        }
-    } else {
-        // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
-        // result.code(); //服务异常码
-        // result.comment();//服务异常描述
-        System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
-    }    
+        } else {
+            // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
+            // result.code(); //服务异常码
+            // result.comment();//服务异常描述
+            System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
+        }    
 
     //透传消息任务推送
     taskId = 45407L;
     // 1 调用推送服务
     result = push.pushAliasMessageByTaskId(PushType.DIRECT, appId, taskId, alias);
-    if (result.isSucceed()) {
-        // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
-        Map<Integer, List<String>> targetResultMap = result.value();//推送结果，全部推送成功，则map为empty
-        if (targetResultMap != null && !targetResultMap.isEmpty()) {
-            // 3 判断是否有获取超速的target
-            if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
-                // 4 获取超速的target
-                List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
-                System.out.println("rateLimitTarget is :" + rateLimitTarget);
-                //TODO 5 业务处理，重推......
+        if (result.isSucceed()) {
+            // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
+            PushResult pushResult = result.value();
+            String msgId = pushResult.getMsgId();//推送消息ID，用于推送流程明细排查
+            Map<Integer, List<String>> targetResultMap = pushResult.getRespTarget();//推送结果，全部推送成功，则map为empty
+            System.out.println("push msgId:" + msgId);
+            System.out.println("push targetResultMap:" + targetResultMap);
+            if (targetResultMap != null && !targetResultMap.isEmpty()) {
+                // 3 判断是否有获取超速的target
+                if (targetResultMap.containsKey(PushResponseCode.RSP_SPEED_LIMIT.getValue())) {
+                    // 4 获取超速的target
+                    List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
+                    System.out.println("rateLimitTarget is :" + rateLimitTarget);
+                    //TODO 5 业务处理，重推......
+                }
             }
-        }
-    } else {
-        // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
-        // result.code(); //服务异常码
-        // result.comment();//服务异常描述
-        System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
-    }    
+        } else {
+            // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
+            // result.code(); //服务异常码
+            // result.comment();//服务异常描述
+            System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
+        }    
 }
 ```
 
