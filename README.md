@@ -6,12 +6,17 @@
 
 ## 更新日志
 
-### [2016-12-18]V1.0.0.20161218_release
-*  1.0.0标准版
+### [2017-03-21]V1.1.1.20170321_release
+*  fixed [#12](https://github.com/MEIZUPUSH/JavaSdk/issues/12)
 
 ### [2017-02-16]V1.1.0.20170216_release
 *  推送结果增加msgId
 *  通过msgId以及推送目标在推送平台查询具体的推送日志明细
+
+### [2016-12-18]V1.0.0.20161218_release
+*  1.0.0标准版
+
+
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)

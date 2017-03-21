@@ -664,7 +664,7 @@ public class IFlymePush extends HttpClient {
         String value = httpResult.getValue();
         String msgId = httpResult.getMsgId();
         if (SUCCESS_CODE.equals(code)) {
-            Map<Integer, List<String>> respTarget = new HashMap<Integer, List<String>>();
+            Map<String, List<String>> respTarget = new HashMap<String, List<String>>();
             if (StringUtils.isNotBlank(value)) {
                 respTarget = JSONObject.parseObject(value, Map.class);
             }
@@ -804,7 +804,7 @@ public class IFlymePush extends HttpClient {
         String msgId = String.valueOf(taskId);
 
         if (SUCCESS_CODE.equals(code)) {
-            Map<Integer, List<String>> respTarget = new HashMap<Integer, List<String>>();
+            Map<String, List<String>> respTarget = new HashMap<String, List<String>>();
             if (StringUtils.isNotBlank(value)) {
                 respTarget = JSONObject.parseObject(value, Map.class);
             }

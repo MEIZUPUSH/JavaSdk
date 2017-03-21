@@ -441,7 +441,7 @@ public class IFlymePushTest {
             // 2 调用推送服务成功 （其中map为设备的具体推送结果，一般业务针对超速的code类型做处理）
             PushResult pushResult = result.value();
             String msgId = pushResult.getMsgId();//推送消息ID，用于推送流程明细排查
-            Map<Integer, List<String>> targetResultMap = pushResult.getRespTarget();//推送结果，全部推送成功，则map为empty
+            Map<String, List<String>> targetResultMap = pushResult.getRespTarget();//推送结果，全部推送成功，则map为empty
             System.out.println("push msgId:" + msgId);
             System.out.println("push targetResultMap:" + targetResultMap);
             if (targetResultMap != null && !targetResultMap.isEmpty()) {
