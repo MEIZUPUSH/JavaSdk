@@ -29,7 +29,7 @@ public class IFlymePushTest {
     /**
      * 平台注册应用ID
      */
-    public static final Long appId = 100999l;
+    public static final Long appId = 0L;
 
 
     /**
@@ -244,7 +244,7 @@ public class IFlymePushTest {
      * @throws IOException
      */
     @Test
-    public void testVarnishedMessagePushAliasPyTaskId() throws IOException {
+    public void testVarnishedMessagePushAliasByTaskId() throws IOException {
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
 
@@ -266,7 +266,7 @@ public class IFlymePushTest {
      * @throws IOException
      */
     @Test
-    public void testUnVarnishedMessagePushAliasPyTaskId() throws IOException {
+    public void testUnVarnishedMessagePushAliasByTaskId() throws IOException {
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
 
