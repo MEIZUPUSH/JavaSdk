@@ -1,4 +1,4 @@
-package com.meizu.push.sdk.server;
+package com.meizu.push.sdk.server.constant;
 
 import java.util.Collection;
 import java.util.HashMap;

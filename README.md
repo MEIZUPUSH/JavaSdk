@@ -6,6 +6,10 @@
 
 ## 更新日志
 
+### [2017-04-28]V1.2.1.20170428_release
+*  开放别名、标签订阅服务接口
+*  开放通知栏、透传消息开关接口
+
 ### [2017-03-21]V1.1.1.20170321_release
 *  fixed [#12](https://github.com/MEIZUPUSH/JavaSdk/issues/12)
 
@@ -21,6 +25,7 @@
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)
     * [推送服务(IFlymePush)](#IFlymePush_index)
+    * [订阅服务(IFlymePushSub)](#IFlymePushSub_index)
     * [通知栏消息体(Message)](#Message_index)
       * [通知栏消息(VarnishedMessage)](#VarnishedMessage_index)
       * [透传消息(UnVarnishedMessage)](#UnVarnishedMessage_index)
@@ -31,9 +36,12 @@
     * [推送类型(PushType)](#PushType_index) 
     * [标签推送集合类型（ScopeType）](#ScopeType_index) 
     * [任务推送统计（TaskStatistics）](#TaskStatistics_index) 
+    * [订阅别名信息（AliasInfo）](#AliasInfo_index) 
+    * [标签订阅信息（TagInfo）](#TagInfo_index) 
+    * [设备开关状态（SwitchStatusInfo）](#SwitchStatusInfo_index) 
 * [二.接口说明](#api_def_index) 
     * [非任务推送](#UnTaskPush_index)      
-         * [pushId通知栏消息推送(pushMessage)](#VarnishedMessage_push_index)    
+         * [pushId通知栏消息推送(pushMessage)](#VarnishedMessage_push_index)   
          * [pushId透传消息推送(pushMessage)](#UnVarnishedMessage_push_index)
          * [别名通知栏消息推送(pushMessageByAlias)](#VarnishedMessage_alias_push_index)    
          * [别名透传消息推送(pushMessageByAlias)](#UnVarnishedMessage_alias_push_index)
@@ -46,7 +54,18 @@
          * [取消推送任务(cancelTaskPush)](#cancelTaskPush_index) 
     * [推送统计](#statistics_index) 
         * [获取任务推送统计(getTaskStatistics)](#getTaskStatistics_index)    
-    
+    * [订阅服务](#sub_index) 
+        * [修改通知栏订阅开关状态(updateStatusbarSwitch)](#updateStatusbarSwitch_index)
+        * [修改透传订阅开关状态(updateDirectSwitch)](#updateDirectSwitch_index)
+        * [同步修改所有开关状态(updateAllSwitch)](#updateAllSwitch_index)
+        * [获取订阅开关状态(getRegisterSwitch)](#getRegisterSwitch_index)
+        * [别名订阅(subscribeAlias)](#subscribeAlias_index)
+        * [取消别名订阅(unSubscribeAlias)](#unSubscribeAlias_index)
+        * [获取订阅别名(getSubAlias)](#getSubAlias_index)
+        * [标签订阅(subscribeTags)](#subscribeTags_index)
+        * [取消标签订阅(unSubscribeTags)](#unSubscribeTags_index)
+        * [获取订阅标签(getSubTags)](#getSubTags_index)
+        * [取消订阅所有标签(unSubAllTags)](#unSubAllTags_index)
 
 # 类型定义 <a name="type_def_index"/>
 ## 推送服务(IFlymePush) <a name="IFlymePush_index"/>
@@ -54,6 +73,15 @@
 
 参数名称|类型|必填|默认|描述
 ---|---|---|---|---
+appSecret|String|是|null|注册应用appSecret
+useSSL|Boolean|否|false| 是否使用https接口调用：true 使用https连接，false使用http连接
+
+## 订阅服务(IFlymePushSub) <a name="IFlymePushSub_index"/>
+> 调用该类实例的方法做别名、标签、推送开关订阅服务， 构造函数说明如下：
+
+参数名称|类型|必填|默认|描述
+---|---|---|---|---
+appId|Long|是|null|注册应用appId
 appSecret|String|是|null|注册应用appSecret
 useSSL|Boolean|否|false| 是否使用https接口调用：true 使用https连接，false使用http连接
 
@@ -177,6 +205,25 @@ pushedNo|Long|推送数
 acceptNo|Long|接受数
 displayNo|Long|展示数
 clickNo|Long|点击数
+
+## 订阅别名信息  (AliasInfo)<a name="AliasInfo_index"/>
+名称|类型|描述
+---|---|--- 
+pushId|String|订阅pushId
+alias|String|订阅别名
+
+## 订阅标签信息 （TagInfo） <a name="TagInfo_index"/>
+名称|类型|描述
+---|---|--- 
+pushId|String|订阅pushId
+tags|List<Tag>|订阅标签
+
+## 订阅开关状态  (SwitchStatusInfo) <a name="SwitchStatusInfo_index"/>
+名称|类型|描述
+---|---|--- 
+pushId|String|订阅pushId
+statusbarSwitch|boolean|通知栏开关状态
+directSwitch|boolean|透传开关状态
 
 
 # 接口说明 <a name="api_def_index"/>
@@ -1015,4 +1062,338 @@ TaskStatistics
         System.out.println(resultPack);
     }
 
+```
+
+## 订阅服务 <a name="sub_index"/>
+### 修改通知栏订阅开关状态  (updateStatusbarSwitch) <a name="updateStatusbarSwitch_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<SwitchStatusInfo> updateStatusbarSwitch(String pushId, Boolean subSwitch)`|修改通知栏订阅开关状态
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushId|String|是|null|订阅pushId
+subSwitch|Boolean|是|null|开关状态 true:打开  false:关闭
+
+- 返回值
+
+```
+SwitchStatusInfo
+```
+
+- 示例
+
+```java
+   @Test
+    public void updateStatusbarSwitch() throws Exception {
+        ResultPack<SwitchStatusInfo> resultPack = sub.updateStatusbarSwitch(pushId, true);
+        System.out.println("updateStatusbarSwitch:" + resultPack);
+    }
+```
+
+### 修改透传订阅开关状态  (updateDirectSwitch) <a name="updateDirectSwitch_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<SwitchStatusInfo> updateDirectSwitch(String pushId, Boolean subSwitch)`|修改透传订阅开关状态
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushId|String|是|null|订阅pushId
+subSwitch|Boolean|是|null|开关状态 true:打开  false:关闭
+
+- 返回值
+
+```
+SwitchStatusInfo
+```
+
+- 示例
+
+```java
+    @Test
+    public void updateDirectSwitch() throws Exception {
+        ResultPack<SwitchStatusInfo> resultPack = sub.updateDirectSwitch(pushId, false);
+        System.out.println("updateDirectSwitch:" + resultPack);
+    }
+```
+
+### 同步修改所有开关状态  (updateAllSwitch) <a name="updateAllSwitch_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<SwitchStatusInfo> updateAllSwitch(String pushId, Boolean subSwitch)`|同步修改所有开关状态
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushId|String|是|null|订阅pushId
+subSwitch|Boolean|是|null|开关状态 true:打开  false:关闭
+
+- 返回值
+
+```
+SwitchStatusInfo
+```
+
+- 示例
+
+```java
+    @Test
+    public void updateAllSwitch() throws Exception {
+        ResultPack<SwitchStatusInfo> resultPack = sub.updateAllSwitch(pushId, true);
+        System.out.println("updateAllSwitch:" + resultPack);
+    }
+```
+
+
+### 获取订阅开关状态  (updateAllSwitch) <a name="getRegisterSwitch_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<SwitchStatusInfo> getRegisterSwitch(String pushId)`|获取订阅开关状态
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushId|String|是|null|订阅pushId
+
+- 返回值
+
+```
+SwitchStatusInfo
+```
+
+- 示例
+
+```java
+    @Test
+    public void getRegisterSwitch() throws Exception {
+        ResultPack<SwitchStatusInfo> resultPack = sub.getRegisterSwitch(pushId);
+        System.out.println("getRegisterSwitch:" + resultPack);
+    }
+```
+
+
+### 别名订阅  (subscribeAlias) <a name="subscribeAlias_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<AliasInfo> subscribeAlias(String pushId, String alias)`|别名订阅
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushId|String|是|null|订阅pushId
+alias|String|是|null|订阅别名 60字符限制
+
+- 返回值
+
+```
+AliasInfo
+```
+
+- 示例
+
+```java
+    @Test
+    public void subscribeAlias() throws Exception {
+        ResultPack<AliasInfo> resultPack = sub.subscribeAlias(pushId, "flyme");
+        System.out.println("subscribeAlias:" + resultPack);
+    }
+```
+
+### 取消别名订阅  (unSubscribeAlias) <a name="unSubscribeAlias_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<AliasInfo> unSubscribeAlias(String pushId)`|取消别名订阅
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushId|String|是|null|订阅pushId
+
+- 返回值
+
+```
+AliasInfo
+```
+
+- 示例
+
+```java
+    @Test
+    public void unSubscribeAlias() throws Exception {
+        ResultPack<AliasInfo> resultPack = sub.unSubscribeAlias(pushId);
+        System.out.println("unSubscribeAlias:" + resultPack);
+    }
+```
+
+### 获取订阅别名  (getSubAlias) <a name="getSubAlias_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<AliasInfo> getSubAlias(String pushId)`|获取订阅别名
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushId|String|是|null|订阅pushId
+
+- 返回值
+
+```
+AliasInfo
+```
+
+- 示例
+
+```java
+    @Test
+    public void getSubAlias() throws Exception {
+        ResultPack<AliasInfo> resultPack = sub.getSubAlias(pushId);
+        System.out.println("getSubAlias:" + resultPack);
+    }
+```
+
+### 标签订阅  (subscribeTags) <a name="subscribeTags_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<TagInfo> subscribeTags(String pushId, List<String> tags)`|标签订阅
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushId|String|是|null|订阅pushId
+tags|List<String>|是|null|订阅标签（单个标签20个字符限制，100个标签数量限制）
+
+- 返回值
+
+```
+TagInfo
+```
+
+- 示例
+
+```java
+    @Test
+    public void subscribeTags() throws Exception {
+        List<String> tags = new ArrayList<String>(2);
+        tags.add("tag1");
+        tags.add("tag2");
+        ResultPack<TagInfo> resultPack = sub.subscribeTags(pushId, tags);
+        System.out.println("subscribeTags:" + resultPack);
+    }
+```
+
+### 取消标签订阅  (unSubscribeTags) <a name="unSubscribeTags_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<TagInfo> unSubscribeTags(String pushId, List<String> tags)`|取消标签订阅
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushId|String|是|null|订阅pushId
+tags|List<String>|是|null|订阅标签（单个标签20个字符限制，100个标签数量限制）
+
+- 返回值
+
+```
+TagInfo
+```
+
+- 示例
+
+```java
+    @Test
+    public void unSubscribeTags() throws Exception {
+        List<String> tags = new ArrayList<String>(2);
+        tags.add("tag1");
+        tags.add("tag2");
+        ResultPack<TagInfo> resultPack = sub.unSubscribeTags(pushId, tags);
+        System.out.println("unSubscribeTags:" + resultPack);
+    }
+```
+
+### 获取订阅标签  (getSubTags) <a name="getSubTags_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<TagInfo> getSubTags(String pushId)`|获取订阅标签
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushId|String|是|null|订阅pushId
+
+- 返回值
+
+```
+TagInfo
+```
+
+- 示例
+
+```java
+    @Test
+    public void getSubTags() throws Exception {
+        ResultPack<TagInfo> resultPack = sub.getSubTags(pushId);
+        System.out.println("getSubTags:" + resultPack);
+    }
+```
+
+### 取消订阅所有标签  (unSubAllTags) <a name="unSubAllTags_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`ResultPack<Boolean> unSubAllTags(String pushId)`|取消订阅所有标签
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+pushId|String|是|null|订阅pushId
+
+- 返回值
+
+```
+Boolean
+```
+
+- 示例
+
+```java
+   @Test
+    public void unSubAllTags() throws Exception {
+        ResultPack<Boolean> resultPack = sub.unSubAllTags(pushId);
+        System.out.println("unSubAllTags:" + resultPack);
+    }
 ```

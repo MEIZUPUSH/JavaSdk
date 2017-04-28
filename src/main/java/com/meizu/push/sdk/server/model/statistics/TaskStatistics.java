@@ -1,4 +1,4 @@
-package com.meizu.push.sdk.server;
+package com.meizu.push.sdk.server.model.statistics;
 
 
 /**

@@ -4,6 +4,12 @@ package com.meizu.push.sdk.server;
 import com.alibaba.fastjson.JSON;
 import com.meizu.push.sdk.constant.PushType;
 import com.meizu.push.sdk.constant.ScopeType;
+import com.meizu.push.sdk.server.constant.PushResponseCode;
+import com.meizu.push.sdk.server.constant.ResultPack;
+import com.meizu.push.sdk.server.model.push.PushResult;
+import com.meizu.push.sdk.server.model.push.UnVarnishedMessage;
+import com.meizu.push.sdk.server.model.push.VarnishedMessage;
+import com.meizu.push.sdk.server.model.statistics.TaskStatistics;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -29,7 +35,7 @@ public class IFlymePushTest {
     /**
      * 平台注册应用ID
      */
-    public static final Long appId = 0L;
+    public static final Long appId = 100999L;
 
 
     /**

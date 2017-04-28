@@ -1,7 +1,10 @@
 package com.meizu.push.sdk.utils;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.meizu.push.sdk.constant.SystemConstants;
+import com.meizu.push.sdk.exception.InvalidRequestException;
+import com.meizu.push.sdk.server.model.HttpResult;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -29,6 +32,8 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.alibaba.fastjson.JSON.parseObject;
+
 public class HttpClient {
     protected static final Logger logger = Logger.getLogger(HttpClient.class.getName());
 
@@ -42,9 +47,29 @@ public class HttpClient {
     private static String LOCAL_IP;
 
     protected final String appSecret;
+    protected final long appId;
+    /**
+     * 是否使用https接口调用：true 使用https连接，false使用http连接；默认使用http
+     */
+    protected final boolean useSSL;
 
     public HttpClient(String appSecret) {
+        this(0, appSecret);
+    }
+
+    public HttpClient(String appSecret, boolean useSSL) {
+        this(0, appSecret, useSSL);
+    }
+
+    public HttpClient(long appId, String appSecret) {
+        this(appId, appSecret, Boolean.FALSE);
+    }
+
+    public HttpClient(long appId, String appSecret, boolean useSSL) {
+        nonNull(appSecret);
+        this.appId = appId;
         this.appSecret = appSecret;
+        this.useSSL = useSSL;
         getLocalHostNameAndIp();
     }
 
@@ -273,6 +298,81 @@ public class HttpClient {
         sc.init(null, trustAllCerts, null);
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
     }
+
+    /**
+     * 超时以及服务不可用异常返回null
+     *
+     * @param useSSL 是否启用https
+     * @param url
+     * @param body
+     * @return
+     * @throws IOException
+     */
+    protected HttpResult post(boolean useSSL, String url, String body) throws IOException {
+        if (useSSL) {
+            if (url.startsWith("http://")) {
+                url = url.replace("http://", "https://");
+            }
+        }
+
+        String bodyParam = body;
+        if (StringUtils.isNotBlank(bodyParam) && bodyParam.charAt(0) == 38) {
+            bodyParam = body.toString().substring(1);
+        }
+
+        HttpURLConnection conn;
+        int status;
+        try {
+            logger.fine("post to: " + url);
+            conn = this.doPost(url, bodyParam);
+            status = conn.getResponseCode();
+        } catch (IOException e) {
+            logger.log(Level.WARNING, "IOException posting to push", e);
+            return null;
+        }
+       /*
+        5xx（服务器错误）
+        这些状态代码表示，服务器在尝试处理请求时发生内部错误。这些错误可能是服务器本身的错误，而不是请求出错。
+        代码 说明
+        500（服务器内部错误） 服务器遇到错误，无法完成请求。
+        501（尚未实施） 服务器不具备完成请求的功能。例如，当服务器无法识别请求方法时，服务器可能会返回此代码。
+        502（错误网关） 服务器作为网关或代理，从上游服务器收到了无效的响应。
+        503（服务不可用） 目前无法使用服务器（由于超载或进行停机维护）。通常，这只是一种暂时的状态。
+        504（网关超时） 服务器作为网关或代理，未及时从上游服务器接收请求。
+        505（HTTP 版本不受支持） 服务器不支持请求中所使用的 HTTP 协议版本。
+       */
+        if (status / 100 == 5) {
+            logger.fine("push service is unavailable (status " + status + ")");
+            return null;
+        } else {
+            String responseBody;
+            if (status != 200) {
+                try {
+                    responseBody = getAndClose(conn.getErrorStream());
+                    logger.finest("Plain post error response: " + responseBody);
+                } catch (IOException e) {
+                    responseBody = "N/A";
+                    logger.log(Level.FINE, "Exception reading response: ", e);
+                }
+                throw new InvalidRequestException(status, responseBody);
+            } else {
+                try {
+                    responseBody = getAndClose(conn.getInputStream());
+                } catch (IOException e) {
+                    logger.log(Level.WARNING, "Exception reading response: ", e);
+                    return null;
+                }
+                try {
+                    JSONObject json = parseObject(responseBody);
+                    return (new HttpResult.Builder()).fromJson(json);
+                } catch (Exception e) {
+                    logger.log(Level.WARNING, "Exception parsing response: ", e);
+                    throw new IOException("Invalid response from push: " + responseBody);
+                }
+            }
+        }
+    }
+
 
     /**
      * @param
