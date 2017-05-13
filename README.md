@@ -1,7 +1,7 @@
 # 魅族开放平台PUSH系统JAVA版本SDK
 
 ## JavaPushSdk发布说明(请使用最新版本)
-* 中央仓库获取 [Central Repository](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.meizu.flyme%22)
+* 中央仓库获取 [MVN Repository](http://mvnrepository.com/artifact/com.meizu.flyme/push-server-sdk) 或者 [Central Repository](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.meizu.flyme%22) 
 * 直接下载获取 [Java Server SDK](https://github.com/MEIZUPUSH/JavaSdk/releases)
 
 ## 更新日志
