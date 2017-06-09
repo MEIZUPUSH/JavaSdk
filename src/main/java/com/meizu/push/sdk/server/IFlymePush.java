@@ -10,9 +10,10 @@ import com.meizu.push.sdk.server.constant.ResultPack;
 import com.meizu.push.sdk.server.model.HttpResult;
 import com.meizu.push.sdk.server.model.push.Message;
 import com.meizu.push.sdk.server.model.push.PushResult;
-import com.meizu.push.sdk.server.model.statistics.TaskStatistics;
 import com.meizu.push.sdk.server.model.push.UnVarnishedMessage;
 import com.meizu.push.sdk.server.model.push.VarnishedMessage;
+import com.meizu.push.sdk.server.model.statistics.DailyPushStatics;
+import com.meizu.push.sdk.server.model.statistics.TaskStatistics;
 import com.meizu.push.sdk.utils.CollectionUtils;
 import com.meizu.push.sdk.utils.DateUtils;
 import com.meizu.push.sdk.utils.HttpClient;
@@ -27,6 +28,8 @@ import com.meizu.push.sdk.vo.UnVarnishedMessageJson;
 import com.meizu.push.sdk.vo.VarnishedMessageJson;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -558,6 +561,33 @@ public class IFlymePush extends HttpClient {
                     taskStatistics.setAcceptNo(jsonObject.getLong("acceptNo"));
                     taskStatistics.setDisplayNo(jsonObject.getLong("displayNo"));
                     taskStatistics.setClickNo(jsonObject.getLong("clickNo"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return ResultPack.succeed(taskStatistics);
+        } else {
+            return ResultPack.failed(code, msg);
+        }
+    }
+
+    public ResultPack<List<DailyPushStatics>> dailyPushStatics(long appId, Date startTime, Date endTime) throws IOException {
+
+        String _url = SystemConstants.GET_PUSH_DAILY_STATICS;
+
+        StringBuilder body = newBody("appId", String.valueOf(appId));
+        addParameter(body, "startTime", DateUtils.date2String(startTime, "yyyyMMdd"));
+        addParameter(body, "endTime", DateUtils.date2String(endTime, "yyyyMMdd"));
+
+        HttpResult httpResult = super.post(useSSL, _url, body.toString());
+        String code = httpResult.getCode();
+        String msg = httpResult.getMessage();
+        String value = httpResult.getValue();
+        List<DailyPushStatics> taskStatistics = new ArrayList<DailyPushStatics>();
+        if (SUCCESS_CODE.equals(code)) {
+            if (StringUtils.isNotBlank(value)) {
+                try {
+                    taskStatistics = JSONObject.parseArray(value, DailyPushStatics.class);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

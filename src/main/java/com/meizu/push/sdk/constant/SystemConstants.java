@@ -7,7 +7,7 @@ public class SystemConstants {
 
     public static final String CHAR_SET = "UTF-8";
 
-    public static final String SDK_VERSION = "1.2.1.20170428_release";
+    public static final String SDK_VERSION = "1.2.2.20170609_release";
 
     /**
      * 推送服务:pushId推送接口（透传消息）
@@ -69,9 +69,14 @@ public class SystemConstants {
 
 
     /**
-     * 统计服务:通过taskId获取推送统计信息
+     * 统计服务: 通过taskId获取推送统计信息
      */
     public static final String GET_PUSH_STATISTICS_BY_TASKID = "http://api-push.meizu.com/garcia/api/server/push/statistics/getTaskStatistics";
+
+    /**
+     * 统计服务: 获取应用推送统计（最长跨度30天）
+     */
+    public static final String GET_PUSH_DAILY_STATICS = "http://api-push.meizu.com/garcia/api/server/push/statistics/dailyPushStatics";
 
 
     /**

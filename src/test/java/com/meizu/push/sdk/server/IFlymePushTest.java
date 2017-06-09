@@ -9,7 +9,9 @@ import com.meizu.push.sdk.server.constant.ResultPack;
 import com.meizu.push.sdk.server.model.push.PushResult;
 import com.meizu.push.sdk.server.model.push.UnVarnishedMessage;
 import com.meizu.push.sdk.server.model.push.VarnishedMessage;
+import com.meizu.push.sdk.server.model.statistics.DailyPushStatics;
 import com.meizu.push.sdk.server.model.statistics.TaskStatistics;
+import com.meizu.push.sdk.utils.DateUtils;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -425,6 +427,16 @@ public class IFlymePushTest {
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
         long taskId = 44760L;
         ResultPack<TaskStatistics> resultPack = push.getTaskStatistics(appId, taskId);
+        System.out.println(resultPack);
+    }
+
+    @Test
+    public void testDailyPushStatics() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+        Date startTime = DateUtils.str2Date("2017-06-03", "yyyy-MM-dd");
+        Date endTime = DateUtils.str2Date("2017-06-10", "yyyy-MM-dd");
+        ResultPack<List<DailyPushStatics>> resultPack = push.dailyPushStatics(appId, startTime, endTime);
         System.out.println(resultPack);
     }
 

@@ -36,6 +36,7 @@
     * [推送类型(PushType)](#PushType_index) 
     * [标签推送集合类型（ScopeType）](#ScopeType_index) 
     * [任务推送统计（TaskStatistics）](#TaskStatistics_index) 
+    * [任务推送统计（天）（DailyPushStatics）](#DailyPushStatics_index) 
     * [订阅别名信息（AliasInfo）](#AliasInfo_index) 
     * [标签订阅信息（TagInfo）](#TagInfo_index) 
     * [设备开关状态（SwitchStatusInfo）](#SwitchStatusInfo_index) 
@@ -54,6 +55,7 @@
          * [取消推送任务(cancelTaskPush)](#cancelTaskPush_index) 
     * [推送统计](#statistics_index) 
         * [获取任务推送统计(getTaskStatistics)](#getTaskStatistics_index)    
+        * [获取应用推送统计（最长跨度30天）(dailyPushStatics)](#dailyPushStatics_index)    
     * [订阅服务](#sub_index) 
         * [修改通知栏订阅开关状态(updateStatusbarSwitch)](#updateStatusbarSwitch_index)
         * [修改透传订阅开关状态(updateDirectSwitch)](#updateDirectSwitch_index)
@@ -199,6 +201,17 @@ INTERSECTION|Enum|交集
 ## 任务推送统计（TaskStatistics）<a name="TaskStatistics_index"/>
 名称|类型|描述
 ---|---|--- 
+targetNo|Long|目标数
+validNo|Long|有效数
+pushedNo|Long|推送数
+acceptNo|Long|接受数
+displayNo|Long|展示数
+clickNo|Long|点击数
+
+## 任务推送统计（天）（DailyPushStatics）<a name="DailyPushStatics_index"/>
+名称|类型|描述
+---|---|--- 
+date|Date|日期
 targetNo|Long|目标数
 validNo|Long|有效数
 pushedNo|Long|推送数
@@ -1062,6 +1075,46 @@ TaskStatistics
         System.out.println(resultPack);
     }
 
+```
+
+### 获取应用推送统计(dailyPushStatics) <a name="dailyPushStatics_index"/>
+- 接口说明
+
+接口|说明
+---|---
+`public ResultPack<List<DailyPushStatics>> dailyPushStatics(long appId, Date startTime, Date endTime)`|获取应用推送统计
+
+- 参数说明
+
+参数名称|类型|必需|默认|描述
+---|---|---|---|---
+appId|Long|是|null|应用ID
+startTime|Date|是|null|开始日期
+endTime|Date|是|null|结束日期
+
+- 返回值
+
+```
+List<DailyPushStatics>
+```
+
+- 示例
+
+```java
+    /**
+     * 获取任务统计结果
+     *
+     * @throws IOException
+     */
+     @Test
+     public void testDailyPushStatics() throws IOException {
+         //推送对象
+         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+         Date startTime = DateUtils.str2Date("2017-06-03", "yyyy-MM-dd");
+         Date endTime = DateUtils.str2Date("2017-06-10", "yyyy-MM-dd");
+         ResultPack<List<DailyPushStatics>> resultPack = push.dailyPushStatics(appId, startTime, endTime);
+         System.out.println(resultPack);
+     }
 ```
 
 ## 订阅服务 <a name="sub_index"/>

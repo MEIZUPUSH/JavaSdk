@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.meizu.flyme</groupId>
     <artifactId>push-server-sdk</artifactId>
-    <version>1.2.1.20170428_release</version>
+    <version>1.2.2.20170609_release</version>
 
     <packaging>jar</packaging>
     <name>MeizuPushSDK</name>
