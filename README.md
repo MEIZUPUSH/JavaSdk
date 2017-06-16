@@ -24,6 +24,17 @@
 *  1.0.0标准版
 
 
+## 说明
+* 为优化flyme系统整体功耗，推送平台决定本周五 **(6月16号)** 起限制透传消息推送的使用，不排除关闭透传推送类型。使用透传推送的业务请尽快切换到通知栏推送，以避免消息推送失败。新接入的应用请使用通知栏推送
+
+* 受影响的接口及功能：
+ 1. pushId透传消息推送(pushMessage)
+ 2. 别名透传消息推送(pushMessageByAlias)
+ 3. 获取taskId的透传推送(getTaskId)
+ 4. 全网透传推送(pushToApp)
+ 5. 标签透传推送(pushToTag)
+ 6. 在平台上进行的透传推送
+
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)
@@ -175,6 +186,7 @@ APP_REQUEST_PUSH_LIMIT|110019|超过该应用每天推送次数限制
 INVALID_APPLICATION_PACKAGENAME|110031|packageName不合法
 INVALID_TASK_ID|110032|非法的taskId
 INVALID_APPLICATION_SECRET|110033|非法的appSecret
+DIRECT_OUT_LIMIT|110053|透传超过限制
 
 ## 推送响应码定义（PushResponseCode） <a name="PushResponseCode_index"/>
 名称|Code|Commen
