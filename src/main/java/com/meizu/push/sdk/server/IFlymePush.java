@@ -670,7 +670,8 @@ public class IFlymePush extends HttpClient {
             AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(),
                     msgInfo.isClearNoticeBar(), notificationType, msgInfo.isFixDisplay(), msgInfo.getFixStartDisplayDate(), msgInfo.getFixEndDisplayDate());
 
-            VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo, noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo);
+            VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo,
+                    noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo,msgInfo.getExtra());
             addParameter(body, "messageJson", JSON.toJSONString(messageJson));
 
             if (UserType.PUSHID == userType) {

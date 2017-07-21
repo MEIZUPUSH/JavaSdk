@@ -6,6 +6,9 @@
 
 ## 更新日志
 
+### [2017-07-18]V1.2.3.20170718_release
+*  通知栏pushId、alias增加消息回执功能
+
 ### [2017-06-09]V1.2.2.20170609_release
 *  开放统计接口：获取应用推送统计（最长跨度30天）
 
@@ -54,6 +57,8 @@
     * [订阅别名信息（AliasInfo）](#AliasInfo_index) 
     * [标签订阅信息（TagInfo）](#TagInfo_index) 
     * [设备开关状态（SwitchStatusInfo）](#SwitchStatusInfo_index) 
+    * [回执类型（CallBackType）](#CallBackType_index)
+    * [回执参数（ExtraParam）](#ExtraParam_index) 
 * [二.接口说明](#api_def_index) 
     * [非任务推送](#UnTaskPush_index)      
          * [pushId通知栏消息推送(pushMessage)](#VarnishedMessage_push_index)   
@@ -69,7 +74,9 @@
          * [取消推送任务(cancelTaskPush)](#cancelTaskPush_index) 
     * [推送统计](#statistics_index) 
         * [获取任务推送统计(getTaskStatistics)](#getTaskStatistics_index)    
-        * [获取应用推送统计（最长跨度30天）(dailyPushStatics)](#dailyPushStatics_index)    
+        * [获取应用推送统计（最长跨度30天）(dailyPushStatics)](#dailyPushStatics_index)  
+    * [高级功能](#super_index)
+        * [消息送达与回执](#callback_index)    
     * [订阅服务](#sub_index) 
         * [修改通知栏订阅开关状态(updateStatusbarSwitch)](#updateStatusbarSwitch_index)
         * [修改透传订阅开关状态(updateDirectSwitch)](#updateDirectSwitch_index)
@@ -137,6 +144,7 @@ fixDisplayTime|(Date,Date)|否|(null,null)|定时展示开始,结束时间 【fi
 vibrate|Boolean|否|true|震动 (false关闭  true 开启) , 【非必填，默认true】
 lights|Boolean|否|true|闪光 (false关闭  true 开启) , 【非必填，默认true】
 sound|Boolean|否|true|声音 (false关闭  true 开启) , 【非必填，默认true】
+extra|Map<String, String>|否|null| [回执参数（ExtraParam）](#ExtraParam_index) 
 
 ### 透传消息(UnVarnishedMessage) <a name="UnVarnishedMessage_index"/>
 参数名称|类型|必填|默认|描述
@@ -252,6 +260,20 @@ tags|List<Tag>|订阅标签
 pushId|String|订阅pushId
 statusbarSwitch|boolean|通知栏开关状态
 directSwitch|boolean|透传开关状态
+
+## 回执类型（CallBackType）<a name="CallBackType_index"/>
+枚举|类型|描述
+---|---|--- 
+RECEIVE|Enum|送达回执
+CLICK|Enum|点击回执
+RECEIVE_CLICK|Enum|送达与点击回执
+
+## 回执参数（ExtraParam）<a name="ExtraParam_index"/>
+枚举|类型|描述
+---|---|--- 
+CALLBACK|Enum|回执接口（第三方接收回执的Http接口, 最大长度128字节）
+CALLBACK_PARAM|Enum|回执参数（第三方自定义回执参数, 最大长度64字节）
+CALLBACK_TYPE|Enum|回执类型（(1-送达回执, 2-点击回执, 3-送达与点击回执), 默认3）
 
 
 # 接口说明 <a name="api_def_index"/>
@@ -1130,6 +1152,111 @@ List<DailyPushStatics>
          ResultPack<List<DailyPushStatics>> resultPack = push.dailyPushStatics(appId, startTime, endTime);
          System.out.println(resultPack);
      }
+```
+## 高级功能 <a name="super_index"/>
+### 消息送达与回执 <a name="callback_index"/>
+- 支持回执接口
+
+  [pushId通知栏消息推送(pushMessage)](#VarnishedMessage_push_index)   
+  
+  [别名通知栏消息推送(pushMessageByAlias)](#VarnishedMessage_alias_push_index)    
+
+- 开发者通过设置通知栏消息extra来指定消息的送达和点击回执规则
+
+key|value含义
+---|---
+callback|回执接口（第三方接收回执的Http接口, 最大长度128字节）
+callback.param|回执参数（第三方自定义回执参数, 最大长度64字节）
+callback.type|回执类型（(1-送达回执, 2-点击回执, 3-送达与点击回执), 默认3）
+
+```
+魅族推送服务器每隔1s将已送达或已点击的消息ID和对应设备的pushId或alias通过调用开发者http接口传给开发者(每次调用后, 魅族推送服务器会清空这些数据,下次传给业务方将是新一拨数据)
+
+注: 
+
+消息的送达回执只支持向pushId或alias发送的消息
+
+单个应用注册不同回执地址累计上限不能超过100个
+```
+```
+服务器POST一个JSON数据到callback参数对应的url，格式如下
+
+格式说明: 外层key代表相应的消息msgId, value是一个JSONObject, 包含了下面的参数值
+
+param： 业务上传的自定义参数值
+type： callback类型
+targets： 一批alias或者pushId集合
+```
+
+```
+{
+    "msgId2": {
+        "param": "param2",
+        "type": 2,
+        "targets": [
+            "pushId3",
+            "pushId2",
+            "pushId1"
+        ]
+    },
+    "msgId1": {
+        "param": "param1",
+        "type": 1,
+        "targets": [
+            "alias2",
+            "alias",
+            "alias1"
+        ]
+    }
+}
+```
+- 示例
+```java
+    @Test
+    public void testPushIDCallback() throws Exception {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //组装消息
+        VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+                .title("Java SDK 推送标题").content("Java SDK 推送内容")
+                .extra(ExtraParam.CALLBACK.getKey(), callbackURL)
+                .extra(ExtraParam.CALLBACK_PARAM.getKey(), "param")
+                .extra(ExtraParam.CALLBACK_TYPE.getKey(), CallBackType.RECEIVE.getKey())
+                .build();
+
+        //目标用户
+        List<String> pushIds = new ArrayList<String>();
+        pushIds.add("pushId_1");
+        pushIds.add("pushId_2");
+
+        // 1 调用推送服务
+        ResultPack<PushResult> result = push.pushMessage(message, pushIds);
+        handleResult(result);
+    }
+
+    @Test
+    public void testAliasCallback() throws Exception {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //组装消息
+        VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+                .title("Java SDK 推送标题").content("Java SDK 推送内容")
+                .extra(ExtraParam.CALLBACK.getKey(), callbackURL)
+                .extra(ExtraParam.CALLBACK_PARAM.getKey(), "param")
+                .extra(ExtraParam.CALLBACK_TYPE.getKey(), CallBackType.RECEIVE.getKey())
+                .build();
+
+        //目标用户
+        List<String> alias = new ArrayList<String>();
+        alias.add("alias_1");
+        alias.add("alias_2");
+
+        // 1 调用推送服务
+        ResultPack<PushResult> result = push.pushMessageByAlias(message, alias);
+        handleResult(result);
+    }
 ```
 
 ## 订阅服务 <a name="sub_index"/>

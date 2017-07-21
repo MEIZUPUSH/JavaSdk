@@ -4,6 +4,8 @@ package com.meizu.push.sdk.server.model.push;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 通知栏消息
@@ -138,6 +140,14 @@ public class VarnishedMessage extends Message {
     private boolean sound = Boolean.TRUE;
     /* =============高级设置 end=============  */
 
+    /**
+     * Key	Value含义  （key 参照：ExtraParam）
+     * callback	String  (必填字段), 第三方接收回执的Http接口, 最大长度128字节
+     * callback.param	String(可选字段), 第三方自定义回执参数, 最大长度64字节
+     * callback.type	int(可选字段), 回执类型(1-送达回执, 2-点击回执, 3-送达与点击回执), 默认3 （ 参考:CallBackType）
+     */
+    public Map<String, String> extra = new LinkedHashMap();
+
     public VarnishedMessage() {
     }
 
@@ -167,6 +177,7 @@ public class VarnishedMessage extends Message {
         this.isFixDisplay = builder.isFixDisplay;
         this.fixStartDisplayDate = builder.fixStartDisplayDate;
         this.fixEndDisplayDate = builder.fixEndDisplayDate;
+        this.extra = builder.extra;
     }
 
     public static long getSerialVersionUID() {
@@ -269,6 +280,10 @@ public class VarnishedMessage extends Message {
         return fixEndDisplayDate;
     }
 
+    public Map<String, String> getExtra() {
+        return extra;
+    }
+
     @Override
     public String toString() {
         return "VarnishedMessage{" +
@@ -296,6 +311,7 @@ public class VarnishedMessage extends Message {
                 ", vibrate=" + vibrate +
                 ", lights=" + lights +
                 ", sound=" + sound +
+                ", extra=" + extra +
                 '}';
     }
 
@@ -421,6 +437,13 @@ public class VarnishedMessage extends Message {
          */
         private boolean sound = Boolean.TRUE;
     /* =============高级设置 end=============  */
+        /**
+         * Key	Value含义  （key 参照：ExtraParam）
+         * callback	String  (必填字段), 第三方接收回执的Http接口, 最大长度128字节
+         * callback.param	String(可选字段), 第三方自定义回执参数, 最大长度64字节
+         * callback.type	int(可选字段), 回执类型(1-送达回执, 2-点击回执, 3-送达与点击回执), 默认3 （ 参考:CallBackType）
+         */
+        public Map<String, String> extra = new LinkedHashMap();
 
         public Builder() {
         }
@@ -548,6 +571,12 @@ public class VarnishedMessage extends Message {
             this.fixEndDisplayDate = fixEndDisplayDate;
             return this;
         }
+
+        public VarnishedMessage.Builder extra(String key, String value) {
+            this.extra.put(key, value);
+            return this;
+        }
+
 
         public VarnishedMessage build() {
             return new VarnishedMessage(this);

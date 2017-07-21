@@ -1,6 +1,8 @@
 package com.meizu.push.sdk.vo;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by wangxinguo on 2016-8-22.
@@ -31,16 +33,33 @@ public class VarnishedMessageJson implements Serializable {
      * 高级设置
      */
     private AdvanceInfo advanceInfo = new AdvanceInfo();
+    /**
+     * 扩展参数 参考枚举 ExtraParam
+     */
+    private Map<String, String> extra = new LinkedHashMap<String, String>();
 
     public VarnishedMessageJson() {
     }
 
-    public VarnishedMessageJson(NoticeBarInfo noticeBarInfo, NoticeExpandInfo noticeExpandInfo, ClickTypeInfo clickTypeInfo, PushTimeInfo pushTimeInfo, AdvanceInfo advanceInfo) {
+    public VarnishedMessageJson(NoticeBarInfo noticeBarInfo, NoticeExpandInfo noticeExpandInfo,
+                                ClickTypeInfo clickTypeInfo, PushTimeInfo pushTimeInfo,
+                                AdvanceInfo advanceInfo) {
         this.noticeBarInfo = noticeBarInfo;
         this.noticeExpandInfo = noticeExpandInfo;
         this.clickTypeInfo = clickTypeInfo;
         this.pushTimeInfo = pushTimeInfo;
         this.advanceInfo = advanceInfo;
+    }
+
+    public VarnishedMessageJson(NoticeBarInfo noticeBarInfo, NoticeExpandInfo noticeExpandInfo,
+                                ClickTypeInfo clickTypeInfo, PushTimeInfo pushTimeInfo,
+                                AdvanceInfo advanceInfo, Map<String, String> extra) {
+        this.noticeBarInfo = noticeBarInfo;
+        this.noticeExpandInfo = noticeExpandInfo;
+        this.clickTypeInfo = clickTypeInfo;
+        this.pushTimeInfo = pushTimeInfo;
+        this.advanceInfo = advanceInfo;
+        this.extra = extra;
     }
 
     public NoticeBarInfo getNoticeBarInfo() {
@@ -83,4 +102,11 @@ public class VarnishedMessageJson implements Serializable {
         this.advanceInfo = advanceInfo;
     }
 
+    public Map<String, String> getExtra() {
+        return extra;
+    }
+
+    public void setExtra(Map<String, String> extra) {
+        this.extra = extra;
+    }
 }

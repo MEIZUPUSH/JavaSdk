@@ -1,7 +1,8 @@
 package com.meizu.push.sdk.server;
 
 
-import com.alibaba.fastjson.JSON;
+import com.meizu.push.sdk.constant.CallBackType;
+import com.meizu.push.sdk.constant.ExtraParam;
 import com.meizu.push.sdk.constant.PushType;
 import com.meizu.push.sdk.constant.ScopeType;
 import com.meizu.push.sdk.server.constant.PushResponseCode;
@@ -39,6 +40,8 @@ public class IFlymePushTest {
      */
     public static final Long appId = 100999L;
 
+    public static final String callbackURL = "callbackurl";
+
 
     /**
      * 通知栏消息推送（pushMessage）
@@ -53,11 +56,6 @@ public class IFlymePushTest {
         //组装消息
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
                 .title("Java SDK 推送标题").content("Java SDK 推送内容")
-                .noticeExpandType(1)
-                .noticeExpandContent("展开文本内容")
-                .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
-                .offLine(true).validTime(12)
-                .suspend(true).clearNoticeBar(true).vibrate(true).lights(true).sound(true)
                 .build();
 
         //目标用户
@@ -84,11 +82,6 @@ public class IFlymePushTest {
         //组装消息
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
                 .title("Java SDK 推送标题").content("Java SDK 推送内容")
-                .noticeExpandType(1)
-                .noticeExpandContent("展开文本内容")
-                .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
-                .offLine(true).validTime(12)
-                .suspend(true).clearNoticeBar(true).vibrate(true).lights(true).sound(true)
                 .build();
 
         //目标用户
@@ -169,12 +162,6 @@ public class IFlymePushTest {
         //组装消息
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
                 .title("java Sdk推送标题").content("java Sdk 推送内容")
-                .noticeExpandType(1)
-                .noticeExpandContent("展开文本内容")
-                .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
-                .offLine(true).validTime(12)
-                .suspend(true).clearNoticeBar(true).vibrate(false).lights(false).sound(false)
-                .fixSpeed(true).fixSpeedRate(20)
                 .build();
 
         ResultPack<Long> result = push.getTaskId(PushType.STATUSBAR, message);
@@ -304,14 +291,6 @@ public class IFlymePushTest {
         //通知栏全部消息推送
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
                 .title("java Sdk 全部推送标题").content("java Sdk 全部推送内容")
-                .noticeExpandType(1)
-                .noticeExpandContent("展开文本内容")
-                .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
-                .offLine(true).validTime(12)
-                .suspend(true).clearNoticeBar(true).vibrate(false).lights(false).sound(false)
-                .fixSpeed(true).fixSpeedRate(30)
-                .pushTimeType(1)
-                .startTime(new Date())
                 .build();
         ResultPack<Long> result = push.pushToApp(PushType.STATUSBAR, message);
         System.out.println(result);
@@ -360,13 +339,6 @@ public class IFlymePushTest {
         //通知栏标签推送
         VarnishedMessage varnishedMessage = new VarnishedMessage.Builder().appId(appId)
                 .title("java Sdk 标签推送标题").content("java Sdk 标签推送内容")
-                .noticeExpandType(1)
-                .noticeExpandContent("展开文本内容")
-                .offLine(true).validTime(12)
-                .suspend(true).clearNoticeBar(true).vibrate(false).lights(false).sound(false)
-                .fixSpeed(true).fixSpeedRate(30)
-                .pushTimeType(1)
-                .startTime(new Date())
                 .build();
         ResultPack<Long> result = push.pushToTag(PushType.STATUSBAR, varnishedMessage, tagName, ScopeType.INTERSECTION);
         System.out.println(result);
@@ -392,10 +364,6 @@ public class IFlymePushTest {
                 .appId(appId)
                 .title("Java SDK 标签推送标题")
                 .content("Java Sdk标签推送内容")
-                .isOffLine(true)
-                .validTime(10)
-                .pushTimeType(1)
-                .startTime(new Date())
                 .build();
         ResultPack<Long> result = push.pushToTag(PushType.DIRECT, unVarnishedMessage, tagName, ScopeType.UNION);
         System.out.println(result);
@@ -438,6 +406,52 @@ public class IFlymePushTest {
         Date endTime = DateUtils.str2Date("2017-06-10", "yyyy-MM-dd");
         ResultPack<List<DailyPushStatics>> resultPack = push.dailyPushStatics(appId, startTime, endTime);
         System.out.println(resultPack);
+    }
+
+    @Test
+    public void testPushIDCallback() throws Exception {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //组装消息
+        VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+                .title("Java SDK 推送标题").content("Java SDK 推送内容")
+                .extra(ExtraParam.CALLBACK.getKey(), callbackURL)
+                .extra(ExtraParam.CALLBACK_PARAM.getKey(), "param")
+                .extra(ExtraParam.CALLBACK_TYPE.getKey(), CallBackType.RECEIVE.getKey())
+                .build();
+
+        //目标用户
+        List<String> pushIds = new ArrayList<String>();
+        pushIds.add("pushId_1");
+        pushIds.add("pushId_2");
+
+        // 1 调用推送服务
+        ResultPack<PushResult> result = push.pushMessage(message, pushIds);
+        handleResult(result);
+    }
+
+    @Test
+    public void testAliasCallback() throws Exception {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //组装消息
+        VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+                .title("Java SDK 推送标题").content("Java SDK 推送内容")
+                .extra(ExtraParam.CALLBACK.getKey(), callbackURL)
+                .extra(ExtraParam.CALLBACK_PARAM.getKey(), "param")
+                .extra(ExtraParam.CALLBACK_TYPE.getKey(), CallBackType.RECEIVE.getKey())
+                .build();
+
+        //目标用户
+        List<String> alias = new ArrayList<String>();
+        alias.add("alias_1");
+        alias.add("alias_2");
+
+        // 1 调用推送服务
+        ResultPack<PushResult> result = push.pushMessageByAlias(message, alias);
+        handleResult(result);
     }
 
     private static Date str2Date(String dateString) {

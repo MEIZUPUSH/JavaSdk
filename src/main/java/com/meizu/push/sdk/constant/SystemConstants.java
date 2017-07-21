@@ -7,7 +7,7 @@ public class SystemConstants {
 
     public static final String CHAR_SET = "UTF-8";
 
-    public static final String SDK_VERSION = "1.2.2.20170609_release";
+    public static final String SDK_VERSION = "1.2.3.20170718_release";
 
     /**
      * 推送服务:pushId推送接口（透传消息）
