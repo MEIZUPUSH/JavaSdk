@@ -1162,6 +1162,7 @@ List<DailyPushStatics>
   [别名通知栏消息推送(pushMessageByAlias)](#VarnishedMessage_alias_push_index)    
 
 - 开发者通过设置通知栏消息extra来指定消息的送达和点击回执规则
+- 回执地址请登录推送平台【配置管理】->【回执管理】注册回执地址
 
 key|value含义
 ---|---
@@ -1186,7 +1187,7 @@ cb|回执明细内容 如下所述（Json数据）
 access_token|回执接口访问令牌（推送平台设置回执地址令牌，此功能开发中，会尽快开放）
 
 ```
-回执明细格式说明: 外层key代表相应的消息msgId, value是一个JSONObject, 包含了下面的参数值
+回执明细格式说明: 外层key代表相应的消息id和回执类型（msgId-type）, value是一个JSONObject, 包含了下面的参数值
 
 param： 业务上传的自定义参数值
 type： callback类型
@@ -1195,7 +1196,7 @@ targets： 一批alias或者pushId集合
 
 ```
 {
-    "msgId2": {
+    "msgId2-1": {
         "param": "param2",
         "type": 2,
         "targets": [
@@ -1204,7 +1205,7 @@ targets： 一批alias或者pushId集合
             "pushId1"
         ]
     },
-    "msgId1": {
+    "msgId1-2": {
         "param": "param1",
         "type": 1,
         "targets": [
