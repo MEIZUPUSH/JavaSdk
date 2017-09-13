@@ -1219,6 +1219,40 @@ targets： 一批alias或者pushId集合
     }
 }
 ```
+- 抓包示例
+```
+Hypertext Transfer Protocol
+
+    POST /callbackUrl/callback HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): POST /callbackUrl/callback HTTP/1.1\r\n]
+        Request Method: POST
+        Request URI: /callbackUrl/callback
+        Request Version: HTTP/1.1
+        
+    Content-Length: 32\r\n
+        [Content length: 32]
+        
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8\r\n
+    Host: xxx.xxx.xxx\r\n
+    Connection: Keep-Alive\r\n
+    User-Agent: Apache-HttpClient/4.3.4 (java 1.5)\r\n
+    Accept-Encoding: gzip,deflate\r\n
+    \r\n
+    [Full request URI: http://xxx.xxx.xxx/callbackUrl/callback]
+    [HTTP request 1/1]
+    [Response in frame: 7253]
+    File Data: 32 bytes
+    
+HTML Form URL Encoded: application/x-www-form-urlencoded
+    Form item: "access_token" = "token"
+        Key: access_token
+        Value: token
+    Form item: "cb" = "json value"
+        Key: cb
+        Value: json value
+```
+
+
 - 示例
 ```java
     @Test
