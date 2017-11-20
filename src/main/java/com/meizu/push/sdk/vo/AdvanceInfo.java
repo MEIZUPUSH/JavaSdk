@@ -47,6 +47,11 @@ public class AdvanceInfo implements Serializable {
      * 是否可清除通知栏 true 可以 false 不可以 【非必填，默认true】
      */
     private boolean isClearNoticeBar = Boolean.TRUE;
+    /**
+     * 分组合并推送的key，凡是带有此key的通知栏消息只会显示最后到达的一条
+     * 字段规则合法的消息组ID由数字([0-9]), 大小写字母([a-zA-Z]), 下划线(_)和中划线(-)组成, 长度不大于8个字符
+     */
+    private String notifyKey = "";
 
     /**
      * 通知方式
@@ -88,7 +93,8 @@ public class AdvanceInfo implements Serializable {
      */
     public AdvanceInfo(boolean isFixSpeed, long fixSpeedRate, boolean isSuspend,
                        boolean isClearNoticeBar, NotificationType notificationType,
-                       boolean isFixDisplay, Date fixStartDisplayDate, Date fixEndDisplayDate) {
+                       boolean isFixDisplay, Date fixStartDisplayDate, Date fixEndDisplayDate,
+                       String notifyKey) {
         this.isFixSpeed = isFixSpeed;
         this.fixSpeedRate = fixSpeedRate;
         this.isSuspend = isSuspend;
@@ -101,6 +107,7 @@ public class AdvanceInfo implements Serializable {
         if (fixEndDisplayDate != null) {
             this.fixEndDisplayTime = DateUtils.date2String(fixEndDisplayDate);
         }
+        this.notifyKey = notifyKey;
     }
 
 
@@ -183,6 +190,14 @@ public class AdvanceInfo implements Serializable {
     public void setFixEndDisplayTime(String fixEndDisplayTime) {
         this.fixEndDisplayTime = fixEndDisplayTime;
     }
+    
+    public String getNotifyKey() {
+		return notifyKey;
+	}
+
+	public void setNotifyKey(String notifyKey) {
+		this.notifyKey = notifyKey;
+	}
 
     @Override
     public String toString() {
@@ -195,6 +210,7 @@ public class AdvanceInfo implements Serializable {
                 ", isSuspend=" + isSuspend +
                 ", isClearNoticeBar=" + isClearNoticeBar +
                 ", notificationType=" + notificationType +
+                ", notifyKey=" + notifyKey +
                 '}';
     }
 }
