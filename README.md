@@ -6,6 +6,9 @@
 
 ## 更新日志
 
+### [2017-11-20]V1.2.5.20171120_release
+*  通知栏消息聚合功能
+
 ### [2017-08-15]V1.2.4.20170815_release
 *  推送&订阅接口域名解耦
 
@@ -147,6 +150,7 @@ fixDisplayTime|(Date,Date)|否|(null,null)|定时展示开始,结束时间 【fi
 vibrate|Boolean|否|true|震动 (false关闭  true 开启) , 【非必填，默认true】
 lights|Boolean|否|true|闪光 (false关闭  true 开启) , 【非必填，默认true】
 sound|Boolean|否|true|声音 (false关闭  true 开启) , 【非必填，默认true】
+notifyKey|String|否|null|分组合并推送的key,凡是带有此key的通知栏消息只会显示最后到达的一条。由数字([0-9]), 大小写字母([a-zA-Z]), 下划线(_)和中划线(-)组成, 长度不大于8个字符
 extra|Map<String, String>|否|null| [回执参数（ExtraParam）](#ExtraParam_index) 
 
 ### 透传消息(UnVarnishedMessage) <a name="UnVarnishedMessage_index"/>

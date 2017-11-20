@@ -138,6 +138,11 @@ public class VarnishedMessage extends Message {
      * 通知方式 声音 false关闭 true 开启 , 【非必填，默认true】
      */
     private boolean sound = Boolean.TRUE;
+    /**
+     * 分组合并推送的key，凡是带有此key的通知栏消息只会显示最后到达的一条
+     * 字段规则合法的消息组ID由数字([0-9]), 大小写字母([a-zA-Z]), 下划线(_)和中划线(-)组成, 长度不大于8个字符
+     */
+    private String notifyKey = "";
     /* =============高级设置 end=============  */
 
     /**
@@ -177,6 +182,7 @@ public class VarnishedMessage extends Message {
         this.isFixDisplay = builder.isFixDisplay;
         this.fixStartDisplayDate = builder.fixStartDisplayDate;
         this.fixEndDisplayDate = builder.fixEndDisplayDate;
+        this.notifyKey = builder.notifyKey;
         this.extra = builder.extra;
     }
 
@@ -284,6 +290,14 @@ public class VarnishedMessage extends Message {
         return extra;
     }
 
+    public String getNotifyKey() {
+		return notifyKey;
+	}
+
+	public void setNotifyKey(String notifyKey) {
+		this.notifyKey = notifyKey;
+	}
+
     @Override
     public String toString() {
         return "VarnishedMessage{" +
@@ -311,6 +325,7 @@ public class VarnishedMessage extends Message {
                 ", vibrate=" + vibrate +
                 ", lights=" + lights +
                 ", sound=" + sound +
+                ", notifyKey=" + notifyKey +
                 ", extra=" + extra +
                 '}';
     }
@@ -436,6 +451,11 @@ public class VarnishedMessage extends Message {
          * 通知方式 声音 false关闭 true 开启 , 【非必填，默认true】
          */
         private boolean sound = Boolean.TRUE;
+        /**
+         * 分组合并推送的key，凡是带有此key的通知栏消息只会显示最后到达的一条
+         * 字段规则合法的消息组ID由数字([0-9]), 大小写字母([a-zA-Z]), 下划线(_)和中划线(-)组成, 长度不大于8个字符
+         */
+        private String notifyKey = "";
     /* =============高级设置 end=============  */
         /**
          * Key	Value含义  （key 参照：ExtraParam）
@@ -575,6 +595,11 @@ public class VarnishedMessage extends Message {
         public VarnishedMessage.Builder extra(String key, String value) {
             this.extra.put(key, value);
             return this;
+        }
+        
+        public VarnishedMessage.Builder notifyKey(String notifyKey) {
+        	this.notifyKey = notifyKey;
+        	return this;
         }
 
 
