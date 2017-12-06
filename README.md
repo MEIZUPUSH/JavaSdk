@@ -135,7 +135,7 @@ noticeExpandContent|String|否|null|展开内容, 【noticeExpandType为文本�
 clickType|int|否|0|点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开URI页面"),(3, "应用客户端自定义")【非必填，默认值为0】
 url|String|否|null|URI页面地址, 【clickType为打开URI页面时，必填, 长度限制1000byte】
 parameters|JSONObject|否|null|透传参数 【JSON格式，非必填】
-activity|String|否|null|应用页面地址, 【clickType为打开应用页面时，必填, 长度限制1000byte】
+activity|String|否|null|应用页面地址, 【clickType为打开应用页面时，格式 pkg.activity eg: com.meizu.upspushdemo.TestActivity 必填】
 customAttribute|String|否|null|应用客户端自定义内容, 【clickType为应用客户端自定义时，必填, 长度限制1000byte】
 isOffLine|Boolean|否|true|是否进离线消息, (false 否 true 是) 【非必填，默认值为true】
 validTime|int|否|24|有效时长 (1~72小时内的正整数), 【isOffLine值为true时，必填，值的范围1~72】
