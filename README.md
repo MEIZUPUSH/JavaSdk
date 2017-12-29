@@ -1191,7 +1191,7 @@ callback.type|回执类型（(1-送达回执, 2-点击回执, 3-送达与点击�
 key|value
 ---|---
 cb|回执明细内容 如下所述（Json数据）
-access_token|回执接口访问令牌（推送平台设置回执地址令牌，此功能开发中，会尽快开放）
+access_token|回执接口访问令牌（推送平台设置回执地址令牌）
 
 ```
 回执明细格式说明: 外层key代表相应的消息id和回执类型（msgId-type）, value是一个JSONObject, 包含了下面的参数值
