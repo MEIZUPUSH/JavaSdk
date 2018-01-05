@@ -1205,7 +1205,7 @@ targets： 一批alias或者pushId集合
 {
     "msgId2-1": {
         "param": "param2",
-        "type": 2,
+        "type": 1,
         "targets": [
             "pushId3",
             "pushId2",
@@ -1214,7 +1214,7 @@ targets： 一批alias或者pushId集合
     },
     "msgId1-2": {
         "param": "param1",
-        "type": 1,
+        "type": 2,
         "targets": [
             "alias2",
             "alias",
