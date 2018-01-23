@@ -20,6 +20,7 @@ public class PushResponseCode {
     public static PushResponseCode RSP_UNSUBSCRIBE_PUSHID = valueOf("110002", "pushId未订阅(un subscribe pushId)");
     public static PushResponseCode RSP_INVALID_PUSHID = valueOf("110003", "pushId非法(invalid pushId)");
     public static PushResponseCode RSP_UNSUBSCRIBE_ALIAS = valueOf("110005", "别名未订阅(un subscribe alias)");
+    public static PushResponseCode RSP_OFF_PUSHID = valueOf("110010", "pushId失效(消息开关关闭)");
 
     private static HashMap<String, PushResponseCode> createIntegerPushResponseCodeMapping() {
         HashMap result = new HashMap();
