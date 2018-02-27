@@ -373,6 +373,11 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+            
+           //全部超速
+            if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                //TODO 5 业务处理，重推......
+            }
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }
     }
@@ -453,6 +458,11 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
              // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
              // result.code(); //服务异常码
              // result.comment();//服务异常描述
+             
+             //全部超速
+             if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                 //TODO 5 业务处理，重推......
+             }
              System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
          }      
     }
@@ -537,6 +547,10 @@ public void testVarnishedMessagePushByAlias() throws Exception {
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+             //全部超速
+             if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                 //TODO 5 业务处理，重推......
+             }            
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }    
 }
@@ -617,6 +631,11 @@ public void testUnVarnishedMessagePushByALias() throws Exception {
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+            
+             //全部超速
+             if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                 //TODO 5 业务处理，重推......
+             }
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }   
 }
@@ -802,6 +821,11 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+            
+             //全部超速
+             if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                 //TODO 5 业务处理，重推......
+             }
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }     
     }
@@ -878,6 +902,12 @@ public void testPushAliasPyTaskId() throws IOException {
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+            
+             //全部超速
+             if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                 //TODO 5 业务处理，重推......
+             }
+            
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }    
 
@@ -905,6 +935,11 @@ public void testPushAliasPyTaskId() throws IOException {
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+            
+             //全部超速
+             if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                 //TODO 5 业务处理，重推......
+             }
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }    
 }
