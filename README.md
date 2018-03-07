@@ -50,7 +50,7 @@
  5. 标签透传推送(pushToTag)
  6. 在平台上进行的透传推送
 
-##SDK 日志配置
+## SDK 日志配置
 本SDK是利用JDK中类java.util.logging.Logger来记录日志，如需SDK日志，classpath中增加flyme-push-logger.properties文件即可
  
  示例配置如下
