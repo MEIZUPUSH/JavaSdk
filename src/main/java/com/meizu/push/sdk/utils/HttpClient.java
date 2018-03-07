@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 import static com.alibaba.fastjson.JSON.parseObject;
 
 public class HttpClient {
-    protected static final Logger logger = Logger.getLogger(HttpClient.class.getName());
+    protected static final Logger logger = Logging.getLogger(HttpClient.class.getName());
 
     private static final String JDK_VERSION = System.getProperty("java.version", "UNKNOWN");
     private static final String OS = System.getProperty("os.name").toLowerCase();
@@ -98,9 +98,9 @@ public class HttpClient {
         try {
             ignoreSsl();
         } catch (KeyManagementException e) {
-            e.printStackTrace();
+            logger.log(Level.FINEST, "ignoreSsl error", e);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.log(Level.FINEST, "ignoreSsl error", e);
         }
 
         StringBuilder signBody = new StringBuilder(body);
@@ -184,9 +184,10 @@ public class HttpClient {
         return new StringBuilder(nonNull(name)).append('=').append(URLEncoder.encode(nonNull(value), SystemConstants.CHAR_SET));
     }
 
-    private static void close(Closeable closeable) {
-        if (closeable == null)
+    private static void close(Closeable closeable) throws IOException {
+        if (closeable == null) {
             return;
+        }
         try {
             closeable.close();
         } catch (IOException e) {
@@ -197,9 +198,9 @@ public class HttpClient {
     protected static StringBuilder newBodyWithArrayParameters(String name, List<String> parameters) throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < parameters.size(); ++i) {
-            if (i == 0)
+            if (i == 0) {
                 sb.append(nonNull(name)).append("=").append(URLEncoder.encode(nonNull(parameters.get(i)), SystemConstants.CHAR_SET));
-            else {
+            } else {
                 (nonNull(sb)).append('&').append(nonNull(name)).append('=').append(URLEncoder.encode(nonNull(parameters.get(i)), SystemConstants.CHAR_SET));
             }
         }
@@ -227,8 +228,9 @@ public class HttpClient {
         StringBuilder content = new StringBuilder();
         do {
             newLine = reader.readLine();
-            if (newLine != null)
+            if (newLine != null) {
                 content.append(newLine).append('\n');
+            }
         } while (newLine != null);
         if (content.length() > 0) {
             content.setLength(content.length() - 1);
@@ -241,8 +243,9 @@ public class HttpClient {
             String str = getString(stream);
             return str;
         } finally {
-            if (stream != null)
+            if (stream != null) {
                 close(stream);
+            }
         }
     }
 

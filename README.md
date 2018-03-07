@@ -6,6 +6,12 @@
 
 ## 更新日志
 
+### [2018-03-07]V1.2.7.20180307_release
+*  增加sdk日志配置文件
+
+### [2017-11-23]V1.2.6.20171123_release
+*  增加pushId开关关闭状态返回
+
 ### [2017-11-20]V1.2.5.20171120_release
 *  通知栏消息聚合功能
 
@@ -44,6 +50,25 @@
  5. 标签透传推送(pushToTag)
  6. 在平台上进行的透传推送
 
+##SDK 日志配置
+本SDK是利用JDK中类java.util.logging.Logger来记录日志，如需SDK日志，classpath中增加flyme-push-logger.properties文件即可
+ 
+ 示例配置如下
+ ```
+ handlers = java.util.logging.ConsoleHandler,java.util.logging.FileHandler
+ 
+ java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
+ java.util.logging.ConsoleHandler.level = INFO
+ 
+ java.util.logging.FileHandler.pattern = c:/push.log%g.log
+ java.util.logging.FileHandler.formatter = java.util.logging.SimpleFormatter
+ java.util.logging.FileHandler.limit = 104857600
+ java.util.logging.FileHandler.count = 3
+ java.util.logging.FileHandler.append = true
+ java.util.logging.FileHandler.level = INFO
+ 
+ LOGGER.level = FINEST
+ ```   
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)

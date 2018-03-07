@@ -65,7 +65,7 @@ public class IFlymePushTest {
         pushIds.add("pushId_2");
 
         // 1 调用推送服务
-        ResultPack<PushResult> result = push.pushMessage(message, pushIds);
+        ResultPack<PushResult> result = push.pushMessage(message, pushIds,2);
         handleResult(result);
     }
 
