@@ -19,6 +19,11 @@ public abstract class Message implements Serializable{
      */
     private Long appId;
 
+    /**
+     * 多包名列表
+     */
+    private String[] restrictedPackageNames;
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -29,5 +34,13 @@ public abstract class Message implements Serializable{
 
     public void setAppId(Long appId) {
         this.appId = appId;
+    }
+
+    public String[] getRestrictedPackageNames() {
+        return restrictedPackageNames;
+    }
+
+    public void setRestrictedPackageNames(String[] restrictedPackageNames) {
+        this.restrictedPackageNames = restrictedPackageNames;
     }
 }

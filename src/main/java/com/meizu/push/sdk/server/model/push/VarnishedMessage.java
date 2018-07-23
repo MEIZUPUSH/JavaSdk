@@ -336,6 +336,11 @@ public class VarnishedMessage extends Message {
          */
         private Long appId;
 
+        /**
+         * 多包名列表
+         */
+        private String[] restrictedPackageNames;
+
     /* =============通知栏样式 begin=============  */
         /**
          * 通知栏类型(0, "默认"),(1, "图片") , 【必填，值为0或者1】
@@ -600,6 +605,11 @@ public class VarnishedMessage extends Message {
         public VarnishedMessage.Builder notifyKey(String notifyKey) {
         	this.notifyKey = notifyKey;
         	return this;
+        }
+
+        public VarnishedMessage.Builder restrictedPackageNames(String[] restrictedPackageNames) {
+            this.restrictedPackageNames = restrictedPackageNames;
+            return this;
         }
 
 

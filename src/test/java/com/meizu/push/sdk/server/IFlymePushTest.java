@@ -56,7 +56,7 @@ public class IFlymePushTest {
 
         //组装消息
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
-                .title("Java SDK 推送标题").content("Java SDK 推送内容")
+                .title("Java SDK 推送标题多包名").content("Java SDK 推送内容")
                 .build();
 
         //目标用户
@@ -206,7 +206,7 @@ public class IFlymePushTest {
         pushIds.add("pushId_2");
 
         //透传消息任务推送
-        Long taskId = 123l;
+        Long taskId = 123L;
         ResultPack<PushResult> result = push.pushMessageByTaskId(PushType.DIRECT, appId, taskId, pushIds);
         // 2 处理推送结果
         handleResult(result);
@@ -228,7 +228,7 @@ public class IFlymePushTest {
         pushIds.add("pushId_2");
 
         //通知栏任务消息推送
-        Long taskId = 123l;
+        Long taskId = 100000000439260L;
         ResultPack<PushResult> result = push.pushMessageByTaskId(PushType.STATUSBAR, appId, taskId, pushIds);
         // 2 处理推送结果
         handleResult(result);
