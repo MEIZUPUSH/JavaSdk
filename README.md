@@ -152,7 +152,7 @@ UnVarnishedMessage|透传消息体
 参数名称|类型|必填|默认|描述
 ---|---|---|---|---
 appId|Long|是|null|注册应用appId
-restrictedPackageNames|String[]|否|多包名配置【最长50】
+restrictedPackageNames|String[]|否|null|多包名配置【最长50】
 title|String|是|null|推送标题, 【字数限制1~32】
 content|String|是|null|推送内容, 【字数限制1~100】
 noticeBarType|int|否|0|通知栏样式(0, "标准"),(2, "安卓原生")【非必填，默认值为0】
