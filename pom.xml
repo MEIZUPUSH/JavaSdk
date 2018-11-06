@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.meizu.flyme</groupId>
     <artifactId>push-server-sdk</artifactId>
-    <version>1.2.7.20180307_release</version>
+    <version>1.2.7.20181106_release</version>
 
     <packaging>jar</packaging>
     <name>MeizuPushSDK</name>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.1.28</version>
+            <version>1.2.51</version>
         </dependency>
 
         <!-- for mock static method,usage: http://code.google.com/p/powermock/wiki/MockStatic -->
