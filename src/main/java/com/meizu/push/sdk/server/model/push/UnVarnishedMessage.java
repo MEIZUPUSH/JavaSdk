@@ -96,6 +96,7 @@ public class UnVarnishedMessage extends Message {
 
     protected UnVarnishedMessage(UnVarnishedMessage.Builder builder) {
         super.setAppId(builder.appId);
+        super.setRestrictedPackageNames(builder.restrictedPackageNames);
         this.title = builder.title;
         this.content = builder.content;
         this.isOffLine = builder.isOffLine;
@@ -109,6 +110,7 @@ public class UnVarnishedMessage extends Message {
 
     public static final class Builder {
         private Long appId;
+        private String[] restrictedPackageNames;
         private String title;
         private String content;
         private boolean isOffLine = Boolean.TRUE;
@@ -160,6 +162,11 @@ public class UnVarnishedMessage extends Message {
 
         public UnVarnishedMessage.Builder startTime(Date startTime) {
             this.startTime = startTime;
+            return this;
+        }
+        
+        public UnVarnishedMessage.Builder restrictedPackageNames(String[] restrictedPackageNames) {
+            this.restrictedPackageNames = restrictedPackageNames;
             return this;
         }
 
