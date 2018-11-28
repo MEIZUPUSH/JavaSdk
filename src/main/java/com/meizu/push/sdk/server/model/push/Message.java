@@ -7,21 +7,20 @@ import java.io.Serializable;
  * @date 2016年7月15日
  * @time 下午7:23:15
  */
-public abstract class Message implements Serializable{
+public abstract class Message implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 平台注册应用ID
      */
     private Long appId;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
+    /**
+     * 多包名列表
+     */
+    private String[] restrictedPackageNames;
+
 
     public Long getAppId() {
         return appId;
@@ -29,5 +28,13 @@ public abstract class Message implements Serializable{
 
     public void setAppId(Long appId) {
         this.appId = appId;
+    }
+
+    public String[] getRestrictedPackageNames() {
+        return restrictedPackageNames;
+    }
+
+    public void setRestrictedPackageNames(String[] restrictedPackageNames) {
+        this.restrictedPackageNames = restrictedPackageNames;
     }
 }

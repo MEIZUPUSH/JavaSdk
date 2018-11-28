@@ -158,6 +158,7 @@ public class VarnishedMessage extends Message {
 
     public VarnishedMessage(VarnishedMessage.Builder builder) {
         super.setAppId(builder.appId);
+        super.setRestrictedPackageNames(builder.restrictedPackageNames);
         this.noticeBarType = builder.noticeBarType;
         this.title = builder.title;
         this.content = builder.content;
@@ -335,6 +336,11 @@ public class VarnishedMessage extends Message {
          * 平台注册应用ID
          */
         private Long appId;
+
+        /**
+         * 多包名列表
+         */
+        private String[] restrictedPackageNames;
 
     /* =============通知栏样式 begin=============  */
         /**
@@ -594,6 +600,11 @@ public class VarnishedMessage extends Message {
 
         public VarnishedMessage.Builder extra(String key, String value) {
             this.extra.put(key, value);
+            return this;
+        }
+        
+        public VarnishedMessage.Builder restrictedPackageNames(String[] restrictedPackageNames) {
+            this.restrictedPackageNames = restrictedPackageNames;
             return this;
         }
         
