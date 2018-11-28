@@ -5,6 +5,7 @@ import com.meizu.push.sdk.constant.CallBackType;
 import com.meizu.push.sdk.constant.ExtraParam;
 import com.meizu.push.sdk.constant.PushType;
 import com.meizu.push.sdk.constant.ScopeType;
+import com.meizu.push.sdk.server.constant.ErrorCode;
 import com.meizu.push.sdk.server.constant.PushResponseCode;
 import com.meizu.push.sdk.server.constant.ResultPack;
 import com.meizu.push.sdk.server.model.push.PushResult;
@@ -64,7 +65,7 @@ public class IFlymePushTest {
         pushIds.add("pushId_2");
 
         // 1 调用推送服务
-        ResultPack<PushResult> result = push.pushMessage(message, pushIds);
+        ResultPack<PushResult> result = push.pushMessage(message, pushIds,2);
         handleResult(result);
     }
 
@@ -489,6 +490,11 @@ public class IFlymePushTest {
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+
+            //全部超速
+            if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                //TODO 5 业务处理，重推......
+            }
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }
     }

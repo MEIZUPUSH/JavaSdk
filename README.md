@@ -6,6 +6,15 @@
 
 ## 更新日志
 
+### [2018-11-06]V1.2.7.20181106_release
+*  fastjson升级版本1.2.51，fix远程代码执行高危安全漏洞
+
+### [2018-03-07]V1.2.7.20180307_release
+*  增加sdk日志配置文件
+
+### [2017-11-23]V1.2.6.20171123_release
+*  增加pushId开关关闭状态返回
+
 ### [2017-11-20]V1.2.5.20171120_release
 *  通知栏消息聚合功能
 
@@ -44,6 +53,25 @@
  5. 标签透传推送(pushToTag)
  6. 在平台上进行的透传推送
 
+## SDK 日志配置
+本SDK是利用JDK中类java.util.logging.Logger来记录日志，如需SDK日志，classpath中增加flyme-push-logger.properties文件即可
+ 
+ 示例配置如下
+ ```
+ handlers = java.util.logging.ConsoleHandler,java.util.logging.FileHandler
+ 
+ java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
+ java.util.logging.ConsoleHandler.level = INFO
+ 
+ java.util.logging.FileHandler.pattern = c:/push.log%g.log
+ java.util.logging.FileHandler.formatter = java.util.logging.SimpleFormatter
+ java.util.logging.FileHandler.limit = 104857600
+ java.util.logging.FileHandler.count = 3
+ java.util.logging.FileHandler.append = true
+ java.util.logging.FileHandler.level = INFO
+ 
+ LOGGER.level = FINEST
+ ```   
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)
@@ -127,16 +155,17 @@ UnVarnishedMessage|透传消息体
 参数名称|类型|必填|默认|描述
 ---|---|---|---|---
 appId|Long|是|null|注册应用appId
+restrictedPackageNames|String[]|否|null|多包名配置【最长50】
 title|String|是|null|推送标题, 【字数限制1~32】
 content|String|是|null|推送内容, 【字数限制1~100】
 noticeBarType|int|否|0|通知栏样式(0, "标准"),(2, "安卓原生")【非必填，默认值为0】
 noticeExpandType|int|否|0|展开方式 (0, "标准"),(1, "文本")【非必填，默认值为0】
 noticeExpandContent|String|否|null|展开内容, 【noticeExpandType为文本时，必填】
 clickType|int|否|0|点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开URI页面"),(3, "应用客户端自定义")【非必填，默认值为0】
-url|String|否|null|URI页面地址, 【clickType为打开URI页面时，必填, 长度限制1000byte】
+url|String|否|null|URI页面地址, 【clickType为打开URI页面时，必填】
 parameters|JSONObject|否|null|透传参数 【JSON格式，非必填】
-activity|String|否|null|应用页面地址, 【clickType为打开应用页面时，必填, 长度限制1000byte】
-customAttribute|String|否|null|应用客户端自定义内容, 【clickType为应用客户端自定义时，必填, 长度限制1000byte】
+activity|String|否|null|应用页面地址, 【clickType为打开应用页面时，格式 pkg.activity eg: com.meizu.upspushdemo.TestActivity 必填】
+customAttribute|String|否|null|应用客户端自定义内容, 【clickType为应用客户端自定义时，必填】
 isOffLine|Boolean|否|true|是否进离线消息, (false 否 true 是) 【非必填，默认值为true】
 validTime|int|否|24|有效时长 (1~72小时内的正整数), 【isOffLine值为true时，必填，值的范围1~72】
 pushTimeType|int|否|0|定时推送 (0, "即时"),(1, "定时"), 【只对全部用户推送生效】
@@ -212,9 +241,10 @@ RSP_INTERNAL_ERROR|513|推送消息失败
 RSP_SPEED_LIMIT|518|推送超过配置的速率
 RSP_OVERFLOW|519|推送消息失败服务过载
 RSP_REPEATED|520|消息折叠（1分钟内同一设备同一应用消息收到多次，默认5次）
-RSP_UNSUBSCRIBE_PUSHID|110002|pushId未订阅(包括推送开关关闭的设备)
+RSP_UNSUBSCRIBE_PUSHID|110002|pushId失效(pushId未订阅)
 RSP_INVALID_PUSHID|110003|pushId非法
 RSP_UNSUBSCRIBE_ALIAS|110005|别名未订阅(包括推送开关关闭的设备)
+RSP_OFF_PUSHID|110010|pushId失效(消息开关关闭)
 
 ## 推送类型（PushType）<a name="PushType_index"/>
 枚举|类型|描述
@@ -338,6 +368,7 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
 
         //组装消息
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+                .restrictedPackageNames(new String[]{"com.xxx.abc"})//多包名推送时才需配置，不填表示所有
                 .title("Java SDK 推送标题").content("Java SDK 推送内容")
                 .noticeExpandType(1)
                 .noticeExpandContent("展开文本内容")
@@ -372,6 +403,11 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+            
+           //全部超速
+            if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                //TODO 5 业务处理，重推......
+            }
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }
     }
@@ -452,6 +488,11 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
              // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
              // result.code(); //服务异常码
              // result.comment();//服务异常描述
+             
+             //全部超速
+             if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                 //TODO 5 业务处理，重推......
+             }
              System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
          }      
     }
@@ -536,6 +577,10 @@ public void testVarnishedMessagePushByAlias() throws Exception {
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+             //全部超速
+             if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                 //TODO 5 业务处理，重推......
+             }            
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }    
 }
@@ -616,6 +661,11 @@ public void testUnVarnishedMessagePushByALias() throws Exception {
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+            
+             //全部超速
+             if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                 //TODO 5 业务处理，重推......
+             }
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }   
 }
@@ -801,6 +851,11 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+            
+             //全部超速
+             if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                 //TODO 5 业务处理，重推......
+             }
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }     
     }
@@ -877,6 +932,12 @@ public void testPushAliasPyTaskId() throws IOException {
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+            
+             //全部超速
+             if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                 //TODO 5 业务处理，重推......
+             }
+            
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }    
 
@@ -904,6 +965,11 @@ public void testPushAliasPyTaskId() throws IOException {
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
             // result.code(); //服务异常码
             // result.comment();//服务异常描述
+            
+             //全部超速
+             if (String.valueOf(ErrorCode.APP_REQUEST_EXCEED_LIMIT.getValue()).equals(result.code())) {
+                 //TODO 5 业务处理，重推......
+             }
             System.out.println(String.format("pushMessage error code:%s comment:%s", result.code(), result.comment()));
         }    
 }
@@ -1191,7 +1257,7 @@ callback.type|回执类型（(1-送达回执, 2-点击回执, 3-送达与点击�
 key|value
 ---|---
 cb|回执明细内容 如下所述（Json数据）
-access_token|回执接口访问令牌（推送平台设置回执地址令牌，此功能开发中，会尽快开放）
+access_token|回执接口访问令牌（推送平台设置回执地址令牌）
 
 ```
 回执明细格式说明: 外层key代表相应的消息id和回执类型（msgId-type）, value是一个JSONObject, 包含了下面的参数值
@@ -1205,7 +1271,7 @@ targets： 一批alias或者pushId集合
 {
     "msgId2-1": {
         "param": "param2",
-        "type": 2,
+        "type": 1,
         "targets": [
             "pushId3",
             "pushId2",
@@ -1214,7 +1280,7 @@ targets： 一批alias或者pushId集合
     },
     "msgId1-2": {
         "param": "param1",
-        "type": 1,
+        "type": 2,
         "targets": [
             "alias2",
             "alias",
