@@ -26,6 +26,8 @@ import com.meizu.push.sdk.vo.NotificationType;
 import com.meizu.push.sdk.vo.PushTimeInfo;
 import com.meizu.push.sdk.vo.UnVarnishedMessageJson;
 import com.meizu.push.sdk.vo.VarnishedMessageJson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +35,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * @author wangxinguo <wangxinguo@meizu.com>
@@ -42,6 +43,8 @@ import java.util.logging.Level;
  * @date 2016-8-23 14:07
  */
 public class IFlymePush extends HttpClient {
+
+    private static final Logger logger = LoggerFactory.getLogger(IFlymePush.class);
 
     private static final String SUCCESS_CODE = "200";
 
@@ -390,7 +393,7 @@ public class IFlymePush extends HttpClient {
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime(), msgInfo.getPushTimeType(), startTime);
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
             AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(),
-                    msgInfo.isClearNoticeBar(), notificationType, msgInfo.isFixDisplay(), msgInfo.getFixStartDisplayDate(), 
+                    msgInfo.isClearNoticeBar(), notificationType, msgInfo.isFixDisplay(), msgInfo.getFixStartDisplayDate(),
                     msgInfo.getFixEndDisplayDate(), msgInfo.getNotifyKey());
 
             VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo, noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo);
@@ -485,7 +488,7 @@ public class IFlymePush extends HttpClient {
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime(), msgInfo.getPushTimeType(), startTime);
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
             AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(),
-                    msgInfo.isClearNoticeBar(), notificationType, msgInfo.isFixDisplay(), msgInfo.getFixStartDisplayDate(), 
+                    msgInfo.isClearNoticeBar(), notificationType, msgInfo.isFixDisplay(), msgInfo.getFixStartDisplayDate(),
                     msgInfo.getFixEndDisplayDate(), msgInfo.getNotifyKey());
 
             VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo, noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo);
@@ -615,9 +618,7 @@ public class IFlymePush extends HttpClient {
         boolean tryAgain;
         do {
             ++attempt;
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine(String.format("attempt [%s] to pushMessage [%s] to %s [%s]", attempt, message, userType.getValue(), targets));
-            }
+            logger.debug(String.format("attempt [%s] to pushMessage [%s] to %s [%s]", attempt, message, userType.getValue(), targets));
             result = this.pushMessageNoRetry(userType, pushType, message, targets);
             tryAgain = result == null && attempt <= retries;
             backoff = getBackoffTime(backoff, tryAgain);
@@ -680,11 +681,11 @@ public class IFlymePush extends HttpClient {
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime());
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
             AdvanceInfo advanceInfo = new AdvanceInfo(msgInfo.isFixSpeed(), msgInfo.getFixSpeedRate(), msgInfo.isSuspend(),
-                    msgInfo.isClearNoticeBar(), notificationType, msgInfo.isFixDisplay(), msgInfo.getFixStartDisplayDate(), 
+                    msgInfo.isClearNoticeBar(), notificationType, msgInfo.isFixDisplay(), msgInfo.getFixStartDisplayDate(),
                     msgInfo.getFixEndDisplayDate(), msgInfo.getNotifyKey());
 
             VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo,
-                    noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo,msgInfo.getExtra());
+                    noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo, msgInfo.getExtra());
             addParameter(body, "messageJson", JSON.toJSONString(messageJson));
 
             if (UserType.PUSHID == userType) {
@@ -722,9 +723,7 @@ public class IFlymePush extends HttpClient {
         boolean tryAgain;
         do {
             ++attempt;
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine(String.format("attempt [%s] to taskId [%s] to %s [%s]", attempt, taskId, userType, targets));
-            }
+            logger.debug(String.format("attempt [%s] to taskId [%s] to %s [%s]", attempt, taskId, userType, targets));
             result = this.pushMessageByTaskIdNoRetry(userType, pushType, appId, taskId, targets);
             tryAgain = result == null && attempt <= retries;
             backoff = getBackoffTime(backoff, tryAgain);

@@ -6,6 +6,9 @@
 
 ## 更新日志
 
+### [2019-01-14]V1.2.8.20190114_release
+*  update log config
+
 ### [2018-11-06]V1.2.7.20181228_release
 *  多包名功能代码
 
@@ -46,7 +49,7 @@
 
 
 ## 说明
-* 为优化flyme系统整体功耗，推送平台决定本周五 **(6月16号)** 起限制透传消息推送的使用，不排除关闭透传推送类型。使用透传推送的业务请尽快切换到通知栏推送，以避免消息推送失败。新接入的应用请使用通知栏推送
+* 为优化flyme系统整体功耗，推送平台已经限制透传消息推送的使用
 
 * 受影响的接口及功能：
  1. pushId透传消息推送(pushMessage)
@@ -56,25 +59,6 @@
  5. 标签透传推送(pushToTag)
  6. 在平台上进行的透传推送
 
-## SDK 日志配置
-本SDK是利用JDK中类java.util.logging.Logger来记录日志，如需SDK日志，classpath中增加flyme-push-logger.properties文件即可
- 
- 示例配置如下
- ```
- handlers = java.util.logging.ConsoleHandler,java.util.logging.FileHandler
- 
- java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
- java.util.logging.ConsoleHandler.level = INFO
- 
- java.util.logging.FileHandler.pattern = c:/push.log%g.log
- java.util.logging.FileHandler.formatter = java.util.logging.SimpleFormatter
- java.util.logging.FileHandler.limit = 104857600
- java.util.logging.FileHandler.count = 3
- java.util.logging.FileHandler.append = true
- java.util.logging.FileHandler.level = INFO
- 
- LOGGER.level = FINEST
- ```   
 
 # 目录 <a name="index"/>
 * [一.类型定义](#type_def_index)

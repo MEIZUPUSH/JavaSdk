@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.meizu.push.sdk.constant.SystemConstants;
 import com.meizu.push.sdk.exception.InvalidRequestException;
 import com.meizu.push.sdk.server.model.HttpResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -30,12 +32,12 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.alibaba.fastjson.JSON.parseObject;
 
 public class HttpClient {
-    protected static final Logger logger = Logging.getLogger(HttpClient.class.getName());
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
 
     private static final String JDK_VERSION = System.getProperty("java.version", "UNKNOWN");
     private static final String OS = System.getProperty("os.name").toLowerCase();
@@ -98,16 +100,16 @@ public class HttpClient {
         try {
             ignoreSsl();
         } catch (KeyManagementException e) {
-            logger.log(Level.FINEST, "ignoreSsl error", e);
+            logger.warn("ignoreSsl error:{}", e.getMessage());
         } catch (NoSuchAlgorithmException e) {
-            logger.log(Level.FINEST, "ignoreSsl error", e);
+            logger.warn("ignoreSsl error:{}", e.getMessage());
         }
 
         StringBuilder signBody = new StringBuilder(body);
         addParameter(signBody, SIGN, getSignature(str2Param(body), this.appSecret));
 
-        logger.fine(new StringBuilder().append("Sending post to ").append(url).toString());
-        logger.finest(new StringBuilder().append("post body: ").append(URLDecoder.decode(signBody.toString(), SystemConstants.CHAR_SET)).toString());
+        logger.debug("Sending post to:{} param:{}", url, URLDecoder.decode(signBody.toString(), SystemConstants.CHAR_SET));
+
         HttpURLConnection conn = getConnection(url);
         prepareConnection(conn);
 
@@ -151,8 +153,8 @@ public class HttpClient {
         StringBuilder signParameter = new StringBuilder(parameter);
         addParameter(signParameter, SIGN, getSignature(str2Param(parameter), this.appSecret));
 
-        logger.fine(new StringBuilder().append("Sending get to ").append(url).toString());
-        logger.finest(new StringBuilder().append("get parameter: ").append(URLDecoder.decode(signParameter.toString(), SystemConstants.CHAR_SET)).toString());
+        logger.debug("Sending get to:{}", url);
+        logger.debug("get parameter:{}", URLDecoder.decode(signParameter.toString(), SystemConstants.CHAR_SET));
 
         String fullUrl = new StringBuilder().append(url).append("?").append(signParameter).toString();
 
@@ -191,7 +193,7 @@ public class HttpClient {
         try {
             closeable.close();
         } catch (IOException e) {
-            logger.log(Level.FINEST, "IOException closing stream", e);
+            logger.error("IOException closing stream:{}", e.getMessage());
         }
     }
 
@@ -277,6 +279,7 @@ public class HttpClient {
 
     private static void ignoreSsl() throws KeyManagementException, NoSuchAlgorithmException {
         HostnameVerifier hv = new HostnameVerifier() {
+            @Override
             public boolean verify(String urlHostName, SSLSession session) {
                 return true;
             }
@@ -326,11 +329,10 @@ public class HttpClient {
         HttpURLConnection conn;
         int status;
         try {
-            logger.fine("post to: " + url);
             conn = this.doPost(url, bodyParam);
             status = conn.getResponseCode();
         } catch (IOException e) {
-            logger.log(Level.WARNING, "IOException posting to push", e);
+            logger.warn("IOException posting:{}", e.getMessage());
             return null;
         }
        /*
@@ -345,31 +347,31 @@ public class HttpClient {
         505（HTTP 版本不受支持） 服务器不支持请求中所使用的 HTTP 协议版本。
        */
         if (status / 100 == 5) {
-            logger.fine("push service is unavailable (status " + status + ")");
+            logger.warn("push service is unavailable (status {})", status);
             return null;
         } else {
             String responseBody;
             if (status != 200) {
                 try {
                     responseBody = getAndClose(conn.getErrorStream());
-                    logger.finest("Plain post error response: " + responseBody);
+                    logger.warn("Plain post error response:{}", responseBody);
                 } catch (IOException e) {
                     responseBody = "N/A";
-                    logger.log(Level.FINE, "Exception reading response: ", e);
+                    logger.warn("Exception reading response:{}", e.getMessage());
                 }
                 throw new InvalidRequestException(status, responseBody);
             } else {
                 try {
                     responseBody = getAndClose(conn.getInputStream());
                 } catch (IOException e) {
-                    logger.log(Level.WARNING, "Exception reading response: ", e);
+                    logger.warn("Exception reading response:{}", e.getMessage());
                     return null;
                 }
                 try {
                     JSONObject json = parseObject(responseBody);
                     return (new HttpResult.Builder()).fromJson(json);
                 } catch (Exception e) {
-                    logger.log(Level.WARNING, "Exception parsing response: ", e);
+                    logger.warn("Exception parsing response:{}", e);
                     throw new IOException("Invalid response from push: " + responseBody);
                 }
             }
@@ -387,6 +389,7 @@ public class HttpClient {
      */
     static class miTM implements javax.net.ssl.TrustManager, javax.net.ssl.X509TrustManager {
 
+        @Override
         public java.security.cert.X509Certificate[] getAcceptedIssuers() {
             return null;
         }
@@ -399,11 +402,13 @@ public class HttpClient {
             return true;
         }
 
+        @Override
         public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType)
                 throws java.security.cert.CertificateException {
             return;
         }
 
+        @Override
         public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
                 throws java.security.cert.CertificateException {
             return;
