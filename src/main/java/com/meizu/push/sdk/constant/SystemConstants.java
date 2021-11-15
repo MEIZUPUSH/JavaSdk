@@ -7,11 +7,16 @@ public class SystemConstants {
 
     public static final String CHAR_SET = "UTF-8";
 
-    public static final String SDK_VERSION = "1.2.8.20190114_release";
+    public static final String SDK_VERSION = "1.2.9.2021111_release";
 
     private static final String PUSH_HOST_NAME = "server-api-push.meizu.com";
     private static final String SUB_HOST_NAME = "api-push.meizu.com";
 
+
+    /**
+     * 推送服务：图片上传接口
+     */
+    public static final String PUSH_UPLOAD_IMAGE = "http://" + PUSH_HOST_NAME + "/garcia/api/server/push/uploadImg";
     /**
      * 推送服务:pushId推送接口（透传消息）
      */

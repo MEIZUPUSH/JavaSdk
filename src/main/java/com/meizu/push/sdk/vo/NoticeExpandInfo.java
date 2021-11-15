@@ -26,15 +26,26 @@ public class NoticeExpandInfo implements Serializable{
 	 */
 	private String noticeExpandContent = "";
 
+	private String noticeExpandImgUrl = "";
+
     public NoticeExpandInfo() {
     }
 
-    public NoticeExpandInfo(int noticeExpandType, String noticeExpandContent) {
+    public NoticeExpandInfo(int noticeExpandType, String noticeExpandContent,String noticeExpandImgUrl) {
         this.noticeExpandType = noticeExpandType;
         this.noticeExpandContent = noticeExpandContent;
+        this.noticeExpandImgUrl = noticeExpandImgUrl;
     }
 
-    public int getNoticeExpandType() {
+	public String getNoticeExpandImgUrl() {
+		return noticeExpandImgUrl;
+	}
+
+	public void setNoticeExpandImgUrl(String noticeExpandImgUrl) {
+		this.noticeExpandImgUrl = noticeExpandImgUrl;
+	}
+
+	public int getNoticeExpandType() {
 		return noticeExpandType;
 	}
 
@@ -50,11 +61,12 @@ public class NoticeExpandInfo implements Serializable{
 		this.noticeExpandContent = noticeExpandContent;
 	}
 
-    @Override
-    public String toString() {
-        return "NoticeExpandInfo{" +
-                "noticeExpandType=" + noticeExpandType +
-                ", noticeExpandContent='" + noticeExpandContent + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "NoticeExpandInfo{" +
+				"noticeExpandType=" + noticeExpandType +
+				", noticeExpandContent='" + noticeExpandContent + '\'' +
+				", noticeExpandImgUrl='" + noticeExpandImgUrl + '\'' +
+				'}';
+	}
 }

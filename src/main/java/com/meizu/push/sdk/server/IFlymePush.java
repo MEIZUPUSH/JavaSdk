@@ -8,33 +8,19 @@ import com.meizu.push.sdk.constant.ScopeType;
 import com.meizu.push.sdk.constant.SystemConstants;
 import com.meizu.push.sdk.server.constant.ResultPack;
 import com.meizu.push.sdk.server.model.HttpResult;
-import com.meizu.push.sdk.server.model.push.Message;
-import com.meizu.push.sdk.server.model.push.PushResult;
-import com.meizu.push.sdk.server.model.push.UnVarnishedMessage;
-import com.meizu.push.sdk.server.model.push.VarnishedMessage;
+import com.meizu.push.sdk.server.model.push.*;
 import com.meizu.push.sdk.server.model.statistics.DailyPushStatics;
 import com.meizu.push.sdk.server.model.statistics.TaskStatistics;
 import com.meizu.push.sdk.utils.CollectionUtils;
 import com.meizu.push.sdk.utils.DateUtils;
 import com.meizu.push.sdk.utils.HttpClient;
 import com.meizu.push.sdk.utils.StringUtils;
-import com.meizu.push.sdk.vo.AdvanceInfo;
-import com.meizu.push.sdk.vo.ClickTypeInfo;
-import com.meizu.push.sdk.vo.NoticeBarInfo;
-import com.meizu.push.sdk.vo.NoticeExpandInfo;
-import com.meizu.push.sdk.vo.NotificationType;
-import com.meizu.push.sdk.vo.PushTimeInfo;
-import com.meizu.push.sdk.vo.UnVarnishedMessageJson;
-import com.meizu.push.sdk.vo.VarnishedMessageJson;
+import com.meizu.push.sdk.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author wangxinguo <wangxinguo@meizu.com>
@@ -54,6 +40,18 @@ public class IFlymePush extends HttpClient {
 
     public IFlymePush(String appSecret, boolean useSSL) {
         super(appSecret, useSSL);
+    }
+
+
+    public ResultPack<ImageInfo> uploadImage(long appId, int imgType, String imgUrl) throws IOException {
+        if (appId == 0) {
+            return ResultPack.failed("appId is illegal");
+        }
+        if (imgType != ImageInfo.NOTICE_BAR_IMG && imgType != ImageInfo.NOTICE_EXPAND_IMG) {
+            return ResultPack.failed("imgType is illegal");
+        }
+
+        return uploadImage(appId, imgType, imgUrl, 0);
     }
 
     /**
@@ -229,8 +227,8 @@ public class IFlymePush extends HttpClient {
             }
             VarnishedMessage msgInfo = (VarnishedMessage) message;
 
-            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent());
-            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent());
+            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent(), msgInfo.getNoticeBarImgUrl());
+            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent(), msgInfo.getNoticeExpandImgUrl());
             ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime());
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
@@ -383,8 +381,8 @@ public class IFlymePush extends HttpClient {
             }
             VarnishedMessage msgInfo = (VarnishedMessage) message;
 
-            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent());
-            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent());
+            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent(), msgInfo.getNoticeBarImgUrl());
+            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent(), msgInfo.getNoticeExpandImgUrl());
             ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             String startTime = "";
             if (msgInfo.getStartTime() != null) {
@@ -478,8 +476,8 @@ public class IFlymePush extends HttpClient {
             }
             VarnishedMessage msgInfo = (VarnishedMessage) message;
 
-            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent());
-            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent());
+            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent(), msgInfo.getNoticeBarImgUrl());
+            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent(), msgInfo.getNoticeExpandImgUrl());
             ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             String startTime = "";
             if (msgInfo.getStartTime() != null) {
@@ -610,6 +608,51 @@ public class IFlymePush extends HttpClient {
         }
     }
 
+    private ResultPack<ImageInfo> uploadImage(long appId, int imgType, String imgUrl, int retries) throws IOException {
+        int attempt = 0;
+        ResultPack<ImageInfo> result;
+        int backoff = 1000;
+        boolean tryAgain;
+        do {
+            ++attempt;
+            logger.debug(String.format("attempt [%s] to uploadImage [%s]", attempt, imgUrl));
+            result = this.uploadImageNoRetry(appId, imgType, imgUrl);
+            tryAgain = result == null && attempt <= retries;
+            backoff = getBackoffTime(backoff, tryAgain);
+        } while (tryAgain);
+        if (result == null) {
+            throw new IOException(String.format("Could not send message after [%s] attempts", attempt));
+        } else {
+            return result;
+        }
+    }
+
+    private ResultPack<ImageInfo> uploadImageNoRetry(long appId, int imgType, String imgUrl) throws IOException {
+        String _url = SystemConstants.PUSH_UPLOAD_IMAGE;
+        StringBuilder body = newBody("pushIds", String.valueOf(appId));
+        addParameter(body, "appId", String.valueOf(appId));
+        addParameter(body, "imgType", String.valueOf(imgType));
+        addParameter(body, "imgUrl", imgUrl);
+
+        HttpResult httpResult = super.post(useSSL, _url, body.toString());
+        if (httpResult == null) {
+            return null;
+        }
+
+        String code = httpResult.getCode();
+        String msg = httpResult.getMessage();
+        String value = httpResult.getValue();
+        if (SUCCESS_CODE.equals(code)) {
+            try {
+                ImageInfo imageInfo = JSONObject.parseObject(value, ImageInfo.class);
+                return ResultPack.succeed(code, msg, imageInfo);
+            } catch (Exception e) {
+                return ResultPack.failed(code, String.format("ImageInfo转化异常,原始str:%s,msg:%s", value, e.getMessage()));
+            }
+        } else {
+            return ResultPack.failed(code, msg);
+        }
+    }
 
     private ResultPack<PushResult> pushMessage(UserType userType, PushType pushType, Message message, String targets, int retries) throws IOException {
         int attempt = 0;
@@ -675,8 +718,8 @@ public class IFlymePush extends HttpClient {
         } else if (PushType.STATUSBAR == pushType) {
             VarnishedMessage msgInfo = (VarnishedMessage) message;
 
-            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent());
-            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent());
+            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent(), msgInfo.getNoticeBarImgUrl());
+            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent(), msgInfo.getNoticeExpandImgUrl());
             ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime());
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());

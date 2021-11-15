@@ -8,6 +8,7 @@ import com.meizu.push.sdk.constant.ScopeType;
 import com.meizu.push.sdk.server.constant.ErrorCode;
 import com.meizu.push.sdk.server.constant.PushResponseCode;
 import com.meizu.push.sdk.server.constant.ResultPack;
+import com.meizu.push.sdk.server.model.push.ImageInfo;
 import com.meizu.push.sdk.server.model.push.PushResult;
 import com.meizu.push.sdk.server.model.push.UnVarnishedMessage;
 import com.meizu.push.sdk.server.model.push.VarnishedMessage;
@@ -43,9 +44,20 @@ public class IFlymePushTest {
 
     public static final String callbackURL = "callbackurl";
 
-
     /**
-     * 通知栏消息推送（pushMessage）
+     * 图片上传
+     */
+    @Test
+    public void testPicUpload()throws Exception{
+        String imgUrl = "";
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+        ResultPack<ImageInfo> ret = push.uploadImage(appId,ImageInfo.NOTICE_BAR_IMG,imgUrl);
+        System.out.println(ret.toString());
+    }
+
+    // ****************************非任务 通知栏推送 begin*******************************
+    /**
+     * pushId通知栏消息推送（pushMessage）
      *
      * @throws Exception
      */
@@ -68,8 +80,6 @@ public class IFlymePushTest {
         ResultPack<PushResult> result = push.pushMessage(message, pushIds,2);
         handleResult(result);
     }
-
-
     /**
      * 别名通知栏消息推送（pushMessage）
      *
@@ -95,9 +105,128 @@ public class IFlymePushTest {
         // 2 处理推送结果
         handleResult(result);
     }
-
     /**
-     * 透传消息推送（pushMessage）
+     * 标签推送通知栏(pushToTag)
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testVarnishedMessagePushToTag() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //推送标签
+        List<String> tagName = new ArrayList<String>();
+        tagName.add("news");
+        tagName.add("tech");
+
+        //通知栏标签推送
+        VarnishedMessage varnishedMessage = new VarnishedMessage.Builder().appId(appId)
+                .title("java Sdk 标签推送标题").content("java Sdk 标签推送内容")
+                .build();
+        ResultPack<Long> result = push.pushToTag(PushType.STATUSBAR, varnishedMessage, tagName, ScopeType.INTERSECTION);
+        System.out.println(result);
+    }
+
+    // ****************************非任务 通知栏推送 end*******************************
+
+
+    // ****************************任务型 通知栏推送begin******************************
+    /**
+     * 获取通知栏推送taskId(getTaskId)
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testGetVarnishedMessageTaskId() throws Exception {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //组装消息
+        VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+                .title("java Sdk推送标题").content("java Sdk 推送内容")
+                .build();
+
+        ResultPack<Long> result = push.getTaskId(PushType.STATUSBAR, message);
+        System.out.println(result);
+    }
+    /**
+     * pushId任务通知栏消息推送（pushMessageByTaskId）
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testVarnishedMessagePushByTaskId() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //目标用户
+        List<String> pushIds = new ArrayList<String>();
+        pushIds.add("pushId_1");
+        pushIds.add("pushId_2");
+
+        //通知栏任务消息推送
+        Long taskId = 123l;
+        ResultPack<PushResult> result = push.pushMessageByTaskId(PushType.STATUSBAR, appId, taskId, pushIds);
+        // 2 处理推送结果
+        handleResult(result);
+    }
+    /**
+     * 别名任务通知栏消息推送
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testVarnishedMessagePushAliasByTaskId() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //目标用户
+        List<String> alias = new ArrayList<String>();
+        alias.add("alias1");
+        alias.add("alias2");
+
+        //通知栏任务消息推送
+        Long taskId = 45361L;
+        ResultPack<PushResult> result = push.pushAliasMessageByTaskId(PushType.STATUSBAR, appId, taskId, alias);
+        // 2 处理推送结果
+        handleResult(result);
+    }
+    /**
+     * 应用全部推送(pushToApp)
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testVarnishedMessagePushToApp() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+
+        //通知栏全部消息推送
+        VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+                .title("java Sdk 全部推送标题").content("java Sdk 全部推送内容")
+                .build();
+        ResultPack<Long> result = push.pushToApp(PushType.STATUSBAR, message);
+        System.out.println(result);
+    }
+    /**
+     * 取消推送任务(cancelTaskPush) 只针对全网推送生效
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testCancelTaskPush() throws IOException {
+        //推送对象
+        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+        long taskId = 123l;
+        ResultPack resultPack = push.cancelTaskPush(PushType.STATUSBAR, appId, taskId);
+        System.out.println(resultPack);
+    }
+    // ****************************任务型 通知栏推送 end******************************
+
+    // ****************************非任务型 透传推送 begin******************************
+    /**
+     * pushId透传消息推送（pushMessage）
      *
      * @throws Exception
      */
@@ -123,7 +252,6 @@ public class IFlymePushTest {
         // 2 处理推送结果
         handleResult(result);
     }
-
     /**
      * 别名透传推送
      *
@@ -149,26 +277,9 @@ public class IFlymePushTest {
         // 2 处理推送结果
         handleResult(result);
     }
+    // ****************************非任务型 透传推送 end******************************
 
-    /**
-     * 获取通知栏推送taskId(getTaskId)
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testGetVarnishedMessageTaskId() throws Exception {
-        //推送对象
-        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
-
-        //组装消息
-        VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
-                .title("java Sdk推送标题").content("java Sdk 推送内容")
-                .build();
-
-        ResultPack<Long> result = push.getTaskId(PushType.STATUSBAR, message);
-        System.out.println(result);
-    }
-
+    // ****************************任务型 透传推送 begin******************************
     /**
      * 获取透传推送taskId(getTaskId)
      *
@@ -189,9 +300,8 @@ public class IFlymePushTest {
         ResultPack<Long> result = push.getTaskId(PushType.DIRECT, message);
         System.out.println(result);
     }
-
     /**
-     * 任务透传消息推送（pushMessageByTaskId）
+     * pushId任务透传消息推送（pushMessageByTaskId）
      *
      * @throws IOException
      */
@@ -211,51 +321,6 @@ public class IFlymePushTest {
         // 2 处理推送结果
         handleResult(result);
     }
-
-    /**
-     * 任务通知栏消息推送（pushMessageByTaskId）
-     *
-     * @throws IOException
-     */
-    @Test
-    public void testVarnishedMessagePushByTaskId() throws IOException {
-        //推送对象
-        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
-
-        //目标用户
-        List<String> pushIds = new ArrayList<String>();
-        pushIds.add("pushId_1");
-        pushIds.add("pushId_2");
-
-        //通知栏任务消息推送
-        Long taskId = 123l;
-        ResultPack<PushResult> result = push.pushMessageByTaskId(PushType.STATUSBAR, appId, taskId, pushIds);
-        // 2 处理推送结果
-        handleResult(result);
-    }
-
-    /**
-     * 别名任务通知栏消息推送
-     *
-     * @throws IOException
-     */
-    @Test
-    public void testVarnishedMessagePushAliasByTaskId() throws IOException {
-        //推送对象
-        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
-
-        //目标用户
-        List<String> alias = new ArrayList<String>();
-        alias.add("alias1");
-        alias.add("alias2");
-
-        //通知栏任务消息推送
-        Long taskId = 45361L;
-        ResultPack<PushResult> result = push.pushAliasMessageByTaskId(PushType.STATUSBAR, appId, taskId, alias);
-        // 2 处理推送结果
-        handleResult(result);
-    }
-
     /**
      * 别名任务透传消息推送
      *
@@ -277,29 +342,8 @@ public class IFlymePushTest {
         // 2 处理推送结果
         handleResult(result);
     }
-
-
     /**
-     * 应用全部推送(pushToApp)
-     *
-     * @throws IOException
-     */
-    @Test
-    public void testVarnishedMessagePushToApp() throws IOException {
-        //推送对象
-        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
-
-        //通知栏全部消息推送
-        VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
-                .title("java Sdk 全部推送标题").content("java Sdk 全部推送内容")
-                .build();
-        ResultPack<Long> result = push.pushToApp(PushType.STATUSBAR, message);
-        System.out.println(result);
-    }
-
-
-    /**
-     * 应用全部推送(pushToApp)
+     * 应用全部推送透传(pushToApp)
      *
      * @throws IOException
      */
@@ -321,32 +365,8 @@ public class IFlymePushTest {
         ResultPack<Long> result = push.pushToApp(PushType.DIRECT, message2);
         System.out.println(result);
     }
-
     /**
-     * 标签推送(pushToTag)
-     *
-     * @throws IOException
-     */
-    @Test
-    public void testVarnishedMessagePushToTag() throws IOException {
-        //推送对象
-        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
-
-        //推送标签
-        List<String> tagName = new ArrayList<String>();
-        tagName.add("news");
-        tagName.add("tech");
-
-        //通知栏标签推送
-        VarnishedMessage varnishedMessage = new VarnishedMessage.Builder().appId(appId)
-                .title("java Sdk 标签推送标题").content("java Sdk 标签推送内容")
-                .build();
-        ResultPack<Long> result = push.pushToTag(PushType.STATUSBAR, varnishedMessage, tagName, ScopeType.INTERSECTION);
-        System.out.println(result);
-    }
-
-    /**
-     * 标签推送(pushToTag)
+     * 标签推送透传(pushToTag)
      *
      * @throws IOException
      */
@@ -369,21 +389,7 @@ public class IFlymePushTest {
         ResultPack<Long> result = push.pushToTag(PushType.DIRECT, unVarnishedMessage, tagName, ScopeType.UNION);
         System.out.println(result);
     }
-
-
-    /**
-     * 取消推送任务(cancelTaskPush) 只针对全网推送生效
-     *
-     * @throws IOException
-     */
-    @Test
-    public void testCancelTaskPush() throws IOException {
-        //推送对象
-        IFlymePush push = new IFlymePush(APP_SECRET_KEY);
-        long taskId = 123l;
-        ResultPack resultPack = push.cancelTaskPush(PushType.STATUSBAR, appId, taskId);
-        System.out.println(resultPack);
-    }
+    // ****************************任务型 透传推送 end******************************
 
     /**
      * 获取任务统计结果
@@ -453,15 +459,6 @@ public class IFlymePushTest {
         // 1 调用推送服务
         ResultPack<PushResult> result = push.pushMessageByAlias(message, alias);
         handleResult(result);
-    }
-
-    private static Date str2Date(String dateString) {
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(FORMAT_STRING);
-            return simpleDateFormat.parse(dateString);
-        } catch (ParseException e) {
-            throw new RuntimeException("时间转化格式错误" + "[dateString=" + dateString + "]" + "[FORMAT_STRING=" + FORMAT_STRING + "]");
-        }
     }
 
     /**

@@ -27,14 +27,19 @@ public class NoticeBarInfo implements Serializable{
 	 * 推送内容, 【必填，字数限制1~100】
 	 */
 	private String content = "";
+	/**
+	 * 通知栏图片, 【noticeBarType为图片时，必填】
+	 */
+	private String noticeBarImgUrl = "";
 
     public NoticeBarInfo() {
     }
 
-    public NoticeBarInfo(int noticeBarType, String title, String content) {
+    public NoticeBarInfo(int noticeBarType, String title, String content,String noticeBarImgUrl) {
         this.noticeBarType = noticeBarType;
         this.title = title;
         this.content = content;
+        this.noticeBarImgUrl = noticeBarImgUrl;
     }
 
     public int getNoticeBarType() {
@@ -61,12 +66,21 @@ public class NoticeBarInfo implements Serializable{
 		this.content = content;
 	}
 
-    @Override
-    public String toString() {
-        return "NoticeBarInfo{" +
-                "noticeBarType=" + noticeBarType +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                '}';
-    }
+	public String getNoticeBarImgUrl() {
+		return noticeBarImgUrl;
+	}
+
+	public void setNoticeBarImgUrl(String noticeBarImgUrl) {
+		this.noticeBarImgUrl = noticeBarImgUrl;
+	}
+
+	@Override
+	public String toString() {
+		return "NoticeBarInfo{" +
+				"noticeBarType=" + noticeBarType +
+				", title='" + title + '\'' +
+				", content='" + content + '\'' +
+				", noticeBarImgUrl='" + noticeBarImgUrl + '\'' +
+				'}';
+	}
 }

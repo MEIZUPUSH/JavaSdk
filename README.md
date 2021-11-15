@@ -6,7 +6,12 @@
 
 ## 更新日志
 
+### [2021-11-11]V1.2.9.2021111_release
+
+* 增加通知栏图片，展开大图推送支持
+
 ### [2019-01-14]V1.2.8.20190114_release
+
 *  update log config
 
 ### [2018-11-06]V1.2.7.20181228_release
@@ -81,6 +86,7 @@
     * [回执类型（CallBackType）](#CallBackType_index)
     * [回执参数（ExtraParam）](#ExtraParam_index) 
 * [二.接口说明](#api_def_index) 
+    * [图片上传](#uploadImage_index)
     * [非任务推送](#UnTaskPush_index)      
          * [pushId通知栏消息推送(pushMessage)](#VarnishedMessage_push_index)   
          * [pushId透传消息推送(pushMessage)](#UnVarnishedMessage_push_index)
@@ -145,9 +151,11 @@ appId|Long|是|null|注册应用appId
 restrictedPackageNames|String[]|否|null|多包名配置【最长50】
 title|String|是|null|推送标题, 【字数限制1~32】
 content|String|是|null|推送内容, 【字数限制1~100】
-noticeBarType|int|否|0|通知栏样式(0, "标准"),(2, "安卓原生")【非必填，默认值为0】
-noticeExpandType|int|否|0|展开方式 (0, "标准"),(1, "文本")【非必填，默认值为0】
+noticeBarType|int|否|0|通知栏样式(0, "标准"),(1, "图片"),(2, "安卓原生")【非必填，默认值为0】
+noticeBarImgUrl|String|否|null|通知栏图片, 【noticeBarType为图片时，必填】
+noticeExpandType|int|否|0|展开方式 (0, "标准"),(1, "文本"),(2, "大图")【非必填，默认值为0】
 noticeExpandContent|String|否|null|展开内容, 【noticeExpandType为文本时，必填】
+noticeExpandImgUrl|String|否|null|展开大图url, 【noticeExpandType为大图时，必填】
 clickType|int|否|0|点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开URI页面"),(3, "应用客户端自定义")【非必填，默认值为0】
 url|String|否|null|URI页面地址, 【clickType为打开URI页面时，必填】
 parameters|JSONObject|否|null|透传参数 【JSON格式，非必填】
@@ -301,7 +309,59 @@ CALLBACK_TYPE|Enum|回执类型（(1-送达回执, 2-点击回执, 3-送达与�
 
 
 # 接口说明 <a name="api_def_index"/>
+## 图片上传<a name="uploadImage_index"/>
+
+### 描述
+
+> 通知栏图片、展开大图使用的图片链接需要由此接口上传生成
+
+``` 
+注：上传的图片最多保留三天，请在需要时才上传
+```
+
+### uploadImage上传接口
+
+* 接口说明
+
+| 接口                                                         | 说明     |
+| ------------------------------------------------------------ | -------- |
+| public ResultPack<ImageInfo> uploadImage(long appId, int imgType, String imgUrl) | 上传图片 |
+
+* 参数说明
+
+| 参数名称 | 类型   | 必需 | 默认 | 描述         |
+| -------- | ------ | ---- | ---- | ------------ |
+| appId    | long   | 是   | null | 应用id       |
+| imgType  | int    | 是   | null | 图片使用类型 |
+| imgUrl   | String | 是   | null | 图片来源url  |
+
+* 返回值
+
+```
+ImageInfo
+imgType：图片类型
+imgUrl：推送时使用的url
+```
+
+* 示例
+
+```java
+/**
+ * 图片上传
+ */
+@Test
+public void testPicUpload()throws Exception{
+    String imgUrl = "";
+    IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+    ResultPack<ImageInfo> ret = push.uploadImage(appId,ImageInfo.NOTICE_BAR_IMG,imgUrl);
+    System.out.println(ret.toString());
+}
+```
+
+
+
 ## 非任务推送 <a name="UnTaskPush_index"/>
+
 ### 描述
 > 向指定的pushId推送消息
 ```

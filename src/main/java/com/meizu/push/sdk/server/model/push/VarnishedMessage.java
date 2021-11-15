@@ -23,7 +23,7 @@ public class VarnishedMessage extends Message {
 
     /* =============通知栏样式 begin=============  */
     /**
-     * 通知栏类型(0, "默认") 【必填，值为0】
+     * 通知栏类型(0, "默认"),(1, "图片"),(2, "安卓原生") 【必填，值为0】
      */
     private int noticeBarType = 0;
     /**
@@ -34,18 +34,26 @@ public class VarnishedMessage extends Message {
      * 推送内容, 【必填，字数限制1~100】
      */
     private String content = "";
+    /**
+     * 通知栏图片, 【noticeBarType为图片时，必填】
+     */
+    private String noticeBarImgUrl = "";
     /* =============通知栏样式 end=============  */
 
 
     /* =============展开方式 begin=============  */
     /**
-     * 展开方式 (0, "禁用"),(1, "文本")
+     * 展开方式 (0, "禁用"),(1, "文本"),(2, "大图")
      */
     private int noticeExpandType = 0;
     /**
      * 展开内容, 【noticeExpandType为文本时，必填】
      */
     private String noticeExpandContent = "";
+    /**
+     * 展开大图url, 【noticeExpandType为大图时，必填】
+     */
+    private String noticeExpandImgUrl = "";
     /* =============展开方式 end=============  */
 
 
@@ -162,8 +170,10 @@ public class VarnishedMessage extends Message {
         this.noticeBarType = builder.noticeBarType;
         this.title = builder.title;
         this.content = builder.content;
+        this.noticeBarImgUrl = builder.noticeBarImgUrl;
         this.noticeExpandType = builder.noticeExpandType;
         this.noticeExpandContent = builder.noticeExpandContent;
+        this.noticeExpandImgUrl = builder.noticeExpandImgUrl;
         this.clickType = builder.clickType;
         this.url = builder.url;
         this.parameters = builder.parameters;
@@ -211,12 +221,20 @@ public class VarnishedMessage extends Message {
         return content;
     }
 
+    public String getNoticeBarImgUrl() {
+        return noticeBarImgUrl;
+    }
+
     public int getNoticeExpandType() {
         return noticeExpandType;
     }
 
     public String getNoticeExpandContent() {
         return noticeExpandContent;
+    }
+
+    public String getNoticeExpandImgUrl() {
+        return noticeExpandImgUrl;
     }
 
     public int getClickType() {
@@ -292,12 +310,12 @@ public class VarnishedMessage extends Message {
     }
 
     public String getNotifyKey() {
-		return notifyKey;
-	}
+        return notifyKey;
+    }
 
-	public void setNotifyKey(String notifyKey) {
-		this.notifyKey = notifyKey;
-	}
+    public void setNotifyKey(String notifyKey) {
+        this.notifyKey = notifyKey;
+    }
 
     @Override
     public String toString() {
@@ -307,6 +325,7 @@ public class VarnishedMessage extends Message {
                 ", content='" + content + '\'' +
                 ", noticeExpandType=" + noticeExpandType +
                 ", noticeExpandContent='" + noticeExpandContent + '\'' +
+                ", noticeExpandImgUrl='" + noticeExpandImgUrl + '\'' +
                 ", clickType=" + clickType +
                 ", url='" + url + '\'' +
                 ", parameters=" + parameters +
@@ -326,7 +345,7 @@ public class VarnishedMessage extends Message {
                 ", vibrate=" + vibrate +
                 ", lights=" + lights +
                 ", sound=" + sound +
-                ", notifyKey=" + notifyKey +
+                ", notifyKey='" + notifyKey + '\'' +
                 ", extra=" + extra +
                 '}';
     }
@@ -342,7 +361,7 @@ public class VarnishedMessage extends Message {
          */
         private String[] restrictedPackageNames;
 
-    /* =============通知栏样式 begin=============  */
+        /* =============通知栏样式 begin=============  */
         /**
          * 通知栏类型(0, "默认"),(1, "图片") , 【必填，值为0或者1】
          */
@@ -355,22 +374,30 @@ public class VarnishedMessage extends Message {
          * 推送内容, 【必填，字数限制1~100】
          */
         private String content = "";
-    /* =============通知栏样式 end=============  */
-
-
-    /* =============展开方式 begin=============  */
         /**
-         * 展开方式 (0, "禁用"),(1, "文本")
+         * 通知栏图片, 【noticeBarType为图片时，必填】
+         */
+        private String noticeBarImgUrl = "";
+        /* =============通知栏样式 end=============  */
+
+
+        /* =============展开方式 begin=============  */
+        /**
+         * 展开方式 (0, "禁用"),(1, "文本"),(2, "大图")
          */
         private int noticeExpandType = 0;
         /**
          * 展开内容, 【noticeExpandType为文本时，必填】
          */
         private String noticeExpandContent = "";
-    /* =============展开方式 end=============  */
+        /**
+         * 展开大图url, 【noticeExpandType为大图时，必填】
+         */
+        private String noticeExpandImgUrl = "";
+        /* =============展开方式 end=============  */
 
 
-    /* =============点击动作 begin=============  */
+        /* =============点击动作 begin=============  */
         /**
          * 点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开H5地址"),(3, "应用客户端自定义")
          */
@@ -392,10 +419,10 @@ public class VarnishedMessage extends Message {
          */
         private String customAttribute = "";
 
-    /* =============点击动作 end=============  */
+        /* =============点击动作 end=============  */
 
 
-    /* =============推送时间 begin=============  */
+        /* =============推送时间 begin=============  */
         /**
          * 是否进离线消息 【非必填，默认值为true】
          */
@@ -412,10 +439,10 @@ public class VarnishedMessage extends Message {
          * 任务定时开始时间【非必填pushTimeType为1必填】只对全部用户推送生效
          */
         private Date startTime;
-    /* =============推送时间 end=============  */
+        /* =============推送时间 end=============  */
 
 
-    /* =============高级设置 begin=============  */
+        /* =============高级设置 begin=============  */
         /**
          * 是否定速推送 (fixSpeedRate 定速速率) 【非必填，默认false】 只对全部用户推送和标签推送生效
          */
@@ -462,7 +489,7 @@ public class VarnishedMessage extends Message {
          * 字段规则合法的消息组ID由数字([0-9]), 大小写字母([a-zA-Z]), 下划线(_)和中划线(-)组成, 长度不大于8个字符
          */
         private String notifyKey = "";
-    /* =============高级设置 end=============  */
+        /* =============高级设置 end=============  */
         /**
          * Key	Value含义  （key 参照：ExtraParam）
          * callback	String  (必填字段), 第三方接收回执的Http接口, 最大长度128字节
@@ -494,6 +521,11 @@ public class VarnishedMessage extends Message {
             return this;
         }
 
+        public VarnishedMessage.Builder noticeBarImgUrl(String noticeBarImgUrl) {
+            this.noticeBarImgUrl = noticeBarImgUrl;
+            return this;
+        }
+
 
         public VarnishedMessage.Builder noticeExpandType(int noticeExpandType) {
             this.noticeExpandType = noticeExpandType;
@@ -502,6 +534,11 @@ public class VarnishedMessage extends Message {
 
         public VarnishedMessage.Builder noticeExpandContent(String noticeExpandContent) {
             this.noticeExpandContent = noticeExpandContent;
+            return this;
+        }
+
+        public VarnishedMessage.Builder noticeExpandImgUrl(String noticeExpandImgUrl) {
+            this.noticeExpandImgUrl = noticeExpandImgUrl;
             return this;
         }
 
@@ -602,15 +639,15 @@ public class VarnishedMessage extends Message {
             this.extra.put(key, value);
             return this;
         }
-        
+
         public VarnishedMessage.Builder restrictedPackageNames(String[] restrictedPackageNames) {
             this.restrictedPackageNames = restrictedPackageNames;
             return this;
         }
-        
+
         public VarnishedMessage.Builder notifyKey(String notifyKey) {
-        	this.notifyKey = notifyKey;
-        	return this;
+            this.notifyKey = notifyKey;
+            return this;
         }
 
 

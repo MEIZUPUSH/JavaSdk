@@ -126,7 +126,6 @@ public class IFlymePushSub extends HttpClient {
      * 取消别名订阅
      *
      * @param pushId
-     * @param alias
      * @return
      * @throws IOException
      */
