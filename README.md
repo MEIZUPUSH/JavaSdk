@@ -159,7 +159,7 @@ noticeBarImgUrl|String|否|null|通知栏图片, 【noticeBarType为图片时，
 noticeExpandType|int|否|0|展开方式 (0, "标准"),(1, "文本"),(2, "大图")【非必填，默认值为0】
 noticeExpandContent|String|否|null|展开内容, 【noticeExpandType为文本时，必填】
 noticeExpandImgUrl|String|否|null|展开大图url, 【noticeExpandType为大图时，必填】
-clickType|int|否|0|点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开URI页面"),(3, "应用客户端自定义")【非必填，默认值为0】
+clickType|int|否|0|点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开URI页面"),~~(3, "应用客户端自定义")~~【非必填，默认值为0,android12后不支持3：应用客户端定义】
 url|String|否|null|URI页面地址, 【clickType为打开URI页面时，必填】
 parameters|JSONObject|否|null|透传参数 【JSON格式，非必填】
 activity|String|否|null|应用页面地址, 【clickType为打开应用页面时，格式 pkg.activity eg: com.meizu.upspushdemo.TestActivity 必填】
