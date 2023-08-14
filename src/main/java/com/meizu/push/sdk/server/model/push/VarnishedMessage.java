@@ -159,7 +159,7 @@ public class VarnishedMessage extends Message {
      * callback.param	String(可选字段), 第三方自定义回执参数, 最大长度64字节
      * callback.type	int(可选字段), 回执类型(1-送达回执, 2-点击回执, 3-送达与点击回执), 默认3 （ 参考:CallBackType）
      */
-    public Map<String, String> extra = new LinkedHashMap();
+    public Map<String, String> extra = new LinkedHashMap<>();
 
     public VarnishedMessage() {
     }

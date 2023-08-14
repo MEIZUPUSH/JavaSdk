@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.meizu.flyme</groupId>
     <artifactId>push-server-sdk</artifactId>
-    <version>1.2.9.20211111_release</version>
+    <version>1.2.10.20230811_release</version>
 
     <packaging>jar</packaging>
     <name>MeizuPushSDK</name>
@@ -139,7 +139,7 @@
                     <!-- GPG -->
                     <plugin>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>3.0.1</version>
                         <configuration>
                             <skip>false</skip>
                         </configuration>

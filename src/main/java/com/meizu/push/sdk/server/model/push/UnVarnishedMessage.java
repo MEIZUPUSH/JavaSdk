@@ -2,6 +2,8 @@ package com.meizu.push.sdk.server.model.push;
 
 
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 透传消息
@@ -47,6 +49,13 @@ public class UnVarnishedMessage extends Message {
      * 任务定时开始时间【非必填pushTimeType为1必填】只对全部用户推送生效
      */
     private Date startTime;
+    /**
+     * Key	Value含义  （key 参照：ExtraParam）
+     * callback	String  (必填字段), 第三方接收回执的Http接口, 最大长度128字节
+     * callback.param	String(可选字段), 第三方自定义回执参数, 最大长度64字节
+     * callback.type	int(可选字段), 回执类型(1-送达回执, 2-点击回执, 3-送达与点击回执), 默认3, 透传消息只支持3 （ 参考:CallBackType）
+     */
+    public Map<String, String> extra = new LinkedHashMap<>();
 
     public int getPushTimeType() {
         return pushTimeType;
@@ -91,6 +100,7 @@ public class UnVarnishedMessage extends Message {
                 ", fixSpeedRate=" + fixSpeedRate +
                 ", pushTimeType=" + pushTimeType +
                 ", startTime=" + startTime +
+                ", extra=" + extra +
                 '}';
     }
 
@@ -105,6 +115,7 @@ public class UnVarnishedMessage extends Message {
         this.isFixSpeed = builder.isFixSpeed;
         this.pushTimeType = builder.pushTimeType;
         this.startTime = builder.startTime;
+        this.extra = builder.extra;
     }
 
 
@@ -119,6 +130,7 @@ public class UnVarnishedMessage extends Message {
         private long fixSpeedRate;
         private int pushTimeType = 0;
         private Date startTime;
+        public Map<String, String> extra = new LinkedHashMap<>();
 
         public UnVarnishedMessage.Builder title(String title) {
             this.title = title;
@@ -167,6 +179,10 @@ public class UnVarnishedMessage extends Message {
         
         public UnVarnishedMessage.Builder restrictedPackageNames(String[] restrictedPackageNames) {
             this.restrictedPackageNames = restrictedPackageNames;
+            return this;
+        }
+        public UnVarnishedMessage.Builder exture(LinkedHashMap<String,String> extra) {
+            this.extra = extra;
             return this;
         }
 

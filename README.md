@@ -5,6 +5,9 @@
 * 直接下载获取 [Java Server SDK](https://github.com/MEIZUPUSH/JavaSdk/releases)
 
 ## 更新日志
+### [2023-08-11]V1.2.10.20230811_release
+
+* 海内外切换支持
 
 ### [2021-11-11]V1.2.9.2021111_release
 
