@@ -389,7 +389,7 @@ public void testPicUpload()throws Exception{
 参数名称|类型|必需|默认|描述
 ---|---|---|---|---
 message|VarnishedMessage|是|null|推送消息
-pushIds|List<String>|是|null|推送目标，一批最多不能超过1000个
+pushIds|List<String>|是|null|推送目标，一批最多不能超过100个
 retries|int|否|0|超时or异常重试次数
 
 - 返回值
@@ -477,7 +477,7 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
 参数名称|类型|必需|默认|描述
 ---|---|---|---|---
 message|UnVarnishedMessage|是|null|推送消息
-pushIds|List<String>|是|null|推送目标，一批最多不能超过1000个
+pushIds|List<String>|是|null|推送目标，一批最多不能超过100个
 retries|int|否|0|超时or异常重试次数
 
 - 返回值
@@ -563,7 +563,7 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
 参数名称|类型|必需|默认|描述
 ---|---|---|---|---
 message|VarnishedMessage|是|null|推送消息
-alias|List<String>|是|null|推送目标，一批最多不能超过1000个
+alias|List<String>|是|null|推送目标，一批最多不能超过100个
 retries|int|否|0|超时or异常重试次数
 
 - 返回值
@@ -651,7 +651,7 @@ public void testVarnishedMessagePushByAlias() throws Exception {
 参数名称|类型|必需|默认|描述
 ---|---|---|---|---
 message|UnVarnishedMessage|是|null|推送消息
-alias|List<String>|是|null|推送目标，一批最多不能超过1000个
+alias|List<String>|是|null|推送目标，一批最多不能超过100个
 retries|int|否|0|超时or异常重试次数
 
 - 返回值
@@ -818,7 +818,7 @@ Long  任务ID
 pushType|PushType|是|null|消息类型
 appId|Long|是|null|推送应用ID
 taskId|Long|是|null|推送任务ID
-pushIds|List<String>|是|null|推送目标，一批最多不能超过1000个
+pushIds|List<String>|是|null|推送目标，一批最多不能超过100个
 retries|int|否|0|超时or异常重试次数
 
 - 返回值
@@ -925,7 +925,7 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
 pushType|PushType|是|null|消息类型
 appId|Long|是|null|推送应用ID
 taskId|Long|是|null|推送任务ID
-alias|List<String>|是|null|推送目标别名，一批最多不能超过1000个
+alias|List<String>|是|null|推送目标别名，一批最多不能超过100个
 retries|int|否|0|超时or异常重试次数
 
 - 返回值
