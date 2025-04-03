@@ -1,31 +1,21 @@
 package com.meizu.push.sdk.server;
 
 
-import com.meizu.push.sdk.constant.CallBackType;
-import com.meizu.push.sdk.constant.ExtraParam;
-import com.meizu.push.sdk.constant.PushType;
-import com.meizu.push.sdk.constant.ScopeType;
+import com.meizu.push.sdk.constant.*;
 import com.meizu.push.sdk.server.constant.ErrorCode;
 import com.meizu.push.sdk.server.constant.PushResponseCode;
 import com.meizu.push.sdk.server.constant.ResultPack;
-import com.meizu.push.sdk.server.model.push.ImageInfo;
-import com.meizu.push.sdk.server.model.push.PushResult;
-import com.meizu.push.sdk.server.model.push.UnVarnishedMessage;
-import com.meizu.push.sdk.server.model.push.VarnishedMessage;
+import com.meizu.push.sdk.server.model.push.*;
 import com.meizu.push.sdk.server.model.statistics.DailyPushStatics;
 import com.meizu.push.sdk.server.model.statistics.TaskStatistics;
 import com.meizu.push.sdk.utils.DateUtils;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import static com.meizu.push.sdk.utils.DateUtils.FORMAT_STRING;
 
 /**
  * Created by wangxinguo on 2016-8-21.
@@ -65,14 +55,23 @@ public class IFlymePushTest {
     public void testVarnishedMessagePush() throws Exception {
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
-
+        // vip特性
+        VipFeatures vipFeatures = new VipFeatures.Builder().noticeExpandImgUrl("展开大图url")
+                .bigIconUrl("大图标url")
+                .smallIconUrl("小图标url")
+                .subtitle("SDK测试子标题")
+                .titleColor(TitleColorType.BLUE)
+                .build();
         //组装消息
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+                .noticeMsgType(NoticeMsgType.PUB_MSG)
+                .vipFeatures(vipFeatures)
                 .title("Java SDK 推送标题").content("Java SDK 推送内容")
                 .build();
 
         //目标用户
         List<String> pushIds = new ArrayList<String>();
+
         pushIds.add("pushId_1");
         pushIds.add("pushId_2");
 
@@ -89,9 +88,17 @@ public class IFlymePushTest {
     public void testVarnishedMessagePushByAlias() throws Exception {
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
-
+        // vip特性
+        VipFeatures vipFeatures = new VipFeatures.Builder().noticeExpandImgUrl("展开大图url")
+                .bigIconUrl("大图标url")
+                .smallIconUrl("小图标")
+                .subtitle("SDK测试子标题")
+                .titleColor(TitleColorType.BLUE)
+                .build();
         //组装消息
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+                .noticeMsgType(NoticeMsgType.PUB_MSG)
+                .vipFeatures(vipFeatures)
                 .title("Java SDK 推送标题").content("Java SDK 推送内容")
                 .build();
 
@@ -120,8 +127,18 @@ public class IFlymePushTest {
         tagName.add("news");
         tagName.add("tech");
 
+        // vip特性
+        VipFeatures vipFeatures = new VipFeatures.Builder().noticeExpandImgUrl("展开大图url")
+                .bigIconUrl("大图标url")
+                .smallIconUrl("小图标")
+                .subtitle("SDK测试子标题")
+                .titleColor(TitleColorType.BLUE)
+                .build();
+
         //通知栏标签推送
         VarnishedMessage varnishedMessage = new VarnishedMessage.Builder().appId(appId)
+                .noticeMsgType(NoticeMsgType.PUB_MSG)
+                .vipFeatures(vipFeatures)
                 .title("java Sdk 标签推送标题").content("java Sdk 标签推送内容")
                 .build();
         ResultPack<Long> result = push.pushToTag(PushType.STATUSBAR, varnishedMessage, tagName, ScopeType.INTERSECTION);
@@ -141,9 +158,17 @@ public class IFlymePushTest {
     public void testGetVarnishedMessageTaskId() throws Exception {
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
-
+        // vip特性
+        VipFeatures vipFeatures = new VipFeatures.Builder().noticeExpandImgUrl("展开大图url")
+                .bigIconUrl("大图标url")
+                .smallIconUrl("小图标")
+                .subtitle("SDK测试子标题")
+                .titleColor(TitleColorType.BLUE)
+                .build();
         //组装消息
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+                .noticeMsgType(NoticeMsgType.PUB_MSG)
+                .vipFeatures(vipFeatures)
                 .title("java Sdk推送标题").content("java Sdk 推送内容")
                 .build();
 
@@ -201,9 +226,17 @@ public class IFlymePushTest {
     public void testVarnishedMessagePushToApp() throws IOException {
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
-
+        // vip特性
+        VipFeatures vipFeatures = new VipFeatures.Builder().noticeExpandImgUrl("展开大图url")
+                .bigIconUrl("大图标url")
+                .smallIconUrl("小图标")
+                .subtitle("SDK测试子标题")
+                .titleColor(TitleColorType.BLUE)
+                .build();
         //通知栏全部消息推送
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
+                .noticeMsgType(NoticeMsgType.PUB_MSG)
+                .vipFeatures(vipFeatures)
                 .title("java Sdk 全部推送标题").content("java Sdk 全部推送内容")
                 .build();
         ResultPack<Long> result = push.pushToApp(PushType.STATUSBAR, message);
@@ -481,6 +514,13 @@ public class IFlymePushTest {
                     List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
                     System.out.println("rateLimitTarget is :" + rateLimitTarget);
                     //TODO 5 业务处理，重推......
+                }
+                // 6 判断是否有超出公信限制的target
+                if (targetResultMap.containsKey(PushResponseCode.RSP_PUBMSG_DAILY_LIMIT.getValue())) {
+                    // 7 获取超出公信限制的target
+                    List<String> pubMsgLimitTarget = targetResultMap.get(PushResponseCode.RSP_PUBMSG_DAILY_LIMIT.getValue());
+                    System.out.println("pubMsgLimitTarget is :" + pubMsgLimitTarget);
+                    //TODO 8 业务处理
                 }
             }
         } else {

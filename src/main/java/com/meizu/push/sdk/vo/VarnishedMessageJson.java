@@ -34,6 +34,10 @@ public class VarnishedMessageJson implements Serializable {
      */
     private AdvanceInfo advanceInfo = new AdvanceInfo();
     /**
+     * vip特性
+     */
+    private VipInfo vipInfo = new VipInfo();
+    /**
      * 扩展参数 参考枚举 ExtraParam
      */
     private Map<String, String> extra = new LinkedHashMap<String, String>();
@@ -108,5 +112,13 @@ public class VarnishedMessageJson implements Serializable {
 
     public void setExtra(Map<String, String> extra) {
         this.extra = extra;
+    }
+
+    public VipInfo getVipInfo() {
+        return vipInfo;
+    }
+
+    public void setVipInfo(VipInfo vipInfo) {
+        this.vipInfo = vipInfo;
     }
 }

@@ -47,7 +47,8 @@ public class IFlymePush extends HttpClient {
         if (appId == 0) {
             return ResultPack.failed("appId is illegal");
         }
-        if (imgType != ImageInfo.NOTICE_BAR_IMG && imgType != ImageInfo.NOTICE_EXPAND_IMG) {
+        if (imgType != ImageInfo.NOTICE_BAR_IMG && imgType != ImageInfo.NOTICE_EXPAND_IMG && imgType != ImageInfo.NOTICE_BACKGROUND_IMG
+                && imgType != ImageInfo.NOTICE_BIG_ICON && imgType != ImageInfo.NOTICE_SMALL_ICON) {
             return ResultPack.failed("imgType is illegal");
         }
 
@@ -226,9 +227,13 @@ public class IFlymePush extends HttpClient {
                 return ResultPack.failed("message must be instanceof VarnishedMessage");
             }
             VarnishedMessage msgInfo = (VarnishedMessage) message;
+            VipFeatures vipFeatures = msgInfo.getVipFeatures();
 
-            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent(), msgInfo.getNoticeBarImgUrl());
-            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent(), msgInfo.getNoticeExpandImgUrl());
+            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeMsgType(), msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent(), msgInfo.getNoticeBarImgUrl());
+            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent());
+            if (vipFeatures != null) {
+                noticeExpandInfo.setNoticeExpandImgUrl(vipFeatures.getNoticeExpandImgUrl());
+            }
             ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime());
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
@@ -236,6 +241,11 @@ public class IFlymePush extends HttpClient {
                     msgInfo.isClearNoticeBar(), notificationType, msgInfo.isFixDisplay(), msgInfo.getFixStartDisplayDate(), msgInfo.getFixEndDisplayDate(), msgInfo.getNotifyKey());
 
             VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo, noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo);
+            if (vipFeatures != null) {
+                VipInfo vipInfo = new VipInfo(vipFeatures.getSubtitle(), vipFeatures.getPullDownTop(), vipFeatures.getTimeTop(), vipFeatures.getNotGroup(),
+                        vipFeatures.getTitleColor(), vipFeatures.getBackgroundImgUrl(), vipFeatures.getSmallIconUrl(), vipFeatures.getBigIconUrl());
+                messageJson.setVipInfo(vipInfo);
+            }
             addParameter(body, "messageJson", JSON.toJSONString(messageJson));
             if (message.getRestrictedPackageNames() != null) {
                 addParameter(body, "restrictedPackageNames", array2Str(message.getRestrictedPackageNames()));
@@ -380,9 +390,13 @@ public class IFlymePush extends HttpClient {
                 return ResultPack.failed("message must be instanceof VarnishedMessage");
             }
             VarnishedMessage msgInfo = (VarnishedMessage) message;
+            VipFeatures vipFeatures = msgInfo.getVipFeatures();
 
-            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent(), msgInfo.getNoticeBarImgUrl());
-            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent(), msgInfo.getNoticeExpandImgUrl());
+            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeMsgType(), msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent(), msgInfo.getNoticeBarImgUrl());
+            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent());
+            if (vipFeatures != null) {
+                noticeExpandInfo.setNoticeExpandImgUrl(vipFeatures.getNoticeExpandImgUrl());
+            }
             ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             String startTime = "";
             if (msgInfo.getStartTime() != null) {
@@ -395,6 +409,11 @@ public class IFlymePush extends HttpClient {
                     msgInfo.getFixEndDisplayDate(), msgInfo.getNotifyKey());
 
             VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo, noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo);
+            if (vipFeatures != null) {
+                VipInfo vipInfo = new VipInfo(vipFeatures.getSubtitle(), vipFeatures.getPullDownTop(), vipFeatures.getTimeTop(), vipFeatures.getNotGroup(),
+                        vipFeatures.getTitleColor(), vipFeatures.getBackgroundImgUrl(), vipFeatures.getSmallIconUrl(), vipFeatures.getBigIconUrl());
+                messageJson.setVipInfo(vipInfo);
+            }
             addParameter(body, "messageJson", JSON.toJSONString(messageJson));
             if (message.getRestrictedPackageNames() != null) {
                 addParameter(body, "restrictedPackageNames", array2Str(message.getRestrictedPackageNames()));
@@ -475,9 +494,13 @@ public class IFlymePush extends HttpClient {
                 return ResultPack.failed("message must be instanceof VarnishedMessage");
             }
             VarnishedMessage msgInfo = (VarnishedMessage) message;
+            VipFeatures vipFeatures = msgInfo.getVipFeatures();
 
-            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent(), msgInfo.getNoticeBarImgUrl());
-            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent(), msgInfo.getNoticeExpandImgUrl());
+            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeMsgType(), msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent(), msgInfo.getNoticeBarImgUrl());
+            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent());
+            if (vipFeatures != null) {
+                noticeExpandInfo.setNoticeExpandImgUrl(vipFeatures.getNoticeExpandImgUrl());
+            }
             ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             String startTime = "";
             if (msgInfo.getStartTime() != null) {
@@ -490,6 +513,11 @@ public class IFlymePush extends HttpClient {
                     msgInfo.getFixEndDisplayDate(), msgInfo.getNotifyKey());
 
             VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo, noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo);
+            if (vipFeatures != null) {
+                VipInfo vipInfo = new VipInfo(vipFeatures.getSubtitle(), vipFeatures.getPullDownTop(), vipFeatures.getTimeTop(), vipFeatures.getNotGroup(),
+                        vipFeatures.getTitleColor(), vipFeatures.getBackgroundImgUrl(), vipFeatures.getSmallIconUrl(), vipFeatures.getBigIconUrl());
+                messageJson.setVipInfo(vipInfo);
+            }
             addParameter(body, "messageJson", JSON.toJSONString(messageJson));
             if (message.getRestrictedPackageNames() != null) {
                 addParameter(body, "restrictedPackageNames", array2Str(message.getRestrictedPackageNames()));
@@ -717,9 +745,13 @@ public class IFlymePush extends HttpClient {
             }
         } else if (PushType.STATUSBAR == pushType) {
             VarnishedMessage msgInfo = (VarnishedMessage) message;
+            VipFeatures vipFeatures = msgInfo.getVipFeatures();
 
-            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent(), msgInfo.getNoticeBarImgUrl());
-            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent(), msgInfo.getNoticeExpandImgUrl());
+            NoticeBarInfo noticeBarInfo = new NoticeBarInfo(msgInfo.getNoticeMsgType(), msgInfo.getNoticeBarType(), msgInfo.getTitle(), msgInfo.getContent(), msgInfo.getNoticeBarImgUrl());
+            NoticeExpandInfo noticeExpandInfo = new NoticeExpandInfo(msgInfo.getNoticeExpandType(), msgInfo.getNoticeExpandContent());
+            if (vipFeatures != null) {
+                noticeExpandInfo.setNoticeExpandImgUrl(vipFeatures.getNoticeExpandImgUrl());
+            }
             ClickTypeInfo clickTypeInfo = new ClickTypeInfo(msgInfo.getClickType(), msgInfo.getUrl(), msgInfo.getParameters(), msgInfo.getActivity(), msgInfo.getCustomAttribute());
             PushTimeInfo pushTimeInfo = new PushTimeInfo(msgInfo.isOffLine(), msgInfo.getValidTime());
             NotificationType notificationType = new NotificationType(msgInfo.isVibrate(), msgInfo.isLights(), msgInfo.isSound());
@@ -729,6 +761,11 @@ public class IFlymePush extends HttpClient {
 
             VarnishedMessageJson messageJson = new VarnishedMessageJson(noticeBarInfo,
                     noticeExpandInfo, clickTypeInfo, pushTimeInfo, advanceInfo, msgInfo.getExtra());
+            if (vipFeatures != null) {
+                VipInfo vipInfo = new VipInfo(vipFeatures.getSubtitle(), vipFeatures.getPullDownTop(), vipFeatures.getTimeTop(), vipFeatures.getNotGroup(),
+                        vipFeatures.getTitleColor(), vipFeatures.getBackgroundImgUrl(), vipFeatures.getSmallIconUrl(), vipFeatures.getBigIconUrl());
+                messageJson.setVipInfo(vipInfo);
+            }
             addParameter(body, "messageJson", JSON.toJSONString(messageJson));
 
             if (UserType.PUSHID == userType) {
