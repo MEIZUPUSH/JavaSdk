@@ -16,6 +16,10 @@ public class NoticeBarInfo implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
+	 * 推送消息分类(0, "公信"),(1, "私信") 【非必填，默认0公信】
+	 */
+	private int noticeMsgType = 0;
+	/**
 	 * 通知栏类型(0, "默认"),(1, "图片") , 【必填，值为0或者1】
 	 */
 	private int noticeBarType = 0;
@@ -35,14 +39,23 @@ public class NoticeBarInfo implements Serializable{
     public NoticeBarInfo() {
     }
 
-    public NoticeBarInfo(int noticeBarType, String title, String content,String noticeBarImgUrl) {
+    public NoticeBarInfo(int noticeMsgType, int noticeBarType, String title, String content,String noticeBarImgUrl) {
+		this.noticeMsgType = noticeMsgType;
         this.noticeBarType = noticeBarType;
         this.title = title;
         this.content = content;
         this.noticeBarImgUrl = noticeBarImgUrl;
     }
 
-    public int getNoticeBarType() {
+	public int getNoticeMsgType() {
+		return noticeMsgType;
+	}
+
+	public void setNoticeMsgType(int noticeMsgType) {
+		this.noticeMsgType = noticeMsgType;
+	}
+
+	public int getNoticeBarType() {
 		return noticeBarType;
 	}
 
@@ -77,7 +90,8 @@ public class NoticeBarInfo implements Serializable{
 	@Override
 	public String toString() {
 		return "NoticeBarInfo{" +
-				"noticeBarType=" + noticeBarType +
+				"noticeMsgType=" + noticeMsgType +
+				", noticeBarType=" + noticeBarType +
 				", title='" + title + '\'' +
 				", content='" + content + '\'' +
 				", noticeBarImgUrl='" + noticeBarImgUrl + '\'' +

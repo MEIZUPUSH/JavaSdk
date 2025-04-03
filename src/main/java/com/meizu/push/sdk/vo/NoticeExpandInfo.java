@@ -22,7 +22,7 @@ public class NoticeExpandInfo implements Serializable{
 	 */
 	private int noticeExpandType = 0;
 	/**
-	 * 展开内容, 【noticeExpandType为文本时，必填】
+	 * 展开内容, 【noticeExpandType为文本时，必填】，vip特性，需要通过VipFeatures设置
 	 */
 	private String noticeExpandContent = "";
 
@@ -31,10 +31,9 @@ public class NoticeExpandInfo implements Serializable{
     public NoticeExpandInfo() {
     }
 
-    public NoticeExpandInfo(int noticeExpandType, String noticeExpandContent,String noticeExpandImgUrl) {
+    public NoticeExpandInfo(int noticeExpandType, String noticeExpandContent) {
         this.noticeExpandType = noticeExpandType;
         this.noticeExpandContent = noticeExpandContent;
-        this.noticeExpandImgUrl = noticeExpandImgUrl;
     }
 
 	public String getNoticeExpandImgUrl() {

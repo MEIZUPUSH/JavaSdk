@@ -5,6 +5,11 @@
 * 直接下载获取 [Java Server SDK](https://github.com/MEIZUPUSH/JavaSdk/releases)
 
 ## 更新日志
+### [2023-08-11]V1.2.11.20250401_release
+
+* 增加推送消息分类noticeMsgType，区分公信和私信消息，默认公信消息
+* 增加VIP特性，应用开启了VIP功能可使用
+
 ### [2023-08-11]V1.2.10.20230811_release
 
 * 海内外切换支持
@@ -73,6 +78,7 @@
     * [推送服务(IFlymePush)](#IFlymePush_index)
     * [订阅服务(IFlymePushSub)](#IFlymePushSub_index)
     * [通知栏消息体(Message)](#Message_index)
+      * [VIP特性(VipFeatures)](#VipFeatures_index)
       * [通知栏消息(VarnishedMessage)](#VarnishedMessage_index)
       * [透传消息(UnVarnishedMessage)](#UnVarnishedMessage_index)
     * [接口返回值(ResultPack)](#ResultPack_index)
@@ -80,6 +86,8 @@
     * [接口响应码定义(ErrorCode)](#ErrorCode_index)
     * [推送响应码定义(PushResponseCode)](#PushResponseCode_index)    
     * [推送类型(PushType)](#PushType_index) 
+    * [通知消息分类(NoticeMsgType)](#NoticeMsgType_index)
+    * [子标题颜色(TitleColorType)](#TitleColorType_index)
     * [标签推送集合类型（ScopeType）](#ScopeType_index) 
     * [任务推送统计（TaskStatistics）](#TaskStatistics_index) 
     * [任务推送统计（天）（DailyPushStatics）](#DailyPushStatics_index) 
@@ -146,6 +154,20 @@ useSSL|Boolean|否|false| 是否使用https接口调用：true 使用https连接
 VarnishedMessage|通知栏消息体
 UnVarnishedMessage|透传消息体
 
+### VIP特性(VipFeatures) <a name="VipFeatures_index"/>
+
+参数名称|类型|必填|默认|描述
+---|---|--|---|---
+subtitle|String|否|null|通知栏推送子标题【非必填，限制字数0~16】
+pullDownTop|Boolean|否|null|通知栏是否允许即时置顶(与定时置顶互斥)【非必填，默认false】
+timeTop|int|否|0|通知栏定时置顶时长(与即时置顶互斥)【非必填，限制为1800~7200秒内的正整数】
+notGroup|Boolean|否|null|通知栏消息独立成组【非必填，默认false】
+titleColor|String|否|null|通知栏主标题变色 (默认不变色，可变蓝色#206CFF、红色#E42D22) 适用Flyme样式、大图样式、小图样式【非必填】
+backgroundImgUrl|String|否|null|通知栏底图 (328px*120px jpg、png、jpeg 200kb以内) 与标题颜色及展开大图互斥，独立成组 【非必填】
+smallIconUrl|String|否|null|通知栏自定义小图标 (18px*18px jpg、png、jpeg 100kb以内) 与标题颜色及底图互斥，独立成组 【非必填】
+bigIconUrl|String|否|null|通知栏自定义大图标 (42px*42px jpg、png、jpeg 100kb以内) 与底图互斥，独立成组 【非必填】
+noticeExpandImgUrl|String|否|null|展开大图url, 【noticeExpandType为大图时，必填】
+
 ### 通知栏消息(VarnishedMessage) <a name="VarnishedMessage_index"/>
 
 参数名称|类型|必填|默认|描述
@@ -154,11 +176,12 @@ appId|Long|是|null|注册应用appId
 restrictedPackageNames|String[]|否|null|多包名配置【最长50】
 title|String|是|null|推送标题, 【字数限制1~32】
 content|String|是|null|推送内容, 【字数限制1~100】
+noticeMsgType|int|否|0|通知消息分类(0, "公信") (1, "私信") 【非必填，默认值为0】
 noticeBarType|int|否|0|通知栏样式(0, "标准"),(1, "图片"),(2, "安卓原生")【非必填，默认值为0】
 noticeBarImgUrl|String|否|null|通知栏图片, 【noticeBarType为图片时，必填】
 noticeExpandType|int|否|0|展开方式 (0, "标准"),(1, "文本"),(2, "大图")【非必填，默认值为0】
 noticeExpandContent|String|否|null|展开内容, 【noticeExpandType为文本时，必填】
-noticeExpandImgUrl|String|否|null|展开大图url, 【noticeExpandType为大图时，必填】
+~~noticeExpandImgUrl~~|String|否|null|~~展开大图url, 【noticeExpandType为大图时，必填】~~ 参数已转移至VipFeatures
 clickType|int|否|0|点击动作 (0,"打开应用"),(1,"打开应用页面"),(2,"打开URI页面"),~~(3, "应用客户端自定义")~~【非必填，默认值为0,android12后不支持3：应用客户端定义】
 url|String|否|null|URI页面地址, 【clickType为打开URI页面时，必填】
 parameters|JSONObject|否|null|透传参数 【JSON格式，非必填】
@@ -178,6 +201,7 @@ vibrate|Boolean|否|true|震动 (false关闭  true 开启) , 【非必填，默�
 lights|Boolean|否|true|闪光 (false关闭  true 开启) , 【非必填，默认true】
 sound|Boolean|否|true|声音 (false关闭  true 开启) , 【非必填，默认true】
 notifyKey|String|否|null|分组合并推送的key,凡是带有此key的通知栏消息只会显示最后到达的一条。由数字([0-9]), 大小写字母([a-zA-Z]), 下划线(_)和中划线(-)组成, 长度不大于8个字符
+VipFeatures|[VipFeatures](#VipFeatures_index)|否|null|分组合并推送的key,凡是带有此key的通知栏消息只会显示最后到达的一条。由数字([0-9]), 大小写字母([a-zA-Z]), 下划线(_)和中划线(-)组成, 长度不大于8个字符
 extra|Map<String, String>|否|null| [回执参数（ExtraParam）](#ExtraParam_index) 
 
 ### 透传消息(UnVarnishedMessage) <a name="UnVarnishedMessage_index"/>
@@ -243,6 +267,19 @@ RSP_UNSUBSCRIBE_PUSHID|110002|pushId失效(pushId未订阅)
 RSP_INVALID_PUSHID|110003|pushId非法
 RSP_UNSUBSCRIBE_ALIAS|110005|别名未订阅(包括推送开关关闭的设备)
 RSP_OFF_PUSHID|110010|pushId失效(消息开关关闭)
+RSP_PUBMSG_DAILY_LIMIT|110011|当日公信类消息已达上限
+
+## 通知消息分类（NoticeMsgType）<a name="NoticeMsgType_index"/>
+枚举|类型|描述
+---|---|--- 
+PUB_MSG|Enum|公共消息
+PERSONAL_MSG|Enum|个人消息
+
+## 子标题颜色（TitleColorType）<a name="TitleColorType_index"/>
+枚举|类型|描述
+---|---|--- 
+BLUE|Enum|蓝色
+RED|Enum|红色
 
 ## 推送类型（PushType）<a name="PushType_index"/>
 枚举|类型|描述
@@ -416,11 +453,21 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
 
+        // vip特性
+        VipFeatures vipFeatures = new VipFeatures.Builder().noticeExpandImgUrl("展开大图url")
+            .bigIconUrl("大图标url")
+            .smallIconUrl("小图标url")
+            .subtitle("SDK测试子标题")
+            .titleColor(TitleColorType.BLUE)
+            .build();
+
         //组装消息
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
                 .restrictedPackageNames(new String[]{"com.xxx.abc"})//多包名推送时才需配置，不填表示所有
                 .title("Java SDK 推送标题").content("Java SDK 推送内容")
-                .noticeExpandType(1)
+                .noticeMsgType(NoticeMsgType.PUB_MSG)
+                .noticeExpandType(2)
+                .vipFeatures(vipFeatures)
                 .noticeExpandContent("展开文本内容")
                 .clickType(2).url("http://www.baidu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
                 .offLine(true).validTime(12)
@@ -447,6 +494,13 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
                     List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
                     System.out.println("rateLimitTarget is :" + rateLimitTarget);
                     //TODO 5 业务处理，重推......
+                }
+                // 6 判断是否有超出公信限制的target
+                if (targetResultMap.containsKey(PushResponseCode.RSP_PUBMSG_DAILY_LIMIT.getValue())) {
+                    // 7 获取超出公信限制的target
+                    List<String> pubMsgLimitTarget = targetResultMap.get(PushResponseCode.RSP_PUBMSG_DAILY_LIMIT.getValue());
+                    System.out.println("pubMsgLimitTarget is :" + pubMsgLimitTarget);
+                    //TODO 8 业务处理
                 }
             }
         } else {
@@ -589,11 +643,21 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
 public void testVarnishedMessagePushByAlias() throws Exception {
     //推送对象
     IFlymePush push = new IFlymePush(APP_SECRET_KEY);
+    
+    // vip特性
+    VipFeatures vipFeatures = new VipFeatures.Builder().noticeExpandImgUrl("展开大图url")
+        .bigIconUrl("大图标url")
+        .smallIconUrl("小图标url")
+        .subtitle("SDK测试子标题")
+        .titleColor(TitleColorType.BLUE)
+        .build();
 
     //组装消息
     VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
             .title("Java SDK 推送标题").content("Java SDK 推送内容")
-            .noticeExpandType(1)
+            .noticeMsgType(NoticeMsgType.PUB_MSG)
+            .noticeExpandType(2)
+            .vipFeatures(vipFeatures)
             .noticeExpandContent("展开文本内容")
             .clickType(2).url("http://push.meizu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
             .offLine(true).validTime(12)
@@ -621,6 +685,13 @@ public void testVarnishedMessagePushByAlias() throws Exception {
                     List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
                     System.out.println("rateLimitTarget is :" + rateLimitTarget);
                     //TODO 5 业务处理，重推......
+                }
+                // 6 判断是否有超出公信限制的target
+                if (targetResultMap.containsKey(PushResponseCode.RSP_PUBMSG_DAILY_LIMIT.getValue())) {
+                    // 7 获取超出公信限制的target
+                    List<String> pubMsgLimitTarget = targetResultMap.get(PushResponseCode.RSP_PUBMSG_DAILY_LIMIT.getValue());
+                    System.out.println("pubMsgLimitTarget is :" + pubMsgLimitTarget);
+                    //TODO 8 业务处理
                 }
             }
         } else {
@@ -765,10 +836,20 @@ Long  任务ID
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
 
+        // vip特性
+        VipFeatures vipFeatures = new VipFeatures.Builder().noticeExpandImgUrl("展开大图url")
+            .bigIconUrl("大图标url")
+            .smallIconUrl("小图标url")
+            .subtitle("SDK测试子标题")
+            .titleColor(TitleColorType.BLUE)
+            .build();
+        
         //组装消息
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
                 .title("java Sdk推送标题").content("java Sdk 推送内容")
-                .noticeExpandType(1)
+                .noticeMsgType(NoticeMsgType.PUB_MSG)
+                .noticeExpandType(2)
+                .vipFeatures(vipFeatures)
                 .noticeExpandContent("展开文本内容")
                 .clickType(2).url("http://www.baidu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
                 .offLine(true).validTime(12)
@@ -868,6 +949,13 @@ respTarget;  推送目标结果状态(key：推送响应码  value：响应码�
                     List<String> rateLimitTarget = targetResultMap.get(PushResponseCode.RSP_SPEED_LIMIT.getValue());
                     System.out.println("rateLimitTarget is :" + rateLimitTarget);
                     //TODO 5 业务处理，重推......
+                }
+                // 6 判断是否有超出公信限制的target
+                if (targetResultMap.containsKey(PushResponseCode.RSP_PUBMSG_DAILY_LIMIT.getValue())) {
+                    // 7 获取超出公信限制的target
+                    List<String> pubMsgLimitTarget = targetResultMap.get(PushResponseCode.RSP_PUBMSG_DAILY_LIMIT.getValue());
+                    System.out.println("pubMsgLimitTarget is :" + pubMsgLimitTarget);
+                    //TODO 8 业务处理
                 }
             }
         } else {
@@ -977,6 +1065,13 @@ public void testPushAliasPyTaskId() throws IOException {
                     System.out.println("rateLimitTarget is :" + rateLimitTarget);
                     //TODO 5 业务处理，重推......
                 }
+                // 6 判断是否有超出公信限制的target
+                if (targetResultMap.containsKey(PushResponseCode.RSP_PUBMSG_DAILY_LIMIT.getValue())) {
+                    // 7 获取超出公信限制的target
+                    List<String> pubMsgLimitTarget = targetResultMap.get(PushResponseCode.RSP_PUBMSG_DAILY_LIMIT.getValue());
+                    System.out.println("pubMsgLimitTarget is :" + pubMsgLimitTarget);
+                    //TODO 8 业务处理
+                }
             }
         } else {
             // 调用推送接口服务异常 eg: appId、appKey非法、推送消息非法.....
@@ -1058,10 +1153,20 @@ Long  任务ID
         //推送对象
         IFlymePush push = new IFlymePush(APP_SECRET_KEY);
 
+        // vip特性
+        VipFeatures vipFeatures = new VipFeatures.Builder().noticeExpandImgUrl("展开大图url")
+            .bigIconUrl("大图标url")
+            .smallIconUrl("小图标url")
+            .subtitle("SDK测试子标题")
+            .titleColor(TitleColorType.BLUE)
+            .build();
+        
         //通知栏全部消息推送
         VarnishedMessage message = new VarnishedMessage.Builder().appId(appId)
                 .title("java Sdk 全部推送标题").content("java Sdk 全部推送内容")
-                .noticeExpandType(1)
+                .noticeMsgType(NoticeMsgType.PUB_MSG)
+                .vipFeatures(vipFeatures)        
+                .noticeExpandType(2)
                 .noticeExpandContent("展开文本内容")
                 .clickType(2).url("http://www.baidu.com").parameters(JSON.parseObject("{\"k1\":\"value1\",\"k2\":0,\"k3\":\"value3\"}"))
                 .offLine(true).validTime(12)
@@ -1128,10 +1233,20 @@ public void testPushToTag() throws IOException {
     tagName.add("news");
     tagName.add("tech");
 
+    // vip特性
+    VipFeatures vipFeatures = new VipFeatures.Builder().noticeExpandImgUrl("展开大图url")
+        .bigIconUrl("大图标url")
+        .smallIconUrl("小图标url")
+        .subtitle("SDK测试子标题")
+        .titleColor(TitleColorType.BLUE)
+        .build();
+
     //通知栏标签推送
     VarnishedMessage varnishedMessage = new VarnishedMessage.Builder().appId(appId)
             .title("java Sdk 标签推送标题").content("java Sdk 标签推送内容")
-            .noticeExpandType(1)
+            .noticeMsgType(NoticeMsgType.PUB_MSG)
+            .vipFeatures(vipFeatures)
+            .noticeExpandType(2)
             .noticeExpandContent("展开文本内容")
             .offLine(true).validTime(12)
             .suspend(true).clearNoticeBar(true).vibrate(false).lights(false).sound(false)

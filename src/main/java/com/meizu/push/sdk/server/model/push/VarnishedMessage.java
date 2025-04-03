@@ -2,6 +2,7 @@ package com.meizu.push.sdk.server.model.push;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.meizu.push.sdk.constant.NoticeMsgType;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -22,6 +23,10 @@ public class VarnishedMessage extends Message {
     private static final long serialVersionUID = 1L;
 
     /* =============通知栏样式 begin=============  */
+    /**
+     * 通知消息分类(0, "公信") (1, "私信") 【非必填，默认为公信】
+     */
+    private int noticeMsgType = 0;
     /**
      * 通知栏类型(0, "默认"),(1, "图片"),(2, "安卓原生") 【必填，值为0】
      */
@@ -51,9 +56,10 @@ public class VarnishedMessage extends Message {
      */
     private String noticeExpandContent = "";
     /**
-     * 展开大图url, 【noticeExpandType为大图时，必填】
+     * 展开大图url, 【noticeExpandType为大图时，必填】 参数已转移至VipFeatures
      */
-    private String noticeExpandImgUrl = "";
+//    private String noticeExpandImgUrl = "";
+
     /* =============展开方式 end=============  */
 
 
@@ -153,6 +159,14 @@ public class VarnishedMessage extends Message {
     private String notifyKey = "";
     /* =============高级设置 end=============  */
 
+    /* =============vip特性 start=============  */
+    /**
+     * vip特性【非必填】 应用需要开启VIP功能才可使用
+     */
+    private VipFeatures vipFeatures;
+
+    /* =============vip特性 end=============  */
+
     /**
      * Key	Value含义  （key 参照：ExtraParam）
      * callback	String  (必填字段), 第三方接收回执的Http接口, 最大长度128字节
@@ -167,13 +181,13 @@ public class VarnishedMessage extends Message {
     public VarnishedMessage(VarnishedMessage.Builder builder) {
         super.setAppId(builder.appId);
         super.setRestrictedPackageNames(builder.restrictedPackageNames);
+        this.noticeMsgType = builder.noticeMsgType.getType();
         this.noticeBarType = builder.noticeBarType;
         this.title = builder.title;
         this.content = builder.content;
         this.noticeBarImgUrl = builder.noticeBarImgUrl;
         this.noticeExpandType = builder.noticeExpandType;
         this.noticeExpandContent = builder.noticeExpandContent;
-        this.noticeExpandImgUrl = builder.noticeExpandImgUrl;
         this.clickType = builder.clickType;
         this.url = builder.url;
         this.parameters = builder.parameters;
@@ -194,6 +208,7 @@ public class VarnishedMessage extends Message {
         this.fixStartDisplayDate = builder.fixStartDisplayDate;
         this.fixEndDisplayDate = builder.fixEndDisplayDate;
         this.notifyKey = builder.notifyKey;
+        this.vipFeatures = builder.vipFeatures;
         this.extra = builder.extra;
     }
 
@@ -207,6 +222,10 @@ public class VarnishedMessage extends Message {
 
     public Date getStartTime() {
         return startTime;
+    }
+
+    public int getNoticeMsgType() {
+        return noticeMsgType;
     }
 
     public int getNoticeBarType() {
@@ -231,10 +250,6 @@ public class VarnishedMessage extends Message {
 
     public String getNoticeExpandContent() {
         return noticeExpandContent;
-    }
-
-    public String getNoticeExpandImgUrl() {
-        return noticeExpandImgUrl;
     }
 
     public int getClickType() {
@@ -317,15 +332,20 @@ public class VarnishedMessage extends Message {
         this.notifyKey = notifyKey;
     }
 
+    public VipFeatures getVipFeatures() {
+        return vipFeatures;
+    }
+
     @Override
     public String toString() {
         return "VarnishedMessage{" +
-                "noticeBarType=" + noticeBarType +
+                "noticeMsgType=" + noticeMsgType +
+                ", noticeBarType=" + noticeBarType +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
+                ", noticeBarImgUrl='" + noticeBarImgUrl + '\'' +
                 ", noticeExpandType=" + noticeExpandType +
                 ", noticeExpandContent='" + noticeExpandContent + '\'' +
-                ", noticeExpandImgUrl='" + noticeExpandImgUrl + '\'' +
                 ", clickType=" + clickType +
                 ", url='" + url + '\'' +
                 ", parameters=" + parameters +
@@ -346,6 +366,7 @@ public class VarnishedMessage extends Message {
                 ", lights=" + lights +
                 ", sound=" + sound +
                 ", notifyKey='" + notifyKey + '\'' +
+                ", vipFeatures=" + vipFeatures +
                 ", extra=" + extra +
                 '}';
     }
@@ -362,6 +383,10 @@ public class VarnishedMessage extends Message {
         private String[] restrictedPackageNames;
 
         /* =============通知栏样式 begin=============  */
+        /**
+         * 通知消息分类(0, "公信") (1, "私信") 【非必填，默认为公信】
+         */
+        private NoticeMsgType noticeMsgType = NoticeMsgType.PUB_MSG;
         /**
          * 通知栏类型(0, "默认"),(1, "图片") , 【必填，值为0或者1】
          */
@@ -391,9 +416,10 @@ public class VarnishedMessage extends Message {
          */
         private String noticeExpandContent = "";
         /**
-         * 展开大图url, 【noticeExpandType为大图时，必填】
+         * 展开大图url, 【noticeExpandType为大图时，必填】 参数已转移至VipFeatures
          */
-        private String noticeExpandImgUrl = "";
+//        private String noticeExpandImgUrl = "";
+
         /* =============展开方式 end=============  */
 
 
@@ -490,6 +516,15 @@ public class VarnishedMessage extends Message {
          */
         private String notifyKey = "";
         /* =============高级设置 end=============  */
+
+        /* =============vip特性 start=============  */
+        /**
+         * vip特性【非必填】
+         */
+        private VipFeatures vipFeatures;
+
+        /* =============vip特性 end=============  */
+
         /**
          * Key	Value含义  （key 参照：ExtraParam）
          * callback	String  (必填字段), 第三方接收回执的Http接口, 最大长度128字节
@@ -503,6 +538,11 @@ public class VarnishedMessage extends Message {
 
         public VarnishedMessage.Builder appId(Long appId) {
             this.appId = appId;
+            return this;
+        }
+
+        public VarnishedMessage.Builder noticeMsgType(NoticeMsgType noticeMsgType) {
+            this.noticeMsgType = noticeMsgType;
             return this;
         }
 
@@ -536,12 +576,6 @@ public class VarnishedMessage extends Message {
             this.noticeExpandContent = noticeExpandContent;
             return this;
         }
-
-        public VarnishedMessage.Builder noticeExpandImgUrl(String noticeExpandImgUrl) {
-            this.noticeExpandImgUrl = noticeExpandImgUrl;
-            return this;
-        }
-
 
         public VarnishedMessage.Builder clickType(int clickType) {
             this.clickType = clickType;
@@ -650,6 +684,10 @@ public class VarnishedMessage extends Message {
             return this;
         }
 
+        public VarnishedMessage.Builder vipFeatures(VipFeatures vipFeatures) {
+            this.vipFeatures = vipFeatures;
+            return this;
+        }
 
         public VarnishedMessage build() {
             return new VarnishedMessage(this);

@@ -21,6 +21,7 @@ public class PushResponseCode {
     public static PushResponseCode RSP_INVALID_PUSHID = valueOf("110003", "pushId非法(invalid pushId)");
     public static PushResponseCode RSP_UNSUBSCRIBE_ALIAS = valueOf("110005", "别名未订阅(un subscribe alias)");
     public static PushResponseCode RSP_OFF_PUSHID = valueOf("110010", "pushId失效(消息开关关闭)");
+    public static PushResponseCode RSP_PUBMSG_DAILY_LIMIT = valueOf("110011", "当日公信类消息已达上限");
 
     private static HashMap<String, PushResponseCode> createIntegerPushResponseCodeMapping() {
         HashMap result = new HashMap();
