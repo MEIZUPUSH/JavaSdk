@@ -5,7 +5,7 @@
 * 直接下载获取 [Java Server SDK](https://github.com/MEIZUPUSH/JavaSdk/releases)
 
 ## 更新日志
-### [2025-04-1]V1.2.11.20250401_release
+### [2025-04-01]V1.2.11.20250401_release
 
 * 增加推送消息分类noticeMsgType，区分公信和私信消息，默认公信消息
 * 增加VIP特性，应用开启了VIP功能可使用
