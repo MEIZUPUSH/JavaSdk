@@ -35,23 +35,23 @@ public class VipFeatures implements Serializable {
      */
     private boolean notGroup = Boolean.FALSE;
     /**
-     * 通知栏主标题变色 (默认不变色，可变蓝色#206CFF、红色#E42D22) 适用Flyme系统样式、大图样式、小图样式，与 【非必填】
+     * 通知栏主标题变色 (默认不变色，可变蓝色#206CFF、红色#E42D22) 与底图互斥 适用Flyme系统样式、大图样式、小图样式，与 【非必填】
      */
     private String titleColor;
     /**
-     * 通知栏底图 (328px*120px jpg、png、jpeg 200kb以内) 与标题颜色及展开大图不能同时设置，独立成组 【非必填】
+     * 通知栏底图 (352px*91px jpg、png、jpeg 200kb以内) 与标题颜色及展开大图不能同时设置 【非必填】
      */
     private String backgroundImgUrl = "";
     /**
-     * 通知栏自定义小图标 (18px*18px jpg、png、jpeg 100kb以内) 与标题颜色及底图不能同时设置，独立成组 【非必填】
+     * 通知栏自定义小图标 (18px*18px jpg、png、jpeg 100kb以内) 与标题颜色及底图不能同时设置 【非必填】
      */
     private String smallIconUrl = "";
     /**
-     * 通知栏自定义大图标 (42px*42px jpg、png、jpeg 100kb以内) 与底图不能同时设置，独立成组 【非必填】
+     * 通知栏自定义大图标 (42px*42px jpg、png、jpeg 100kb以内) 与底图不能同时设置 【非必填】
      */
     private String bigIconUrl = "";
     /**
-     * 展开大图 (内容不为空时，noticeExpandType必须设置为大图)【非必填】
+     * 展开大图 (内容不为空时，noticeExpandType必须设置为大图)【非必填】 与底图互斥
      */
     private String noticeExpandImgUrl = "";
 
@@ -147,23 +147,23 @@ public class VipFeatures implements Serializable {
          */
         private boolean notGroup = Boolean.FALSE;
         /**
-         * 通知栏主标题变色 (默认不变色，可变蓝色#206CFF、红色#E42D22) 适用Flyme系统样式、大图样式、小图样式【非必填】
+         * 通知栏主标题变色 (默认不变色，可变蓝色#206CFF、红色#E42D22) 与底图互斥 适用Flyme系统样式、大图样式、小图样式【非必填】
          */
         private TitleColorType titleColor;
         /**
-         * 通知栏底图 (328px*120px jpg、png、jpeg 200kb以内) 与标题颜色及展开大图互斥，独立成组 【非必填】
+         * 通知栏底图 (352px*91px jpg、png、jpeg 200kb以内) 与标题颜色及展开大图互斥 【非必填】
          */
         private String backgroundImgUrl = "";
         /**
-         * 通知栏自定义小图标 (18px*18px jpg、png、jpeg 100kb以内) 与标题颜色及底图互斥，独立成组 【非必填】
+         * 通知栏自定义小图标 (18px*18px jpg、png、jpeg 100kb以内) 【非必填】
          */
         private String smallIconUrl = "";
         /**
-         * 通知栏自定义大图标 (42px*42px jpg、png、jpeg 100kb以内) 与底图互斥，独立成组 【非必填】
+         * 通知栏自定义大图标 (42px*42px jpg、png、jpeg 100kb以内) 与底图互斥 【非必填】
          */
         private String bigIconUrl = "";
         /**
-         * 展开大图, 【noticeExpandType为大图时，必填】
+         * 展开大图 【noticeExpandType为大图时，必填】 与底图互斥
          */
         private String noticeExpandImgUrl = "";
 

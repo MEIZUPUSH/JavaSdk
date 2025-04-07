@@ -7,8 +7,8 @@
 ## 更新日志
 ### [2025-04-01]V1.2.11.20250401_release
 
-* 增加推送消息分类noticeMsgType，区分公信和私信消息，默认公信消息
-* 增加VIP特性，应用开启了VIP功能可使用
+* 增加推送消息分类noticeMsgType，区分公信消息和私信消息，默认公信消息
+* 增加VIP特性，应用开启VIP功能后方可使用
 
 ### [2023-08-11]V1.2.10.20230811_release
 
@@ -87,7 +87,7 @@
     * [推送响应码定义(PushResponseCode)](#PushResponseCode_index)    
     * [推送类型(PushType)](#PushType_index) 
     * [通知消息分类(NoticeMsgType)](#NoticeMsgType_index)
-    * [子标题颜色(TitleColorType)](#TitleColorType_index)
+    * [主标题颜色(TitleColorType)](#TitleColorType_index)
     * [标签推送集合类型（ScopeType）](#ScopeType_index) 
     * [任务推送统计（TaskStatistics）](#TaskStatistics_index) 
     * [任务推送统计（天）（DailyPushStatics）](#DailyPushStatics_index) 
@@ -159,14 +159,14 @@ UnVarnishedMessage|透传消息体
 参数名称|类型|必填|默认|描述
 ---|---|--|---|---
 subtitle|String|否|null|通知栏推送子标题【非必填，限制字数0~16】
-pullDownTop|Boolean|否|null|通知栏是否允许即时置顶(与定时置顶互斥)【非必填，默认false】
+pullDownTop|boolean|否|false|通知栏是否允许即时置顶(与定时置顶互斥)【非必填，默认false】
 timeTop|int|否|0|通知栏定时置顶时长(与即时置顶互斥)【非必填，限制为1800~7200秒内的正整数】
-notGroup|Boolean|否|null|通知栏消息独立成组【非必填，默认false】
-titleColor|String|否|null|通知栏主标题变色 (默认不变色，可变蓝色#206CFF、红色#E42D22) 适用Flyme样式、大图样式、小图样式【非必填】
-backgroundImgUrl|String|否|null|通知栏底图 (328px*120px jpg、png、jpeg 200kb以内) 与标题颜色及展开大图互斥，独立成组 【非必填】
-smallIconUrl|String|否|null|通知栏自定义小图标 (18px*18px jpg、png、jpeg 100kb以内) 与标题颜色及底图互斥，独立成组 【非必填】
-bigIconUrl|String|否|null|通知栏自定义大图标 (42px*42px jpg、png、jpeg 100kb以内) 与底图互斥，独立成组 【非必填】
-noticeExpandImgUrl|String|否|null|展开大图url, 【noticeExpandType为大图时，必填】
+notGroup|boolean|否|false|通知栏消息独立成组【非必填，默认false】
+titleColor|String|否|null|通知栏主标题变色 (默认不变色，可变蓝色#206CFF、红色#E42D22) 与底图互斥 适用Flyme样式、大图样式、小图样式【非必填】
+backgroundImgUrl|String|否|null|通知栏底图 (352px*91px jpg、png、jpeg 200kb以内) 与标题颜色及展开大图互斥 【非必填】
+smallIconUrl|String|否|null|通知栏自定义小图标 (18px*18px jpg、png、jpeg 100kb以内) 【非必填】
+bigIconUrl|String|否|null|通知栏自定义大图标 (42px*42px jpg、png、jpeg 100kb以内) 与底图互斥，可与展开大图组合使用 【非必填】
+noticeExpandImgUrl|String|否|null|展开大图url (328px*120px jpg、png、jpeg 200kb以内) 与底图互斥，可与大图标组合使用 【noticeExpandType为大图时，必填】
 
 ### 通知栏消息(VarnishedMessage) <a name="VarnishedMessage_index"/>
 
@@ -272,10 +272,10 @@ RSP_PUBMSG_DAILY_LIMIT|110011|当日公信类消息已达上限
 ## 通知消息分类（NoticeMsgType）<a name="NoticeMsgType_index"/>
 枚举|类型|描述
 ---|---|--- 
-PUB_MSG|Enum|公共消息
-PERSONAL_MSG|Enum|个人消息
+PUB_MSG|Enum|公信消息
+PERSONAL_MSG|Enum|私信消息
 
-## 子标题颜色（TitleColorType）<a name="TitleColorType_index"/>
+## 主标题颜色（TitleColorType）<a name="TitleColorType_index"/>
 枚举|类型|描述
 ---|---|--- 
 BLUE|Enum|蓝色

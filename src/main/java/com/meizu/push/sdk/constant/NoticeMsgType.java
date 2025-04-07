@@ -9,8 +9,8 @@ public enum NoticeMsgType {
     /**
      *
      */
-    PUB_MSG(0, "公共消息"),
-    PERSONAL_MSG(1, "个人消息") ;
+    PUB_MSG(0, "公信消息"),
+    PERSONAL_MSG(1, "私信消息") ;
 
     private Integer type;
     private String desc;

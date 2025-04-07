@@ -30,19 +30,19 @@ public class VipInfo implements Serializable {
      */
     private boolean notGroup = Boolean.FALSE;
     /**
-     * 通知栏主标题变色 (默认不变色，可变蓝色#206CFF、红色#E42D22) 适用Flyme系统样式、大图样式、小图样式，与 【非必填】
+     * 通知栏主标题变色 (默认不变色，可变蓝色#206CFF、红色#E42D22) 适用Flyme系统样式、大图样式、小图样式 【非必填】
      */
     private String titleColor = "";
     /**
-     * 通知栏底图 (328px*120px jpg、png、jpeg 200kb以内) 与标题颜色互斥，与展开大图互斥，独立成组 【非必填】
+     * 通知栏底图 (352px*91px jpg、png、jpeg 200kb以内) 与标题颜色互斥，与展开大图互斥 【非必填】
      */
     private String backgroundImgUrl = "";
     /**
-     * 通知栏自定义小图标 (18px*18px jpg、png、jpeg 100kb以内) 与标题颜色互斥，与底图互斥，独立成组 【非必填】
+     * 通知栏自定义小图标 (18px*18px jpg、png、jpeg 100kb以内) 与标题颜色互斥，与底图互斥 【非必填】
      */
     private String smallIconUrl = "";
     /**
-     * 通知栏自定义大图标 (42px*42px jpg、png、jpeg 100kb以内) 与底图互斥，独立成组 【非必填】
+     * 通知栏自定义大图标 (42px*42px jpg、png、jpeg 100kb以内) 与底图互斥 【非必填】
      */
     private String bigIconUrl = "";
 
