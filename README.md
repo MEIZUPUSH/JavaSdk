@@ -5,6 +5,13 @@
 * 直接下载获取 [Java Server SDK](https://github.com/MEIZUPUSH/JavaSdk/releases)
 
 ## 更新日志
+
+### [2025-04-22]V1.2.13.20250422_release
+* 使用TLSv1.2版本，支持https协议，不再支持http协议
+
+### [2025-04-01]V1.2.12.20250407_release
+* 更新注释
+
 ### [2025-04-01]V1.2.11.20250401_release
 
 * 增加推送消息分类noticeMsgType，区分公信消息和私信消息，默认公信消息
@@ -135,7 +142,9 @@
 参数名称|类型|必填|默认|描述
 ---|---|---|---|---
 appSecret|String|是|null|注册应用appSecret
-useSSL|Boolean|否|false| 是否使用https接口调用：true 使用https连接，false使用http连接
+~~useSSL~~|~~Boolean~~|~~否~~|~~false~~| ~~是否使用https接口调用：true 使用https连接，false使用http连接~~
+
+> 2025.04.22 不再支持http协议，改为https协议，useSSL参数不再使用
 
 ## 订阅服务(IFlymePushSub) <a name="IFlymePushSub_index"/>
 > 调用该类实例的方法做别名、标签、推送开关订阅服务， 构造函数说明如下：
@@ -144,8 +153,10 @@ useSSL|Boolean|否|false| 是否使用https接口调用：true 使用https连接
 ---|---|---|---|---
 appId|Long|是|null|注册应用appId
 appSecret|String|是|null|注册应用appSecret
-useSSL|Boolean|否|false| 是否使用https接口调用：true 使用https连接，false使用http连接
+~~useSSL~~|~~Boolean~~|~~否~~|~~false~~|~~是否使用https接口调用：true 使用https连接，false使用http连接~~
 
+> 2025.04.22 不再支持http协议，改为https协议，useSSL参数不再使用
+> 
 ## 通知栏消息体(Message) <a name="Message_index"/>
 > 推送消息实体（抽象类）
 

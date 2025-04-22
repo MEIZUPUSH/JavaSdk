@@ -64,7 +64,7 @@ public class HttpClient {
     }
 
     public HttpClient(long appId, String appSecret) {
-        this(appId, appSecret, Boolean.FALSE);
+        this(appId, appSecret, Boolean.TRUE);
     }
 
     public HttpClient(long appId, String appSecret, boolean useSSL) {
@@ -300,7 +300,7 @@ public class HttpClient {
         javax.net.ssl.TrustManager[] trustAllCerts = new javax.net.ssl.TrustManager[1];
         javax.net.ssl.TrustManager tm = new miTM();
         trustAllCerts[0] = tm;
-        javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("SSL");
+        javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("TLSv1.2");
         sc.init(null, trustAllCerts, null);
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
     }

@@ -30,10 +30,6 @@ public class IFlymePushSub extends HttpClient {
         super(appId, appSecret);
     }
 
-    public IFlymePushSub(long appId, String appSecret, boolean useSSL) {
-        super(appId, appSecret, useSSL);
-    }
-
     /**
      * 修改通知栏订阅开关状态
      *

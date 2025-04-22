@@ -38,11 +38,6 @@ public class IFlymePush extends HttpClient {
         super(appSecret);
     }
 
-    public IFlymePush(String appSecret, boolean useSSL) {
-        super(appSecret, useSSL);
-    }
-
-
     public ResultPack<ImageInfo> uploadImage(long appId, int imgType, String imgUrl) throws IOException {
         if (appId == 0) {
             return ResultPack.failed("appId is illegal");
